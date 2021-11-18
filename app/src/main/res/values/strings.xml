@@ -2,8 +2,11 @@
     <string name="app_name">AustTravels</string>
     <string name="or">OR</string>
     <string name="enter_your_email">Enter your email</string>
+    <string name="enter_your_name">Enter your name</string>
     <string name="enter_your_password">Enter your password</string>
     <string name="sign_in">SIGN IN</string>
     <string name="sign_up_with_email">SIGN UP WITH EMAIL</string>
     <string name="aust_travels">AUST TRAVELS</string>
+    <string name="sign_up">Sign UP</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

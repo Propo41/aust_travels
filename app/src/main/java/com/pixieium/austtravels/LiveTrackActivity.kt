@@ -186,7 +186,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     companion object {
-        private const val MY_PERMISSIONS_REQUEST_LOCATION = 99
+        const val MY_PERMISSIONS_REQUEST_LOCATION = 99
     }
 
 

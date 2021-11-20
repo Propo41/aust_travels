@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUpActivity">
+    tools:context=".SignUpActivity"
+
+    >
 
 
     <TextView
@@ -33,13 +35,16 @@
         app:layout_constraintTop_toBottomOf="@+id/signup_txt"
         app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
         app:startIconTint="@color/black"
-        android:padding="@dimen/text_input_padding"
+        android:paddingLeft="@dimen/text_input_padding"
+        android:paddingRight="@dimen/text_input_padding"
+
         >
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:padding="@dimen/text_input_padding"
             />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -49,24 +54,133 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/item_spacing_large"
-        android:hint="@string/enter_your_name"
+        android:layout_marginTop="@dimen/item_spacing"
+        android:hint="@string/enter_your_institutional_email"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name"
         app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
         app:startIconTint="@color/black"
-        android:padding="@dimen/text_input_padding"
+        android:paddingLeft="@dimen/text_input_padding"
+        android:paddingRight="@dimen/text_input_padding"
         >
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:padding="@dimen/text_input_padding"
             />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/semester"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/item_spacing"
+        android:hint="@string/select_your_semester"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edu_mail"
+        app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+        app:startIconTint="@color/black"
+        android:paddingLeft="@dimen/text_input_padding"
+        android:paddingRight="@dimen/text_input_padding"
+        >
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:padding="@dimen/text_input_padding"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/department"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/item_spacing"
+        android:hint="@string/select_your_department"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/semester"
+        app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+        app:startIconTint="@color/black"
+        android:paddingLeft="@dimen/text_input_padding"
+        android:paddingRight="@dimen/text_input_padding"
+        >
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/text_input_padding"
+            android:textColor="@color/black" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/password"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/item_spacing"
+        android:hint="@string/enter_your_password"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/department"
+        app:startIconDrawable="@drawable/ic_password"
+        app:startIconTint="@color/black"
+        android:paddingLeft="@dimen/text_input_padding"
+        android:paddingRight="@dimen/text_input_padding"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:padding="@dimen/text_input_padding"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <Button
+        android:id="@+id/signup"
+        style="@style/Widget.App.Button"
+        android:layout_marginTop="@dimen/item_spacing"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/yellow_light"
+        android:padding="@dimen/button_padding"
+        android:text="@string/sign_up"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        android:layout_marginLeft="@dimen/text_input_padding"
+        android:layout_marginRight="@dimen/text_input_padding"
+        />
+
+
+
+
+
+
+
+
 
 
 

@@ -31,6 +31,10 @@
     <string name="share_location">SHARE LOCATION</string>
     <string name="view_volunteers">VIEW VOLUNTEERS</string>
     <string name="select_bus">SELECT BUS</string>
+    <string name="app_title">AUST TRAVELS</string>
+    <string name="bus_jamuna"><b>Bus</b>: Jamuna</string>
+    <string name="time_6_45_am"><b>Time</b>: 6:45 AM</string>
+    <string name="currently_sharing_location">You are currently sharing you location for <b>%s mins</b></string>
 
 
 </resources>

@@ -2,6 +2,7 @@
     <string name="app_name">AustTravels</string>
     <string name="or">OR</string>
     <string name="enter_your_email">Enter your email</string>
+    <string name="enter_your_name">Enter your name</string>
     <string name="enter_your_password">Enter your password</string>
     <string name="sign_in">SIGN IN</string>
     <string name="sign_up_with_email">SIGN UP WITH EMAIL</string>
@@ -17,5 +18,19 @@
     <string name="select_name">Select name</string>
     <string name="select">SELECT</string>
     <string name="ROUTES">ROUTES</string>
+    <string name="sign_up">Sign UP</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="enter_your_institutional_email">Enter your institutional email</string>
+    <string name="select_your_semester">Select your semester</string>
+    <string name="select_your_department">Select your  department</string>
+    <string name="logout">Logout</string>
+    <string name="live_track_bus">LIVE TRACK BUS</string>
+    <string name="view_directions">VIEW DIRECTIONS</string>
+    <string name="view_routes">VIEW ROUTES</string>
+    <string name="contribute">CONTRIBUTE</string>
+    <string name="share_location">SHARE LOCATION</string>
+    <string name="view_volunteers">VIEW VOLUNTEERS</string>
+    <string name="select_bus">SELECT BUS</string>
+
 
 </resources>

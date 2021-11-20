@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "714054307139",
+    "project_id": "aust-travels",
+    "storage_bucket": "aust-travels.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714054307139:android:a4472f2ecfe792009b73f6",
+        "android_client_info": {
+          "package_name": "com.pixieium.austtravels"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714054307139-qd93ng69or950o7fc53qegt7jp39v0n5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBd6jO31c3GChhY0oKSbLzXB5utn4cZzik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714054307139-qd93ng69or950o7fc53qegt7jp39v0n5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

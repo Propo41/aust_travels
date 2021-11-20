@@ -37,6 +37,7 @@
         tools:context=".LiveTrackActivity" />
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView"
         style="@style/CustomCardViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -109,10 +110,10 @@
 
             <TextView
                 android:id="@+id/depart"
+                style="@style/TextBottomSheetDialog"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:foreground="?attr/selectableItemBackground"
-                style="@style/TextBottomSheetDialog"
                 android:paddingStart="20dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="25dp"

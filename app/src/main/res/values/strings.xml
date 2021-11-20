@@ -13,5 +13,9 @@
     <string name="arrival_time"><b>Arrival Time</b>: %s</string>
     <string name="departure_time"><b>Departure Time</b>: %s</string>
     <string name="selected_bus"><b>Selected Bus</b>: %s</string>
+    <string name="select_time">Select time</string>
+    <string name="select_name">Select name</string>
+    <string name="select">SELECT</string>
+    <string name="ROUTES">ROUTES</string>
 
 </resources>

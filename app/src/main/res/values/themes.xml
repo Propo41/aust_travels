@@ -11,7 +11,6 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
 
     </style>
 
@@ -25,6 +24,17 @@
     <!--text input layout-->
     <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="hintTextColor">?attr/colorOnSurface</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.App.Subtitle1</item>
+        <item name="editTextStyle">
+            @style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense
+        </item>
+    </style>
+
+
+    <style name="Widget.App.TextInputLayout.Black" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout.Black</item>
         <item name="boxStrokeWidth">2dp</item>
         <item name="hintTextColor">?attr/colorOnSurface</item>
         <item name="textAppearanceSubtitle1">@style/TextAppearance.App.Subtitle1</item>

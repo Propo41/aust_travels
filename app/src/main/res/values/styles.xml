@@ -4,11 +4,29 @@
     <style name="TextAppearance.AppCompat.Headline" parent="TextAppearance.MaterialComponents.Headline3">
         <item name="fontFamily">@font/saira_semi_bold</item>
         <item name="android:fontFamily">@font/saira_bold</item>
+        <item name="android:textColor">@color/black</item>
+
+    </style>
+
+    <style name="TextBottomSheetDialog">
+        <item name="fontFamily">@font/saira_medium</item>
+        <item name="android:fontFamily">@font/saira_bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="TextAppearance.App.Subtitle1" parent="TextAppearance.MaterialComponents.Body1">
         <item name="fontFamily">@font/saira_semi_bold</item>
         <item name="android:fontFamily">@font/saira_bold</item>
+        <item name="android:textColor">@color/black</item>
+
+    </style>
+
+    <style name="TextAppearance.AppCompat.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/saira_medium</item>
+        <item name="android:fontFamily">@font/saira_medium</item>
+        <item name="android:textColor">@color/black</item>
+
     </style>
 
     <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
@@ -36,5 +54,45 @@
     <style name="ThemeOverlay.App.Button" parent="">
         <item name="colorPrimary">@color/white</item>
         <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+    <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10dp</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Toolbar" parent="">
+        <item name="colorPrimary">@color/green_dark</item>
+        <item name="colorPrimaryVariant">@color/green_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+
+    <style name="TextAppearance.Toolbar.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/saira_medium</item>
+        <item name="android:fontFamily">@font/saira_medium</item>
+    </style>
+
+    <style name="TextAppearance.Toolbar.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/saira_medium</item>
+        <item name="android:fontFamily">@font/saira_medium</item>
+    </style>
+
+    <style name="ModalBottomSheetDialog" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@color/green_vibrant</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Modal.LargeComponent</item>
+        <item name="behavior_draggable">false</item>
+        <item name="behavior_hideable">false</item>
+    </style>
+
+    <style name="ShapeAppearance.Modal.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">24dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay_card_custom_corners" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">10dp</item>
+        <item name="cornerSizeTopLeft">10dp</item>
     </style>
 </resources>

@@ -6,4 +6,12 @@
     <string name="sign_in">SIGN IN</string>
     <string name="sign_up_with_email">SIGN UP WITH EMAIL</string>
     <string name="aust_travels">AUST TRAVELS</string>
+    <string name="directions">DIRECTIONS</string>
+    <string name="title_activity_live_track">LiveTrackActivity</string>
+    <string name="LIVE_TRACKING">LIVE TRACKING</string>
+    <string name="starting_time"><b>Starting Time</b>: %s</string>
+    <string name="arrival_time"><b>Arrival Time</b>: %s</string>
+    <string name="departure_time"><b>Departure Time</b>: %s</string>
+    <string name="selected_bus"><b>Selected Bus</b>: %s</string>
+
 </resources>

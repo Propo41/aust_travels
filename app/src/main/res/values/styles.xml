@@ -115,4 +115,8 @@
         <item name="cornerSizeTopRight">10dp</item>
         <item name="cornerSizeTopLeft">10dp</item>
     </style>
+
+    <style name="RoundedCornersDialog" parent="Theme.MaterialComponents.DayNight.Dialog">
+        <item name="dialogCornerRadius">10dp</item>
+    </style>
 </resources>

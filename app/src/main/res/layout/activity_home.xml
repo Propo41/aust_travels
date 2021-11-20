@@ -38,6 +38,7 @@
         <Button
             android:id="@+id/live_track"
             style="@style/Widget.App.Button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/item_spacing_large"
             android:backgroundTint="@color/yellow"
@@ -54,6 +55,7 @@
         <Button
             android:id="@+id/view_direction"
             style="@style/Widget.App.Button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/yellow"
             android:padding="@dimen/button_padding"
@@ -68,6 +70,7 @@
         <Button
             android:id="@+id/view_routes"
             style="@style/Widget.App.Button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/yellow"
             android:padding="@dimen/button_padding"
@@ -115,6 +118,7 @@
         <Button
             android:id="@+id/share_location"
             style="@style/Widget.App.Button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/orange"
             android:padding="@dimen/button_padding"
@@ -131,6 +135,7 @@
         <Button
             android:id="@+id/view_volunteers"
             style="@style/Widget.App.Button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/green_vibrant"
             android:padding="@dimen/button_padding"
@@ -148,7 +153,7 @@
             android:id="@+id/cardView"
             android:layout_width="0dp"
             android:layout_height="150dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:cardCornerRadius="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -161,7 +166,7 @@
                 <TextView
                     android:id="@+id/sharing_your_location"
                     style="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@color/light_ash"
                     android:padding="10dp"

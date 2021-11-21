@@ -26,7 +26,6 @@ import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityHomeBinding
 import com.pixieium.austtravels.directions.DirectionsActivity
-import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.routes.RoutesActivity
 import kotlinx.coroutines.launch
 
@@ -77,10 +76,11 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
+            Firebase.auth.signOut()
             val intent = Intent(this, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-            // todo logout()
+
             return true
         }
         return false

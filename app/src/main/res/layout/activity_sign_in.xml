@@ -37,6 +37,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
             android:padding="@dimen/text_input_padding" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -49,16 +50,17 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/item_spacing"
         android:hint="@string/enter_your_password"
+        app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email"
         app:startIconDrawable="@drawable/ic_password"
-        app:endIconMode="password_toggle"
         app:startIconTint="@color/green_vibrant">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
             android:padding="@dimen/text_input_padding" />
 
     </com.google.android.material.textfield.TextInputLayout>

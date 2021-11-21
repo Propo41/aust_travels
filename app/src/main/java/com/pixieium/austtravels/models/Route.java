@@ -6,6 +6,9 @@ public class Route {
     private String mapPlaceName;
     private String mapPlaceId;
 
+    public Route() {
+    }
+
     public Route(String place, String estTime, String mapPlaceName, String mapPlaceId) {
         this.place = place;
         this.estTime = estTime;

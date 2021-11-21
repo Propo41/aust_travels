@@ -39,6 +39,7 @@
     <string name="become_a_volunteer">BECOME A VOLUNTEER</string>
     <string name="volunteer_prompt">You will be responsible for sharing your location ONLY when you are on the bus. <b>Do you wish to continue?</b></string>
     <string name="btn_continue">continue</string>
+    <string name="web_client_id">714054307139-qd93ng69or950o7fc53qegt7jp39v0n5.apps.googleusercontent.com</string>
 
 
 </resources>

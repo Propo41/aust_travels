@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
@@ -51,6 +52,11 @@ class RoutesActivity : AppCompatActivity() {
         pushBusRouteInfo("Jamuna", "6:30AM")
         //pushAllBusInfo()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_app_bar, menu)
+        return true
     }
 
     private fun pushBusRouteInfo(busName: String, busTime: String) {
@@ -199,6 +205,7 @@ class RoutesActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
             Firebase.auth.signOut()
+            Toast.makeText(this, "Signing out!", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)

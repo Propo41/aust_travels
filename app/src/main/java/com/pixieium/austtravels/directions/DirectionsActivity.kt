@@ -3,6 +3,7 @@ package com.pixieium.austtravels.directions
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -47,7 +48,14 @@ class DirectionsActivity : AppCompatActivity() {
             }
         }
 
+        setSupportActionBar(binding.toolbar)
         Toast.makeText(this, "$selectedBusName $selectedBusTime", Toast.LENGTH_SHORT).show()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_app_bar, menu)
+        return true
     }
 
     private fun buildMapUrl(routeList: ArrayList<Route>): String? {
@@ -94,7 +102,7 @@ class DirectionsActivity : AppCompatActivity() {
             val intent = Intent(this, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-
+            Toast.makeText(this, "Signing out!", Toast.LENGTH_SHORT).show()
             return true
         } else if (item.itemId == android.R.id.home) {
             finish()

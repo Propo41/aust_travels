@@ -12,8 +12,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
 
 import android.content.Intent
@@ -27,8 +25,6 @@ import android.view.MenuItem
 
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -41,8 +37,10 @@ import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.home.HomeRepository
 import com.pixieium.austtravels.models.BusInfo
 import android.text.format.DateUtils
+import android.view.Menu
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.maps.model.*
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.launch
 import java.util.*
@@ -58,6 +56,8 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
     private val mDatabase: LiveTrackRepository = LiveTrackRepository()
     private lateinit var mSelectedBusName: String
     private lateinit var mSelectedBusTime: String
+
+    private var mBusMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,15 +78,21 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding.sec.text = getString(R.string.selected_bus, mSelectedBusName)
         binding.start.text = getString(R.string.starting_time, mSelectedBusTime)
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_app_bar, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
+            Toast.makeText(this, "Signing out!", Toast.LENGTH_SHORT).show()
             Firebase.auth.signOut()
             val intent = Intent(this, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-
             return true
         } else if (item.itemId == android.R.id.home) {
             finish()
@@ -260,10 +266,15 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun moveToCurrentLocation(currentLocation: LatLng) {
         val markerOptions = MarkerOptions().position(currentLocation)
-            .title("Marker in Sydney")
-            .snippet("snippet snippet snippet snippet snippet...")
+            .title(mSelectedBusName)
+            .snippet("Start time: $mSelectedBusTime")
             .icon(bitmapDescriptorFromVector(this, R.drawable.ic_bus))
-        mMap.addMarker(markerOptions)
+
+        if (mBusMarker != null) {
+            mBusMarker!!.remove()
+        }
+        mBusMarker = mMap.addMarker(markerOptions)
+
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
         mMap.animateCamera(CameraUpdateFactory.zoomIn());
         // Zoom out to zoom level 10, animating with a duration of 2 seconds.

@@ -29,6 +29,9 @@ import com.pixieium.austtravels.directions.DirectionsActivity
 import com.pixieium.austtravels.routes.RoutesActivity
 import kotlinx.coroutines.launch
 
+import android.view.Menu
+
+
 /* stop watch: https://stackoverflow.com/questions/3733867/stop-watch-logic*/
 
 class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
@@ -50,8 +53,12 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         mUid = Firebase.auth.currentUser?.uid.toString()
+        setSupportActionBar(binding.topAppBar)
+    }
 
-
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_app_bar, menu)
+        return true
     }
 
     /*todo: incomplete*/
@@ -76,14 +83,14 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
+            Toast.makeText(this, "Signing out!", Toast.LENGTH_SHORT).show()
             Firebase.auth.signOut()
             val intent = Intent(this, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-
             return true
         }
-        return false
+        return super.onOptionsItemSelected(item)
     }
 
     private fun startLocationSharing() {

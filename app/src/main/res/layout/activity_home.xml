@@ -150,7 +150,6 @@
             app:iconPadding="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-
             app:layout_constraintTop_toBottomOf="@+id/cardView"
             app:startIconTint="@color/white" />
 

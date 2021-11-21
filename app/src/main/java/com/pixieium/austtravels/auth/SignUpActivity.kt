@@ -35,13 +35,12 @@ class SignUpActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val semesters: ArrayList<String> = mDatabase.getSemesterInfo()
-            val departments: ArrayList<String> = mDatabase.getSemesterInfo()
+            val departments: ArrayList<String> = mDatabase.getDeptInfo()
 
             initSpinnerSemester(semesters)
             initSpinnerDepartment(departments)
         }
 
-        FirebaseDatabase.getInstance().getReference("Demo").child("data").setValue("value")
         mBinding.signup.setOnClickListener { createNewUser() }
     }
 

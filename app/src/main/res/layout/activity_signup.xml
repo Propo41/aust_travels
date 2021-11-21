@@ -1,169 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".auth.SignUpActivity">
+    tools:layout_editor_absoluteX="1dp"
+    android:scrollbars="none"
+    tools:layout_editor_absoluteY="1dp">
 
-
-    <TextView
-        android:id="@+id/signup_txt"
-        style="@style/TextAppearance.AppCompat.Title"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/green_dark"
-        android:paddingTop="30dp"
-        android:paddingBottom="30dp"
-        android:text="@string/sign_up"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/name"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/item_spacing_large"
-        android:hint="@string/enter_your_name"
-        android:paddingLeft="@dimen/text_input_padding"
-        android:paddingRight="@dimen/text_input_padding"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup_txt"
-        app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
-        app:startIconTint="@color/black">
-
-        <com.google.android.material.textfield.TextInputEditText
+        <TextView
+            android:id="@+id/signup_txt"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/text_input_padding"
-            android:textAppearance="@style/TextAppearance.App.Subtitle1"
-            android:textColor="@color/black" />
+            android:background="@color/green_dark"
+            android:paddingTop="30dp"
+            android:paddingBottom="30dp"
+            android:text="@string/sign_up"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/edu_mail"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/item_spacing"
-        android:hint="@string/enter_your_institutional_email"
-        android:paddingLeft="@dimen/text_input_padding"
-        android:paddingRight="@dimen/text_input_padding"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name"
-        app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
-        app:startIconTint="@color/black">
-
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/name"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/text_input_padding"
-            android:textAppearance="@style/TextAppearance.App.Subtitle1"
-            android:textColor="@color/black" />
+            android:layout_marginTop="@dimen/item_spacing"
+            android:hint="@string/enter_your_name"
+            android:paddingLeft="@dimen/text_input_padding"
+            android:paddingRight="@dimen/text_input_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/password"
+            app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+            app:startIconTint="@color/black">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/text_input_padding"
+                android:textAppearance="@style/TextAppearance.App.Subtitle1"
+                android:textColor="@color/black" />
 
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/semester"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/item_spacing"
-        android:hint="@string/select_your_semester"
-        android:paddingLeft="@dimen/text_input_padding"
-        android:paddingRight="@dimen/text_input_padding"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edu_mail"
-        app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
-        app:startIconTint="@color/black">
-
-        <AutoCompleteTextView
-            android:id="@+id/semester_dropdown"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/university_id"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:padding="@dimen/text_input_padding"
-            android:textAppearance="@style/TextAppearance.App.Subtitle1"
-            android:textColor="@color/black" />
+            android:layout_marginTop="@dimen/item_spacing"
+            android:hint="@string/enter_your_university_id"
+            android:paddingLeft="@dimen/text_input_padding"
+            android:paddingRight="@dimen/text_input_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+            app:startIconTint="@color/black">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/text_input_padding"
+                android:textAppearance="@style/TextAppearance.App.Subtitle1"
+                android:textColor="@color/black" />
 
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/department"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/item_spacing"
-        android:hint="@string/select_your_department"
-        android:paddingLeft="@dimen/text_input_padding"
-        android:paddingRight="@dimen/text_input_padding"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/semester"
-        app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
-        app:startIconTint="@color/black">
-
-        <AutoCompleteTextView
-            android:id="@+id/department_dropdown"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edu_mail"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:padding="@dimen/text_input_padding"
-            android:textAppearance="@style/TextAppearance.App.Subtitle1"
-            android:textColor="@color/black" />
+            android:hint="@string/enter_your_institutional_email"
+            android:paddingLeft="@dimen/text_input_padding"
+            android:paddingRight="@dimen/text_input_padding"
+            android:layout_marginTop="@dimen/item_spacing"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/signup_txt"
+            app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+            app:startIconTint="@color/black">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/text_input_padding"
+                android:textAppearance="@style/TextAppearance.App.Subtitle1"
+                android:textColor="@color/black" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/item_spacing"
-        android:hint="@string/enter_your_password"
-        android:paddingLeft="@dimen/text_input_padding"
-        android:paddingRight="@dimen/text_input_padding"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/department"
-        app:startIconDrawable="@drawable/ic_password"
-        app:startIconTint="@color/black"
-        app:endIconMode="password_toggle"
-        >
-
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/semester"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/text_input_padding"
-            android:textAppearance="@style/TextAppearance.App.Subtitle1"
-            android:textColor="@color/black" />
+            android:layout_marginTop="@dimen/item_spacing"
+            android:hint="@string/select_your_semester"
+            android:paddingLeft="@dimen/text_input_padding"
+            android:paddingRight="@dimen/text_input_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/university_id"
+            app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+            app:startIconTint="@color/black">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <AutoCompleteTextView
+                android:id="@+id/semester_dropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:padding="@dimen/text_input_padding"
+                android:textAppearance="@style/TextAppearance.App.Subtitle1"
+                android:textColor="@color/black" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-    <Button
-        android:id="@+id/signup"
-        style="@style/Widget.App.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/text_input_padding"
-        android:layout_marginTop="@dimen/item_spacing"
-        android:layout_marginRight="@dimen/text_input_padding"
-        android:backgroundTint="@color/yellow_light"
-        android:padding="@dimen/button_padding"
-        android:text="@string/sign_up"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/department"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_spacing"
+            android:hint="@string/select_your_department"
+            android:paddingLeft="@dimen/text_input_padding"
+            android:paddingRight="@dimen/text_input_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/semester"
+            app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+            app:startIconTint="@color/black">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <AutoCompleteTextView
+                android:id="@+id/department_dropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:padding="@dimen/text_input_padding"
+                android:textAppearance="@style/TextAppearance.App.Subtitle1"
+                android:textColor="@color/black" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_spacing"
+            android:hint="@string/enter_your_password"
+            android:paddingLeft="@dimen/text_input_padding"
+            android:paddingRight="@dimen/text_input_padding"
+            app:endIconMode="password_toggle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edu_mail"
+            app:startIconDrawable="@drawable/ic_password"
+            app:startIconTint="@color/black">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/text_input_padding"
+                android:textAppearance="@style/TextAppearance.App.Subtitle1"
+                android:textColor="@color/black" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <Button
+            android:id="@+id/signup"
+            style="@style/Widget.App.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_spacing"
+            android:backgroundTint="@color/yellow_light"
+            android:padding="@dimen/button_padding"
+            android:layout_marginLeft="@dimen/text_input_padding"
+            android:layout_marginRight="@dimen/text_input_padding"
+            android:text="@string/sign_up"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/department" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

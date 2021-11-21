@@ -70,6 +70,9 @@ public class SignInActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
             startActivity(intent);
         }
+        else {
+
+        }
     }
 
     private void CreateUserbyGmail(){
@@ -102,6 +105,7 @@ public class SignInActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
+                Log.d("googlsignin",e.toString());
                 Toast.makeText(getApplicationContext(),"There was an error",Toast.LENGTH_SHORT).show();
 
             }
@@ -130,6 +134,10 @@ public class SignInActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void loginUserbyEmail(){
+
     }
 
 }

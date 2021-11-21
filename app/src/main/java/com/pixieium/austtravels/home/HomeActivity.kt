@@ -18,6 +18,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.livetrack.LiveTrackActivity
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
@@ -42,6 +45,8 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
     }
 
     /*todo: incomplete*/
@@ -66,10 +71,11 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
+            Firebase.auth.signOut()
             val intent = Intent(this, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-            // todo logout()
+
             return true
         }
         return false

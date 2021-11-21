@@ -28,6 +28,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 
@@ -60,10 +62,11 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
+            Firebase.auth.signOut()
             val intent = Intent(this, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-            // todo logout()
+
             return true
         } else if (item.itemId == android.R.id.home) {
             finish()

@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AustTravels">
         <activity
+            android:name=".volunteers.VolunteersActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -36,7 +39,6 @@
             android:name=".livetrack.LiveTrackActivity"
             android:exported="true"
             android:label="@string/title_activity_live_track" />
-
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

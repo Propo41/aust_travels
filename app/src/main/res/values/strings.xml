@@ -7,6 +7,17 @@
     <string name="sign_in">SIGN IN</string>
     <string name="sign_up_with_email">SIGN UP WITH EMAIL</string>
     <string name="aust_travels">AUST TRAVELS</string>
+    <string name="directions">DIRECTIONS</string>
+    <string name="title_activity_live_track">LiveTrackActivity</string>
+    <string name="LIVE_TRACKING">LIVE TRACKING</string>
+    <string name="starting_time"><b>Starting Time</b>: %s</string>
+    <string name="arrival_time"><b>Arrival Time</b>: %s</string>
+    <string name="departure_time"><b>Departure Time</b>: %s</string>
+    <string name="selected_bus"><b>Selected Bus</b>: %s</string>
+    <string name="select_time">Select time</string>
+    <string name="select_name">Select name</string>
+    <string name="select">SELECT</string>
+    <string name="ROUTES">ROUTES</string>
     <string name="sign_up">Sign UP</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="enter_your_institutional_email">Enter your institutional email</string>
@@ -20,9 +31,11 @@
     <string name="share_location">SHARE LOCATION</string>
     <string name="view_volunteers">VIEW VOLUNTEERS</string>
     <string name="select_bus">SELECT BUS</string>
-    <string name="select_time">Select Time</string>
-    <string name="select_name">Select Name</string>
-    <string name="select">SELECT</string>
+    <string name="app_title">AUST TRAVELS</string>
+    <string name="bus_jamuna"><b>Bus</b>: %s</string>
+    <string name="time_6_45_am"><b>Time</b>: %s</string>
+    <string name="currently_sharing_location"><b>You are currently sharing you location</b></string>
+    <string name="stop_sharing_location">STOP SHARING LOCATION</string>
 
 
 </resources>

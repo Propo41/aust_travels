@@ -36,6 +36,9 @@
     <string name="time_6_45_am"><b>Time</b>: %s</string>
     <string name="currently_sharing_location"><b>You are currently sharing you location</b></string>
     <string name="stop_sharing_location">STOP SHARING LOCATION</string>
+    <string name="become_a_volunteer">BECOME A VOLUNTEER</string>
+    <string name="volunteer_prompt">You will be responsible for sharing your location ONLY when you are on the bus. <b>Do you wish to continue?</b></string>
+    <string name="btn_continue">continue</string>
 
 
 </resources>

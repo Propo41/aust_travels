@@ -1,4 +1,4 @@
-package com.pixieium.austtravels.dialog
+package com.pixieium.austtravels.home
 
 import android.content.Context
 import android.os.Bundle
@@ -12,21 +12,29 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.databinding.DialogSelectBusBinding
+import java.lang.RuntimeException
 
 class SelectBusDialog : DialogFragment() {
 
     private lateinit var mContext: Context
     private lateinit var mBinding: DialogSelectBusBinding
+    private var listener: FragmentListener? = null
 
     companion object {
-        const val TAG = "PremiumDialogFragment"
-        private lateinit var mUid: String
+        const val TAG = "SelectBusDialogFragment"
+        private var REQUESTER: Int = 0
 
-        fun newInstance(uid: String): SelectBusDialog {
-            mUid = uid
+        fun newInstance(requester: Int): SelectBusDialog {
+            REQUESTER = requester
             return SelectBusDialog()
         }
     }
+
+
+    interface FragmentListener {
+        fun onBusSelectClick(selectedBusName: String, selectedBusTime: String, requestCode: Int)
+    }
+
 
     /**
      * The onCreateView() method is responsible for creating the Dialog Fragment.
@@ -37,12 +45,17 @@ class SelectBusDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = DialogSelectBusBinding.inflate(layoutInflater)
+        mContext = mBinding.root.context
         initSpinnerName()
         initSpinnerTime()
-        mContext = mBinding.root.context
         mBinding.selectBtn.setOnClickListener {
-            Toast.makeText(context, "bus selected!", Toast.LENGTH_SHORT).show()
+            val selectedBusName = mBinding.selectName.editText?.text.toString()
+            val selectedBusTime = mBinding.selectTime.editText?.text.toString()
 
+            Toast.makeText(context, "$selectedBusName is selected!", Toast.LENGTH_SHORT).show()
+
+            listener?.onBusSelectClick(selectedBusName, selectedBusTime, REQUESTER)
+            dismiss()
         }
         return mBinding.root
     }
@@ -65,6 +78,20 @@ class SelectBusDialog : DialogFragment() {
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        listener = if (context is FragmentListener) {
+            context
+        } else {
+            throw RuntimeException(context.toString())
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
     }
 
     override fun getTheme() = R.style.RoundedCornersDialog

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".home.HomeActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -43,6 +43,7 @@
             android:layout_marginTop="@dimen/item_spacing_large"
             android:backgroundTint="@color/yellow"
             android:padding="@dimen/button_padding"
+            android:onClick="onLiveTrackBusClick"
             android:text="@string/live_track_bus"
             app:icon="@drawable/ic_password"
             app:iconGravity="textStart"
@@ -58,6 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/yellow"
+            android:onClick="onViewDirectionsClick"
             android:padding="@dimen/button_padding"
             android:text="@string/view_directions"
             app:icon="@drawable/ic_password"
@@ -73,6 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/yellow"
+            android:onClick="onViewRoutesClick"
             android:padding="@dimen/button_padding"
             android:text="@string/view_routes"
             app:icon="@drawable/ic_password"
@@ -121,6 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/orange"
+            android:onClick="onShareLocationClick"
             android:padding="@dimen/button_padding"
             android:text="@string/share_location"
             android:textColor="@color/white"
@@ -138,6 +142,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/green_vibrant"
+            android:onClick="onViewVolunteersClick"
             android:padding="@dimen/button_padding"
             android:text="@string/view_volunteers"
             app:icon="@drawable/ic_password"

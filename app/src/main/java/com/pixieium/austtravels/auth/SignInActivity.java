@@ -1,24 +1,21 @@
-package com.pixieium.austtravels;
+package com.pixieium.austtravels.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.media.audiofx.DynamicsProcessing;
 import android.os.Bundle;
 import android.view.View;
+import com.pixieium.austtravels.databinding.ActivitySignInBinding;
+import com.pixieium.austtravels.home.HomeActivity;
 
-import com.pixieium.austtravels.databinding.ActivityHomeBinding;
-import com.pixieium.austtravels.databinding.ActivityMainBinding;
+public class SignInActivity extends AppCompatActivity {
 
-public class MainActivity extends AppCompatActivity {
-
-    private ActivityMainBinding mBinding;
+    private ActivitySignInBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        mBinding = ActivitySignInBinding.inflate(getLayoutInflater());
         View view = mBinding.getRoot();
         setContentView(view);
 

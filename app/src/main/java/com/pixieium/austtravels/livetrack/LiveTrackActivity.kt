@@ -1,4 +1,4 @@
-package com.pixieium.austtravels
+package com.pixieium.austtravels.livetrack
 
 import android.Manifest
 import android.content.Context
@@ -22,13 +22,16 @@ import android.graphics.Canvas
 
 import android.provider.Settings
 import android.net.Uri
+import android.view.MenuItem
 
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.pixieium.austtravels.R
+import com.pixieium.austtravels.auth.SignInActivity
 
-// watch this for setting location permissio at run time: https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime
+// watch this for setting location permission at run time: https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime
 class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
@@ -39,6 +42,12 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding = ActivityLiveTrackBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        val selectedBusName = intent.getStringExtra("SELECTED_BUS_NAME")
+        val selectedBusTime = intent.getStringExtra("SELECTED_BUS_TIME")
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -49,6 +58,19 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.logout) {
+            val intent = Intent(this, SignInActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+            // todo logout()
+            return true
+        } else if (item.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+        return false
+    }
 
     /**
      * Manipulates the map once available.

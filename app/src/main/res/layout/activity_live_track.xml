@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DirectionsActivity">
+    tools:context=".directions.DirectionsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -22,7 +22,6 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:menu="@menu/options_menu"
-            app:navigationIcon="@drawable/ic_back"
             app:popupTheme="@style/Theme.AustTravels.PopupOverlay"
             app:title="@string/LIVE_TRACKING" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -34,7 +33,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
-        tools:context=".LiveTrackActivity" />
+        tools:context=".livetrack.LiveTrackActivity" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"

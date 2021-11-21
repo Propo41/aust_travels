@@ -1,8 +1,10 @@
-package com.pixieium.austtravels;
+package com.pixieium.austtravels.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.pixieium.austtravels.R;
 
 public class SignUpActivity extends AppCompatActivity {
 

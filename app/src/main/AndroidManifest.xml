@@ -25,18 +25,12 @@
         </activity>
         <activity
             android:name=".routes.RoutesActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="true" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".livetrack.LiveTrackActivity"
             android:exported="true"
             android:label="@string/title_activity_live_track" />
-
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -53,13 +47,8 @@
             android:exported="false" />
         <activity
             android:name=".auth.SignInActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="true" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

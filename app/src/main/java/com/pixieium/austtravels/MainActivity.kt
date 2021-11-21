@@ -9,16 +9,15 @@ import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.home.HomeActivity
 
 class MainActivity : AppCompatActivity() {
-    val  mAuth =FirebaseAuth.getInstance();
+    private val mAuth = FirebaseAuth.getInstance();
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
 
-
     override fun onStart() {
         super.onStart()
-        val user: FirebaseUser = mAuth.getCurrentUser()
+        val user: FirebaseUser? = mAuth.currentUser
         if (user != null) {
             val intent = Intent(this@MainActivity, HomeActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

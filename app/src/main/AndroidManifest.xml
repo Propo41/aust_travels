@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pixieium.austtravels">
 
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the "MyLocation" functionality.
+    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,6 +19,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AustTravels">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <activity
             android:name=".volunteers.VolunteersActivity"
             android:exported="false" />
@@ -29,34 +39,24 @@
         <activity
             android:name=".routes.RoutesActivity"
             android:exported="true" />
-
         <activity
             android:name=".livetrack.LiveTrackActivity"
             android:exported="true"
             android:label="@string/title_activity_live_track" />
-
         <activity
             android:name=".auth.SignUpActivity"
             android:exported="true"
             android:label="@string/title_activity_live_track" />
-
         <activity
             android:name=".auth.SignInActivity"
             android:exported="true"
             android:label="@string/title_activity_live_track" />
-
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
         <activity
             android:name=".directions.DirectionsActivity"
             android:exported="false" />
         <activity
             android:name=".home.HomeActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>

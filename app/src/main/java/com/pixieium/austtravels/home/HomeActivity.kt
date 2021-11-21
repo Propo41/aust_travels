@@ -54,6 +54,9 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         setContentView(binding.root)
         mUid = Firebase.auth.currentUser?.uid.toString()
         setSupportActionBar(binding.topAppBar)
+
+        binding.loggedInAs.text =
+            getString(R.string.logged_in_as_s, Firebase.auth.currentUser?.email)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

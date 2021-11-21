@@ -44,7 +44,7 @@
             android:enabled="false"
             android:paddingBottom="@dimen/window_margin"
             app:layout_constraintTop_toBottomOf="@+id/select_name"
-            app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+            app:startIconDrawable="@drawable/ic_time"
             app:startIconTint="@color/black">
 
             <AutoCompleteTextView
@@ -69,7 +69,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+            app:startIconDrawable="@drawable/ic_bus"
             app:startIconTint="@color/black">
 
             <AutoCompleteTextView

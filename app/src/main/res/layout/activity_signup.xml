@@ -65,7 +65,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name"
-            app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+            app:startIconDrawable="@drawable/ic_roll"
             app:startIconTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -89,7 +89,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signup_txt"
-            app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+            app:startIconDrawable="@drawable/ic_email"
             app:startIconTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -115,7 +115,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/university_id"
-            app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+            app:startIconDrawable="@drawable/ic_semester"
             app:startIconTint="@color/black">
 
             <AutoCompleteTextView
@@ -142,7 +142,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/semester"
-            app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
+            app:startIconDrawable="@drawable/ic_department"
             app:startIconTint="@color/black">
 
             <AutoCompleteTextView

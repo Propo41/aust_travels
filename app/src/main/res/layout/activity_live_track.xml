@@ -93,7 +93,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/arr"
+                android:id="@+id/last_updated"
                 style="@style/TextBottomSheetDialog"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -101,8 +101,9 @@
                 android:paddingStart="20dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="25dp"
-                android:paddingBottom="5dp"
-                android:text="@string/arrival_time"
+                android:paddingBottom="15dp"
+                android:visibility="visible"
+                android:text="@string/last_updated"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/start" />
@@ -116,11 +117,12 @@
                 android:paddingStart="20dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="25dp"
+                android:visibility="gone"
                 android:paddingBottom="15dp"
                 android:text="@string/departure_time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/arr" />
+                app:layout_constraintTop_toBottomOf="@+id/last_updated" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

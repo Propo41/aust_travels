@@ -1,21 +1,25 @@
 package com.pixieium.austtravels.directions
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.webkit.WebView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityDirectionsBinding
-import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
+import com.pixieium.austtravels.models.Route
+import kotlinx.coroutines.launch
 
 class DirectionsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDirectionsBinding
+    private val mDatabase: DirectionsRepository = DirectionsRepository()
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDirectionsBinding.inflate(layoutInflater)
@@ -27,15 +31,62 @@ class DirectionsActivity : AppCompatActivity() {
         val selectedBusName = intent.getStringExtra("SELECTED_BUS_NAME")
         val selectedBusTime = intent.getStringExtra("SELECTED_BUS_TIME")
 
-        Toast.makeText(this, "$selectedBusName $selectedBusTime", Toast.LENGTH_SHORT).show()
-
-        // todo: get the routes list from firebase for the selected bus
-
-        val mWebView = findViewById<WebView>(R.id.web_view)
-        val webSettings = mWebView.settings
+        val webSettings = binding.webView.settings
         webSettings.javaScriptEnabled = true
-        mWebView.loadUrl("https://www.google.com/maps/dir/?api=1&origin=Paris%2CFrance&destination=Cherbourg%2CFrance&travelmode=driving&waypoints=Versailles%2CFrance%7CCaen%2CFrance%7CLe+Mans%2CFrance%7CChartres%2CFrance")
+
+        lifecycleScope.launch {
+            if (selectedBusName != null && selectedBusTime != null) {
+                val routeList: ArrayList<Route> =
+                    mDatabase.getBusRouteInfo(selectedBusName, selectedBusTime)
+
+                val mapUrl: String? = buildMapUrl(routeList)
+                if (mapUrl != null) {
+                    println(mapUrl)
+                    binding.webView.loadUrl(mapUrl)
+                }
+            }
+        }
+
+        Toast.makeText(this, "$selectedBusName $selectedBusTime", Toast.LENGTH_SHORT).show()
     }
+
+    private fun buildMapUrl(routeList: ArrayList<Route>): String? {
+        if (routeList.isNotEmpty()) {
+            var wayPoints = ""
+            var placeIds = ""
+            for ((i, item: Route) in routeList.withIndex()) {
+                wayPoints += encodeEmptySpaces(item.mapPlaceName)
+                placeIds += item.mapPlaceId
+                if (i != routeList.size - 1) {
+                    wayPoints += "%7C"
+                    placeIds += "%7C"
+                }
+            }
+
+            val travelMode = "driving"
+            return "https://www.google.com/maps/dir/?api=1&" +
+                    "origin=${encodeEmptySpaces(routeList[0].mapPlaceName)}&" +
+                    "destination=${encodeEmptySpaces(routeList[routeList.size - 1].mapPlaceName)}&" +
+                    "travelmode=$travelMode&" +
+                    "waypoints=$wayPoints&" +
+                    "waypoint_place_ids=$placeIds"
+        }
+        return null
+    }
+
+    private fun encodeEmptySpaces(str: String): String {
+        var newStr: String = ""
+        for (ch: Char in str) {
+            if (ch == ' ') {
+                newStr += "%2C"
+            } else {
+                newStr += ch
+            }
+        }
+        return newStr
+
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {

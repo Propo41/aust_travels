@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/green_dark"
@@ -15,6 +16,7 @@
         android:text="@string/select_bus"
         android:textAlignment="center"
         android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -37,17 +39,18 @@
             android:layout_height="wrap_content"
             android:hint="@string/select_time"
             android:paddingLeft="@dimen/window_margin"
-            android:paddingTop="@dimen/text_input_padding"
+            android:paddingTop="@dimen/item_spacing_small"
             android:paddingRight="@dimen/window_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:enabled="false"
+            android:paddingBottom="@dimen/window_margin"
+            app:layout_constraintTop_toBottomOf="@+id/select_name"
             app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
             app:startIconTint="@color/black">
 
             <AutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="none"
                 android:padding="@dimen/text_input_padding"
                 android:textAppearance="@style/TextAppearance.App.Subtitle1.Light"
                 android:textColor="@color/black" />
@@ -59,21 +62,20 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/item_spacing"
             android:hint="@string/select_name"
             android:paddingLeft="@dimen/window_margin"
+            android:paddingTop="@dimen/window_margin"
             android:paddingRight="@dimen/window_margin"
-            android:paddingBottom="@dimen/text_input_padding"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/select_time"
+            app:layout_constraintTop_toTopOf="parent"
             app:startIconDrawable="@drawable/ic_baseline_account_circle_24"
             app:startIconTint="@color/black">
 
             <AutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="none"
                 android:padding="@dimen/text_input_padding"
                 android:textAppearance="@style/TextAppearance.App.Subtitle1.Light"
                 android:textColor="@color/black" />

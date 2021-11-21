@@ -5,15 +5,19 @@ public class Route {
     private String estTime;
     private String mapPlaceName;
     private String mapPlaceId;
+    private String latitude;
+    private String longitude;
 
     public Route() {
     }
 
-    public Route(String place, String estTime, String mapPlaceName, String mapPlaceId) {
+    public Route(String place, String estTime, String mapPlaceName, String mapPlaceId, String latitude, String longitude) {
         this.place = place;
         this.estTime = estTime;
         this.mapPlaceName = mapPlaceName;
         this.mapPlaceId = mapPlaceId;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getPlace() {
@@ -46,5 +50,21 @@ public class Route {
 
     public void setMapPlaceId(String mapPlaceId) {
         this.mapPlaceId = mapPlaceId;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

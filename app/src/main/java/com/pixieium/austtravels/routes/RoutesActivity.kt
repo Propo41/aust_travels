@@ -20,6 +20,8 @@ import com.pixieium.austtravels.databinding.ActivityRoutesBinding
 import com.pixieium.austtravels.models.BusInfo
 import androidx.lifecycle.lifecycleScope
 import com.pixieium.austtravels.models.BusTiming
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 class RoutesActivity : AppCompatActivity() {
@@ -196,10 +198,11 @@ class RoutesActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
+            Firebase.auth.signOut()
             val intent = Intent(this, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-            // todo logout()
+
             return true
         } else if (item.itemId == android.R.id.home) {
             finish()

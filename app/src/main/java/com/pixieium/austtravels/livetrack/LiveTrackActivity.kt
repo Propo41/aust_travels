@@ -34,6 +34,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.ktx.auth
+
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.home.HomeRepository
@@ -80,10 +82,11 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
+            Firebase.auth.signOut()
             val intent = Intent(this, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-            // todo logout()
+
             return true
         } else if (item.itemId == android.R.id.home) {
             finish()
@@ -203,6 +206,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             MY_PERMISSIONS_REQUEST_LOCATION
         )
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

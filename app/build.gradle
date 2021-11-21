@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
     id 'kotlin-android'
 }
 
@@ -7,6 +8,7 @@ android {
     compileSdk 31
 
     defaultConfig {
+
         applicationId "com.pixieium.austtravels"
         minSdk 23
         targetSdk 31
@@ -16,9 +18,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildFeatures {
-        viewBinding true
-    }
+
 
     buildTypes {
         release {
@@ -29,6 +29,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        viewBinding true
     }
 }
 
@@ -43,4 +46,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'androidx.core:core-ktx:1.7.0'
 
+    implementation platform('com.google.firebase:firebase-bom:29.0.0')
+    implementation 'com.google.firebase:firebase-analytics'
 }

@@ -19,7 +19,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.livetrack.LiveTrackActivity
@@ -27,9 +26,11 @@ import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityHomeBinding
 import com.pixieium.austtravels.directions.DirectionsActivity
-import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.routes.RoutesActivity
 import kotlinx.coroutines.launch
+
+import android.view.Menu
+
 
 /* stop watch: https://stackoverflow.com/questions/3733867/stop-watch-logic*/
 
@@ -42,15 +43,22 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     private val REQUEST_LIVE_TRACK = 0
     private val REQUEST_DIRECTIONS = 1
     private val REQUEST_SHARE_LOCATION = 2
-    private val uid = "123eqasdasd" // dummy
 
     private lateinit var mSelectedBusName: String
     private lateinit var mSelectedBusTime: String
+    private lateinit var mUid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        mUid = Firebase.auth.currentUser?.uid.toString()
+        setSupportActionBar(binding.topAppBar)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_app_bar, menu)
+        return true
     }
 
     /*todo: incomplete*/
@@ -75,14 +83,14 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
+            Toast.makeText(this, "Signing out!", Toast.LENGTH_SHORT).show()
             Firebase.auth.signOut()
             val intent = Intent(this, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-
             return true
         }
-        return false
+        return super.onOptionsItemSelected(item)
     }
 
     private fun startLocationSharing() {
@@ -112,7 +120,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
 
         val location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         if (location != null) {
-            mDatabase.updateLocation(uid, mSelectedBusName, mSelectedBusTime, location)
+            mDatabase.updateLocation(mUid, mSelectedBusName, mSelectedBusTime, location)
         }
 
         myLocationListener = MyLocationListener()
@@ -128,7 +136,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
 
     private inner class MyLocationListener : LocationListener {
         override fun onLocationChanged(location: Location) {
-            mDatabase.updateLocation(uid, mSelectedBusName, mSelectedBusTime, location)
+            mDatabase.updateLocation(mUid, mSelectedBusName, mSelectedBusTime, location)
             Toast.makeText(
                 this@HomeActivity, "Location changed!",
                 Toast.LENGTH_SHORT
@@ -165,7 +173,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     /*volunteer select dialog*/
     override fun onVolunteerApprovalClick() {
         lifecycleScope.launch {
-            if (mDatabase.createVolunteer(uid)) {
+            if (mDatabase.createVolunteer(mUid)) {
                 Toast.makeText(
                     this@HomeActivity,
                     "You are now a volunteer! Start sharing your location!",
@@ -326,7 +334,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     fun onShareLocationClick(view: View) {
         if (!isLocationSharing) {
             lifecycleScope.launch {
-                val isVolunteer = mDatabase.isVolunteer(uid)
+                val isVolunteer = mDatabase.isVolunteer(mUid)
                 // if user is a volunteer
                 if (isVolunteer) {
                     // open dialog to select bus
@@ -334,7 +342,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
                         .show(supportFragmentManager, SelectBusDialog.TAG)
                 } else {
                     // open dialog to prompt user to become a volunteer
-                    PromptVolunteerDialog.newInstance("uid")
+                    PromptVolunteerDialog.newInstance()
                         .show(supportFragmentManager, PromptVolunteerDialog.TAG)
                 }
             }

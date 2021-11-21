@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:menu="@menu/options_menu"
+            app:menu="@menu/top_app_bar"
             app:popupTheme="@style/Theme.AustTravels.PopupOverlay"
             app:title="@string/LIVE_TRACKING" />
     </com.google.android.material.appbar.AppBarLayout>

@@ -21,10 +21,7 @@ class PromptVolunteerDialog : DialogFragment() {
 
     companion object {
         const val TAG = "PromptVolunteerDialogFragment"
-        private lateinit var mUid: String
-
-        fun newInstance(uid: String): PromptVolunteerDialog {
-            mUid = uid
+        fun newInstance(): PromptVolunteerDialog {
             return PromptVolunteerDialog()
         }
     }

@@ -1,29 +1,29 @@
 package com.pixieium.austtravels.models;
 
-public class User {
-    private String userId;
+public class UserInfo {
+    private String email;
     private String name;
     private String semester;
     private String department;
-    private String email;
+    private String universityId;
 
-    public User() {
+    public UserInfo() {
     }
 
-    public User(String userId, String name, String semester, String department, String email) {
-        this.userId = userId;
+    public UserInfo(String email, String name, String semester, String department, String universityId) {
+        this.email = email;
         this.name = name;
         this.semester = semester;
         this.department = department;
+        this.universityId = universityId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getName() {
@@ -50,11 +50,11 @@ public class User {
         this.department = department;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUniversityId() {
+        return universityId;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUniversityId(String universityId) {
+        this.universityId = universityId;
     }
 }

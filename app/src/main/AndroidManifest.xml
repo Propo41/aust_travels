@@ -35,6 +35,17 @@
             android:exported="true"
             android:label="@string/title_activity_live_track" />
 
+        <activity
+            android:name=".auth.SignUpActivity"
+            android:exported="true"
+            android:label="@string/title_activity_live_track" />
+
+        <activity
+            android:name=".auth.SignInActivity"
+            android:exported="true"
+            android:label="@string/title_activity_live_track" />
+
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -43,14 +54,8 @@
             android:name=".directions.DirectionsActivity"
             android:exported="false" />
         <activity
-            android:name=".auth.SignUpActivity"
-            android:exported="false" />
-        <activity
             android:name=".home.HomeActivity"
             android:exported="false" />
-        <activity
-            android:name=".auth.SignInActivity"
-            android:exported="true" />
 
     </application>
 

@@ -11,11 +11,11 @@
     <string name="title_activity_live_track">LiveTrackActivity</string>
     <string name="LIVE_TRACKING">LIVE TRACKING</string>
     <string name="starting_time"><b>Starting Time</b>: %s</string>
-    <string name="arrival_time"><b>Arrival Time</b>: %s</string>
+    <string name="last_updated"><b>Last Updated</b>: %s</string>
     <string name="departure_time"><b>Departure Time</b>: %s</string>
     <string name="selected_bus"><b>Selected Bus</b>: %s</string>
-    <string name="select_time">Select time</string>
-    <string name="select_name">Select name</string>
+    <string name="select_time">Select start time</string>
+    <string name="select_name">Select bus name</string>
     <string name="select">SELECT</string>
     <string name="ROUTES">ROUTES</string>
     <string name="sign_up">Sign UP</string>

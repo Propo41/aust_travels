@@ -2,6 +2,8 @@ package com.pixieium.austtravels.home
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +12,12 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.databinding.DialogSelectBusBinding
+import com.pixieium.austtravels.models.BusInfo
+import com.pixieium.austtravels.models.BusTiming
+import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 
 class SelectBusDialog : DialogFragment() {
@@ -19,6 +25,7 @@ class SelectBusDialog : DialogFragment() {
     private lateinit var mContext: Context
     private lateinit var mBinding: DialogSelectBusBinding
     private var listener: FragmentListener? = null
+    private val mDatabase: HomeRepository = HomeRepository()
 
     companion object {
         const val TAG = "SelectBusDialogFragment"
@@ -46,8 +53,14 @@ class SelectBusDialog : DialogFragment() {
     ): View {
         mBinding = DialogSelectBusBinding.inflate(layoutInflater)
         mContext = mBinding.root.context
-        initSpinnerName()
-        initSpinnerTime()
+
+
+        lifecycleScope.launch {
+            val list: ArrayList<BusInfo> = mDatabase.fetchAllBusInfo()
+            mBinding.selectTime.isEnabled = false
+            initSpinnerName(list)
+        }
+
         mBinding.selectBtn.setOnClickListener {
             val selectedBusName = mBinding.selectName.editText?.text.toString()
             val selectedBusTime = mBinding.selectTime.editText?.text.toString()
@@ -60,17 +73,55 @@ class SelectBusDialog : DialogFragment() {
         return mBinding.root
     }
 
-    private fun initSpinnerName() {
-        val items = listOf("Option 1", "Option 2", "Option 3", "Option 4")
-        val adapter = ArrayAdapter(mContext, R.layout.item_spinner, items)
+
+    private fun initSpinnerName(list: ArrayList<BusInfo>) {
+        val items: ArrayList<String> = ArrayList()
+        for (busInfo: BusInfo in list) {
+            items.add(busInfo.name)
+        }
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner, items)
         (mBinding.selectName.editText as? AutoCompleteTextView)?.setAdapter(adapter)
+
+        mBinding.selectName.editText?.setOnClickListener {
+            mBinding.selectTime.editText?.text?.clear()
+            mBinding.selectTime.isEnabled = false
+        }
+
+        mBinding.selectName.editText?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Toast.makeText(requireContext(), s.toString(), Toast.LENGTH_SHORT).show()
+                initSpinnerTime(s.toString(), list)
+            }
+        })
+
     }
 
-    private fun initSpinnerTime() {
-        val items = listOf("Option 1", "Option 2", "Option 3", "Option 4")
-        val adapter = ArrayAdapter(mContext, R.layout.item_spinner, items)
+    private fun initSpinnerTime(selectedName: String, list: ArrayList<BusInfo>) {
+        val timingList: ArrayList<String> = ArrayList()
+        mBinding.selectTime.isEnabled = true
+        for (busInfo: BusInfo in list) {
+            if (busInfo.name == selectedName) {
+                for (timing: BusTiming in busInfo.timing) {
+                    timingList.add(timing.startTime)
+                }
+                break
+            }
+        }
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner, timingList)
         (mBinding.selectTime.editText as? AutoCompleteTextView)?.setAdapter(adapter)
     }
+
 
     override fun onStart() {
         super.onStart()

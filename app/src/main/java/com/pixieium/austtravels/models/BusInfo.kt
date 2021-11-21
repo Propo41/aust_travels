@@ -1,11 +1,11 @@
 package com.pixieium.austtravels.models
 
 data class BusInfo(
-    val name: String,
-    val time: String
+    var name: String,
+    var timing: ArrayList<BusTiming>
 ) {
     constructor() : this(
         "",
-        ""
+        ArrayList()
     )
 }

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "714054307139",
+    "firebase_url": "https://aust-travels-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "aust-travels",
     "storage_bucket": "aust-travels.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "714054307139-0ag9dbcck6soel5hn13quebqirnjimla.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pixieium.austtravels",
+            "certificate_hash": "44391102bfcbfdc31982b2d52a6ce95c006a26a5"
+          }
+        },
         {
           "client_id": "714054307139-qd93ng69or950o7fc53qegt7jp39v0n5.apps.googleusercontent.com",
           "client_type": 3

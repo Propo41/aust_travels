@@ -19,6 +19,7 @@ import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.location.Location
 
 import android.provider.Settings
 import android.net.Uri
@@ -28,14 +29,33 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
+import com.pixieium.austtravels.home.HomeRepository
+import com.pixieium.austtravels.models.BusInfo
+import android.text.format.DateUtils
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import com.pixieium.austtravels.models.Route
+import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 // watch this for setting location permission at run time: https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime
 class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityLiveTrackBinding
+
+    private val mDatabase: LiveTrackRepository = LiveTrackRepository()
+    private lateinit var mSelectedBusName: String
+    private lateinit var mSelectedBusTime: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,16 +66,16 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        val selectedBusName = intent.getStringExtra("SELECTED_BUS_NAME")
-        val selectedBusTime = intent.getStringExtra("SELECTED_BUS_TIME")
+        mSelectedBusName = intent.getStringExtra("SELECTED_BUS_NAME").toString()
+        mSelectedBusTime = intent.getStringExtra("SELECTED_BUS_TIME").toString()
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        binding.sec.text = getString(R.string.selected_bus, "jamuna");
-
+        binding.sec.text = getString(R.string.selected_bus, mSelectedBusName)
+        binding.start.text = getString(R.string.starting_time, mSelectedBusTime)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -72,23 +92,75 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         return false
     }
 
+    private fun fetchLocationInfo(busName: String, busTime: String) {
+        val locListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val lat = dataSnapshot.child("lat").value.toString().toDouble()
+                    val long = dataSnapshot.child("long").value.toString().toDouble()
+                    val location = LatLng(lat, long)
+                    moveToCurrentLocation(location)
+                    val lastUpdated = dataSnapshot.child("lastUpdatedTime").value.toString()
+                    binding.lastUpdated.text =
+                        getString(R.string.last_updated, getRelativeTime(lastUpdated.toLong()))
+                } else {
+                    binding.lastUpdated.text =
+                        getString(R.string.last_updated, "Never")
+                    // center the map around AUST if no location available
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(23.763863, 90.406255)))
+                    mMap.animateCamera(CameraUpdateFactory.zoomIn());
+                    // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15F), 2000, null)
+
+                    Toast.makeText(baseContext, "Oops. No location data found!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                databaseError.toException().printStackTrace()
+            }
+        }
+        val database = Firebase.database
+        database.getReference("bus/$busName/$busTime/location").addValueEventListener(locListener)
+    }
+
     /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
+     * @param oldDate a long representing time in ms. Note, long numbers have L at the end, ie 1592717400000L
+     * @return a string representing the relative time, ie X min ago, June 10,2020, x days ago etc
      */
+    fun getRelativeTime(oldDate: Long): String {
+        val currentDate = Date()
+        val currentDateLong: Long = currentDate.time
+        val relativeTime = DateUtils
+            .getRelativeTimeSpanString(oldDate, currentDateLong, 0L)
+        return relativeTime.toString()
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         enableCurrentLocation()
+        setBusStopMarkers()
+    }
 
-        /* custom marker icon */
-        val location = LatLng(23.748134, 90.380149)
-        moveToCurrentLocation(location)
+    private fun setBusStopMarkers() {
+        lifecycleScope.launch {
+            val list: ArrayList<Route> = mDatabase.fetchBusRoute(mSelectedBusName, mSelectedBusTime)
+            for (route: Route in list) {
+                val loc: LatLng = LatLng(route.latitude.toDouble(), route.longitude.toDouble())
+                val markerOptions = MarkerOptions().position(loc)
+                    .title(route.place)
+                    .snippet("Est. Time: ${route.estTime}")
+                    .icon(
+                        bitmapDescriptorFromVector(
+                            baseContext,
+                            R.drawable.ic_baseline_directions_24
+                        )
+                    )
+                mMap.addMarker(markerOptions)
+            }
 
+        }
     }
 
     private fun enableCurrentLocation() {
@@ -98,6 +170,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             mMap.isMyLocationEnabled = true
+            fetchLocationInfo(mSelectedBusName, mSelectedBusTime)
         } else {
             // Show rationale and request permission.
             Toast.makeText(applicationContext, "You need to enable your GPS", Toast.LENGTH_SHORT)
@@ -130,7 +203,6 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             MY_PERMISSIONS_REQUEST_LOCATION
         )
     }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -192,9 +264,6 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.animateCamera(CameraUpdateFactory.zoomIn());
         // Zoom out to zoom level 10, animating with a duration of 2 seconds.
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15F), 2000, null)
-        mMap.uiSettings.isZoomControlsEnabled = true
-
-
     }
 
     private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {

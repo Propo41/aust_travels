@@ -60,6 +60,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/yellow"
             android:onClick="onViewDirectionsClick"
+            android:visibility="gone"
             android:padding="@dimen/button_padding"
             android:text="@string/view_directions"
             app:icon="@drawable/ic_password"

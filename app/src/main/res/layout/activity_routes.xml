@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/yellow"
-        app:layout_constraintBottom_toBottomOf="@+id/signin"
+        app:layout_constraintBottom_toBottomOf="@+id/select"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout" />
@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:background="@color/yellow"
-        app:layout_constraintBottom_toBottomOf="@+id/signin"
+        app:layout_constraintBottom_toBottomOf="@+id/select"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view3" />
@@ -81,6 +81,7 @@
         android:paddingLeft="@dimen/window_margin"
         android:paddingTop="@dimen/item_spacing"
         android:paddingRight="@dimen/window_margin"
+        android:enabled="false"
         app:layout_constraintEnd_toEndOf="@+id/view3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name"
@@ -97,13 +98,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/signin"
+        android:id="@+id/select"
         style="@style/Widget.App.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/window_margin"
         android:layout_marginTop="@dimen/item_spacing"
         android:layout_marginRight="@dimen/window_margin"
+        android:onClick="onBusSelectClick"
         android:backgroundTint="@color/black"
         android:padding="@dimen/button_padding"
         android:text="@string/select"

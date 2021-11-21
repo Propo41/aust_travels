@@ -18,12 +18,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.pixieium.austtravels.livetrack.LiveTrackActivity
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityHomeBinding
 import com.pixieium.austtravels.directions.DirectionsActivity
+import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.routes.RoutesActivity
+import kotlinx.coroutines.launch
 
 /* stop watch: https://stackoverflow.com/questions/3733867/stop-watch-logic*/
 
@@ -32,11 +35,14 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     private lateinit var binding: ActivityHomeBinding
     private lateinit var mLocationManager: LocationManager
     private lateinit var myLocationListener: MyLocationListener
-    private var isVolunteer = false
-
+    private val mDatabase: HomeRepository = HomeRepository()
     private val REQUEST_LIVE_TRACK = 0
     private val REQUEST_DIRECTIONS = 1
     private val REQUEST_SHARE_LOCATION = 2
+    private val uid = "123eqasdasd" // dummy
+
+    private lateinit var mSelectedBusName: String
+    private lateinit var mSelectedBusTime: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +107,10 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         }
 
         val location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        if (location != null) {
+            mDatabase.updateLocation(uid, mSelectedBusName, mSelectedBusTime, location)
+        }
+
         myLocationListener = MyLocationListener()
         mLocationManager.requestLocationUpdates(
             LocationManager.GPS_PROVIDER, 5, 1f,
@@ -114,6 +124,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
 
     private inner class MyLocationListener : LocationListener {
         override fun onLocationChanged(location: Location) {
+            mDatabase.updateLocation(uid, mSelectedBusName, mSelectedBusTime, location)
             Toast.makeText(
                 this@HomeActivity, "Location changed!",
                 Toast.LENGTH_SHORT
@@ -149,13 +160,21 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
 
     /*volunteer select dialog*/
     override fun onVolunteerApprovalClick() {
-        // todo make the user a volunteer in firebase
-        Toast.makeText(
-            this@HomeActivity,
-            "You are now a volunteer! Press the button again",
-            Toast.LENGTH_SHORT
-        ).show()
-        isVolunteer = true
+        lifecycleScope.launch {
+            if (mDatabase.createVolunteer(uid)) {
+                Toast.makeText(
+                    this@HomeActivity,
+                    "You are now a volunteer! Start sharing your location!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    this@HomeActivity,
+                    "Couldn't make you a volunteer at this moment. Try again later!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     override fun onBusSelectClick(
@@ -169,6 +188,12 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
                 binding.shareLocation.text = getString(R.string.stop_sharing_location)
                 binding.cardView.visibility = View.VISIBLE
                 isLocationSharing = true
+
+                mSelectedBusName = selectedBusName
+                mSelectedBusTime = selectedBusTime
+
+                binding.busName.text = getString(R.string.bus_jamuna, selectedBusName)
+                binding.busTime.text = getString(R.string.time_6_45_am, selectedBusTime)
 
                 startLocationSharing()
                 // createNotification();
@@ -202,23 +227,6 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
             ) { dialog, _ -> dialog.cancel() }
         val alert = builder.create()
         alert.show()
-    }
-
-    private fun enableCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            startLocationSharing()
-            // createNotification();
-        } else {
-            // Show rationale and request permission.
-            Toast.makeText(applicationContext, "You need to enable your GPS", Toast.LENGTH_SHORT)
-                .show()
-            buildAlertMessageNoPermission()
-        }
-
     }
 
     private fun buildAlertMessageNoPermission() {
@@ -313,16 +321,20 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
 
     fun onShareLocationClick(view: View) {
         if (!isLocationSharing) {
-            // if user is a volunteer
-            if (isVolunteer) {
-                // open dialog to select bus
-                SelectBusDialog.newInstance(REQUEST_SHARE_LOCATION)
-                    .show(supportFragmentManager, SelectBusDialog.TAG)
-            } else {
-                // open dialog to prompt user to become a volunteer
-                PromptVolunteerDialog.newInstance("uid")
-                    .show(supportFragmentManager, PromptVolunteerDialog.TAG)
+            lifecycleScope.launch {
+                val isVolunteer = mDatabase.isVolunteer(uid)
+                // if user is a volunteer
+                if (isVolunteer) {
+                    // open dialog to select bus
+                    SelectBusDialog.newInstance(REQUEST_SHARE_LOCATION)
+                        .show(supportFragmentManager, SelectBusDialog.TAG)
+                } else {
+                    // open dialog to prompt user to become a volunteer
+                    PromptVolunteerDialog.newInstance("uid")
+                        .show(supportFragmentManager, PromptVolunteerDialog.TAG)
+                }
             }
+
         } else {
             // stop sharing location
             binding.shareLocation.text = getString(R.string.share_location)

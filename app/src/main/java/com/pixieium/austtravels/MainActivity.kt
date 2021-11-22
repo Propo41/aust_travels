@@ -12,6 +12,7 @@ import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.home.HomeActivity
 import kotlinx.coroutines.tasks.await
 import android.location.Geocoder
+import kotlinx.coroutines.delay
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
        // setUniversityInfo()
+
     }
 
 
@@ -62,6 +64,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
         val user: FirebaseUser? = mAuth.currentUser
         if (user != null) {
             val intent = Intent(this@MainActivity, HomeActivity::class.java)

@@ -30,6 +30,7 @@ import com.pixieium.austtravels.routes.RoutesActivity
 import kotlinx.coroutines.launch
 
 import android.view.Menu
+import com.pixieium.austtravels.volunteers.VolunteersActivity
 
 
 /* stop watch: https://stackoverflow.com/questions/3733867/stop-watch-logic*/
@@ -359,5 +360,9 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         }
     }
 
-    fun onViewVolunteersClick(view: View) {}
+    fun onViewVolunteersClick(view: View) {
+        Toast.makeText(this,"volunteer",Toast.LENGTH_SHORT).show()
+        val intent = Intent(this@HomeActivity, VolunteersActivity::class.java)
+        startActivity(intent)
+    }
 }

@@ -9,8 +9,10 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -19,24 +21,20 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.pixieium.austtravels.livetrack.LiveTrackActivity
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityHomeBinding
 import com.pixieium.austtravels.directions.DirectionsActivity
-import com.pixieium.austtravels.routes.RoutesActivity
-import kotlinx.coroutines.launch
-
-import android.view.Menu
-import android.widget.ImageView
-import coil.ImageLoader
-import coil.decode.SvgDecoder
-import coil.request.ImageRequest
+import com.pixieium.austtravels.livetrack.LiveTrackActivity
 import com.pixieium.austtravels.models.UserInfo
+import com.pixieium.austtravels.routes.RoutesActivity
 import com.pixieium.austtravels.volunteers.VolunteersActivity
-
+import kotlinx.coroutines.launch
 
 
 /* stop watch: https://stackoverflow.com/questions/3733867/stop-watch-logic*/

@@ -10,8 +10,6 @@ import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
 import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.tasks.await
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class HomeRepository {
 
@@ -44,7 +42,7 @@ class HomeRepository {
             database.getReference("volunteers/$uid").setValue(true).await()
             true
         } catch (e: Exception) {
-            e.printStackTrace()
+            //e.printStackTrace()
             false
         }
     }
@@ -55,7 +53,7 @@ class HomeRepository {
             val snapshot = database.getReference("volunteers/$uid").get().await()
             snapshot.exists()
         } catch (e: Exception) {
-            e.printStackTrace()
+            //e.printStackTrace()
             false
         }
     }

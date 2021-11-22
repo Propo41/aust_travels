@@ -2,60 +2,48 @@ package com.pixieium.austtravels.livetrack
 
 import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
-
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-
-import android.provider.Settings
+import android.graphics.Typeface
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
+import android.os.Bundle
+import android.provider.Settings
+import android.text.format.DateUtils
+import android.view.Gravity
+import android.view.Menu
 import android.view.MenuItem
-
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.*
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.auth.ktx.auth
-
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
-import android.text.format.DateUtils
-import android.view.Menu
-import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.maps.model.*
+import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
-import android.location.Address
-import android.location.Geocoder
-import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener
-
-import com.google.android.gms.maps.model.Marker
-import android.widget.TextView
-
-import android.graphics.Typeface
-
-import android.view.Gravity
-import android.view.View
-
-import android.widget.LinearLayout
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 
 
 // watch this for setting location permission at run time: https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime
@@ -139,7 +127,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                databaseError.toException().printStackTrace()
+                //databaseError.toException().printStackTrace()
             }
         }
         val database = Firebase.database

@@ -42,7 +42,7 @@ class DirectionsActivity : AppCompatActivity() {
 
                 val mapUrl: String? = buildMapUrl(routeList)
                 if (mapUrl != null) {
-                    println(mapUrl)
+                    //println(mapUrl)
                     binding.webView.loadUrl(mapUrl)
                 }
             }

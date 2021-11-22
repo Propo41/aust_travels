@@ -57,13 +57,5 @@ dependencies {
     // for loading svg files in imageView
     implementation("io.coil-kt:coil:0.12.0")
     implementation("io.coil-kt:coil-svg:0.12.0")
-    //lottiefiles
-    def lottieVersion = "3.4.0"
-    implementation "com.airbnb.android:lottie:$lottieVersion"
-
-
-
-
-
 
 }

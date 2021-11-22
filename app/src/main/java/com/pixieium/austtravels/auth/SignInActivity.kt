@@ -7,8 +7,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.databinding.ActivitySignInBinding
 import com.pixieium.austtravels.home.HomeActivity
 
@@ -52,7 +50,7 @@ class SignInActivity : AppCompatActivity() {
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         startActivity(intent)
                     } else {
-                        task.exception?.printStackTrace()
+                        //task.exception?.printStackTrace()
                         Toast.makeText(
                             applicationContext, "Authentication failed.",
                             Toast.LENGTH_SHORT

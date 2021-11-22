@@ -1,5 +1,6 @@
 package com.pixieium.austtravels.auth
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -11,11 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.databinding.ActivitySignupBinding
+import com.pixieium.austtravels.home.HomeActivity
 import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.launch
-import java.util.ArrayList
-import android.content.Intent
-import com.pixieium.austtravels.home.HomeActivity
+import java.util.*
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -89,8 +89,8 @@ class SignUpActivity : AppCompatActivity() {
                         }
                     } else {
                         // If sign in fails, display a message to the user.
-                        Log.d("signUp", task.exception.toString())
-                        task.exception?.printStackTrace()
+                       // Log.d("signUp", task.exception.toString())
+                        //task.exception?.printStackTrace()
                         Toast.makeText(
                             applicationContext, "Authentication failed.",
                             Toast.LENGTH_SHORT
@@ -109,7 +109,7 @@ class SignUpActivity : AppCompatActivity() {
         val universityId = mBinding.universityId.editText!!.text.toString()
 
         if (email.split('@')[1] != "aust.edu") {
-            println(email.split('@')[1])
+            //println(email.split('@')[1])
             mBinding.eduMail.error = "You must enter your institutional mail"
             return false
         }

@@ -8,7 +8,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 class AuthRepository {
     suspend fun getSemesterInfo(): ArrayList<String> {
@@ -46,7 +45,7 @@ class AuthRepository {
             database.getReference("users/$uid").setValue(userInfo).await()
             true
         } catch (e: Exception) {
-            e.printStackTrace()
+            //e.printStackTrace()
             false
         }
     }

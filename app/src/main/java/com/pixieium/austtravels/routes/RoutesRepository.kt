@@ -1,6 +1,5 @@
 package com.pixieium.austtravels.routes
 
-import android.hardware.lights.LightState
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -9,7 +8,6 @@ import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 class RoutesRepository {
     suspend fun fetchRouteList(busName: String, busTime: String): ArrayList<Route> {
@@ -19,7 +17,7 @@ class RoutesRepository {
         if (snapshot.exists()) {
             for (snap: DataSnapshot in snapshot.children) {
                 snap.getValue<Route>()?.let { list.add(it) }
-                println(snap.value)
+                //println(snap.value)
             }
         }
         return list
@@ -45,7 +43,7 @@ class RoutesRepository {
                 list.add(busInfo)
             }
         }
-        println(list)
+        //println(list)
 
         return list
     }

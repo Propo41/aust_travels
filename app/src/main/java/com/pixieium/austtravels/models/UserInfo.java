@@ -1,9 +1,5 @@
 package com.pixieium.austtravels.models;
 
-import android.net.Uri;
-
-import org.jetbrains.annotations.Nullable;
-
 public class UserInfo {
     private String email;
     private String name;

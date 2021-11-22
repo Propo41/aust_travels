@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.databinding.DialogPromptVolunteerBinding
-import java.lang.RuntimeException
 
 
 class PromptVolunteerDialog : DialogFragment() {

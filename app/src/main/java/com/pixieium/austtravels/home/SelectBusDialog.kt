@@ -18,7 +18,6 @@ import com.pixieium.austtravels.databinding.DialogSelectBusBinding
 import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
 import kotlinx.coroutines.launch
-import java.lang.RuntimeException
 
 class SelectBusDialog : DialogFragment() {
 

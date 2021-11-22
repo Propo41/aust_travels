@@ -64,7 +64,7 @@ class SelectBusDialog : DialogFragment() {
             val selectedBusName = mBinding.selectName.editText?.text.toString()
             val selectedBusTime = mBinding.selectTime.editText?.text.toString()
 
-            Toast.makeText(context, "$selectedBusName is selected!", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "$selectedBusName is selected!", Toast.LENGTH_SHORT).show()
 
             listener?.onBusSelectClick(selectedBusName, selectedBusTime, REQUESTER)
             dismiss()
@@ -99,7 +99,7 @@ class SelectBusDialog : DialogFragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Toast.makeText(requireContext(), s.toString(), Toast.LENGTH_SHORT).show()
+               // Toast.makeText(requireContext(), s.toString(), Toast.LENGTH_SHORT).show()
                 initSpinnerTime(s.toString(), list)
             }
         })

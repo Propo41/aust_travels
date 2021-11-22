@@ -49,7 +49,7 @@ class DirectionsActivity : AppCompatActivity() {
         }
 
         setSupportActionBar(binding.toolbar)
-        Toast.makeText(this, "$selectedBusName $selectedBusTime", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "$selectedBusName $selectedBusTime", Toast.LENGTH_SHORT).show()
     }
 
 

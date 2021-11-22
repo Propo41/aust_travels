@@ -187,8 +187,8 @@
         android:layout_height="150dp"
         android:visibility="gone"
         app:cardCornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/share_location"
+        app:layout_constraintStart_toStartOf="@+id/share_location"
         app:layout_constraintTop_toBottomOf="@+id/share_location">
 
         <androidx.constraintlayout.widget.ConstraintLayout

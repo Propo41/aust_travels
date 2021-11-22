@@ -90,7 +90,7 @@ class RoutesActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Toast.makeText(this@RoutesActivity, s.toString(), Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@RoutesActivity, s.toString(), Toast.LENGTH_SHORT).show()
                 initSpinnerTime(s.toString(), list)
             }
         })

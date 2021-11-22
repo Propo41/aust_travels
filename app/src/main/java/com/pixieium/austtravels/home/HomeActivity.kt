@@ -168,10 +168,10 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     private inner class MyLocationListener : LocationListener {
         override fun onLocationChanged(location: Location) {
             mDatabase.updateLocation(mUid, mSelectedBusName, mSelectedBusTime, location)
-            Toast.makeText(
+          /*  Toast.makeText(
                 this@HomeActivity, "Location changed!",
                 Toast.LENGTH_SHORT
-            ).show()
+            ).show()*/
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
@@ -388,7 +388,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     }
 
     fun onViewVolunteersClick(view: View) {
-        Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
         val intent = Intent(this@HomeActivity, VolunteersActivity::class.java)
         startActivity(intent)
     }

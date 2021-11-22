@@ -146,6 +146,14 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
             return
         }
 
+        // start sharing location
+        binding.shareLocation.text = getString(R.string.stop_sharing_location)
+        binding.cardView.visibility = View.VISIBLE
+        isLocationSharing = true
+
+        binding.busName.text = getString(R.string.bus_jamuna, mSelectedBusName)
+        binding.busTime.text = getString(R.string.time_6_45_am, mSelectedBusTime)
+
         // check if GPS is enabled or not
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps()
@@ -229,17 +237,8 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     ) {
         when (requestCode) {
             REQUEST_SHARE_LOCATION -> {
-                // start sharing location
-                binding.shareLocation.text = getString(R.string.stop_sharing_location)
-                binding.cardView.visibility = View.VISIBLE
-                isLocationSharing = true
-
                 mSelectedBusName = selectedBusName
                 mSelectedBusTime = selectedBusTime
-
-                binding.busName.text = getString(R.string.bus_jamuna, selectedBusName)
-                binding.busTime.text = getString(R.string.time_6_45_am, selectedBusTime)
-
                 startLocationSharing()
                 // createNotification();
             }

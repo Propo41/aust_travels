@@ -11,4 +11,9 @@ In this country 🌏 of ours, we face severe traffic in our day to day lives. As
 - View the distance between the bus and your preferred bus-stop 📍
 
 
+<h2>Contributing Guidelines</h2>
+Refer to our <a href="https://github.com/Propo41/aust_travels/blob/main/contributing.md">contributing guidelines</a> for more information on how to contribute to our project 
+
+
+<h2>Screenshots</h2>
 

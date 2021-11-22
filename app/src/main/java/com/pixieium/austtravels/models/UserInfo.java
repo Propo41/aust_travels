@@ -6,8 +6,18 @@ public class UserInfo {
     private String semester;
     private String department;
     private String universityId;
+    private String imageUrl;
 
     public UserInfo() {
+    }
+
+    public UserInfo(String email, String name, String semester, String department, String universityId, String imageUrl) {
+        this.email = email;
+        this.name = name;
+        this.semester = semester;
+        this.department = department;
+        this.universityId = universityId;
+        this.imageUrl = imageUrl;
     }
 
     public UserInfo(String email, String name, String semester, String department, String universityId) {
@@ -16,6 +26,14 @@ public class UserInfo {
         this.semester = semester;
         this.department = department;
         this.universityId = universityId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getEmail() {

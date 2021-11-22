@@ -50,19 +50,4 @@ class RoutesRepository {
         return list
     }
 
-
-    fun updateAvailableBusInfo(list: HashMap<String, ArrayList<BusTiming>>) {
-        // Write a message to the database
-        val database = Firebase.database
-        val myRef = database.getReference("availableBusInfo")
-        myRef.setValue(list)
-    }
-
-    fun updateBusRoute(busName: String, busTime: String, list: ArrayList<Route>) {
-        // Write a message to the database
-        val database = Firebase.database
-        val myRef = database.getReference("bus/$busName/$busTime/routes")
-        myRef.setValue(list)
-    }
-
 }

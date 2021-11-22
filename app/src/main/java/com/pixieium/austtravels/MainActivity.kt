@@ -12,6 +12,8 @@ import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.home.HomeActivity
 import kotlinx.coroutines.tasks.await
 import android.location.Geocoder
+import com.pixieium.austtravels.models.BusTiming
+import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.delay
 import java.util.*
 import kotlin.collections.ArrayList
@@ -19,47 +21,17 @@ import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private val mAuth = FirebaseAuth.getInstance();
+    private val mDatabase: MainRepository = MainRepository()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-       // setUniversityInfo()
-
-    }
-
-
-    private fun setUniversityInfo() {
-        val database = Firebase.database
-        val semesters: ArrayList<String?> = object : java.util.ArrayList<String?>() {
-            init {
-                add("5.2")
-                add("5.1")
-                add("4.2")
-                add("4.1")
-                add("3.2")
-                add("3.1")
-                add("2.2")
-                add("2.1")
-                add("1.2")
-                add("1.1")
-            }
-        }
-        database.getReference("universityInfo/semesters").setValue(semesters)
-
-        val departments: ArrayList<String?> = object : java.util.ArrayList<String?>() {
-            init {
-                add("CSE")
-                add("EEE")
-                add("CE")
-                add("ME")
-                add("IPE")
-                add("TE")
-                add("BBA")
-                add("ARCH")
-            }
-        }
-
-        database.getReference("universityInfo/departments").setValue(departments)
+        /*
+        // the following are dummy queries
+         mDatabase.setUniversityInfo()
+         mDatabase.pushBusRouteInfo("Jamuna", "6:30AM")
+         mDatabase.pushAllBusInfo()
+         */
     }
 
     override fun onStart() {

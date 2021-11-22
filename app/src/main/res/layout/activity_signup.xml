@@ -20,6 +20,7 @@
             android:background="@color/green_dark"
             android:paddingTop="30dp"
             android:paddingBottom="30dp"
+            android:textSize="18sp"
             android:text="@string/sign_up"
             android:textAlignment="center"
             android:textAllCaps="true"

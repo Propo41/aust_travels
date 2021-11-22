@@ -1,14 +1,15 @@
 package com.pixieium.austtravels.home
 
 import android.location.Location
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
+import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.tasks.await
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -75,6 +76,17 @@ class HomeRepository {
         val database = Firebase.database
         database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/location").setValue(payload)
 
+    }
+
+    fun getUserInfo(): UserInfo? {
+        val user = Firebase.auth.currentUser
+        user?.let {
+            // Name, email address, and profile photo Url
+            val email = user.email
+            val photoUrl = user.photoUrl
+            return UserInfo(email, photoUrl.toString())
+        }
+        return null
     }
 
 }

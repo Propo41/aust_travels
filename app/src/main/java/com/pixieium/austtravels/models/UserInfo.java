@@ -1,5 +1,9 @@
 package com.pixieium.austtravels.models;
 
+import android.net.Uri;
+
+import org.jetbrains.annotations.Nullable;
+
 public class UserInfo {
     private String email;
     private String name;
@@ -18,6 +22,12 @@ public class UserInfo {
         this.department = department;
         this.universityId = universityId;
         this.userImage = userImage;
+    }
+
+    public UserInfo(String email, String userImage) {
+        this.email = email;
+        this.userImage = userImage;
+
     }
 
     public String getUserImage() {

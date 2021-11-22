@@ -7,17 +7,16 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
-import com.pixieium.austtravels.databinding.ActivityRoutesBinding
 import com.pixieium.austtravels.databinding.ActivityVolunteersBinding
-import com.pixieium.austtravels.models.Route
-import com.pixieium.austtravels.models.Volunteer
-import com.pixieium.austtravels.routes.RoutesAdapter
+import com.pixieium.austtravels.models.UserInfo
+import kotlinx.coroutines.launch
 
 class VolunteersActivity : AppCompatActivity() {
     private lateinit var mAdapter: VolunteerAdapter
@@ -25,7 +24,7 @@ class VolunteersActivity : AppCompatActivity() {
             : RecyclerView.LayoutManager
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mBinding: ActivityVolunteersBinding
-    lateinit var  list: ArrayList<Volunteer>
+    private val mDatabase: VolunteerRepository = VolunteerRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +33,11 @@ class VolunteersActivity : AppCompatActivity() {
         setContentView(view)
         setSupportActionBar(mBinding.toolbar)
 
-        pushInfo()
-        initRecyclerView()
+        lifecycleScope.launch {
+            val volunteers: ArrayList<UserInfo> = mDatabase.fetchVolunteers()
+            initRecyclerView(volunteers)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -43,34 +45,14 @@ class VolunteersActivity : AppCompatActivity() {
         return true
     }
 
-    private fun pushInfo() {
-     list = ArrayList()
-
-        list.add(
-                Volunteer(
-                       "abc",
-                        "18",
-                        "https://picsum.photos/200"
-
-
-                )
-        )
-        list.add(
-                Volunteer(
-                       "abbc",
-                        "04",
-                        "https://picsum.photos/seed/picsum/200/300"
-                )
-        )
-
-    }
-    private fun initRecyclerView() {
+    private fun initRecyclerView(volunteers: ArrayList<UserInfo>) {
         mRecyclerView = findViewById(R.id.vrecyclerView)
         mLayoutManager = LinearLayoutManager(this)
-        mAdapter = VolunteerAdapter(list)
+        mAdapter = VolunteerAdapter(volunteers)
         mBinding.vrecyclerView.layoutManager = mLayoutManager
         mRecyclerView.adapter = mAdapter
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
             Firebase.auth.signOut()
@@ -78,7 +60,6 @@ class VolunteersActivity : AppCompatActivity() {
             val intent = Intent(this, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-
             return true
         } else if (item.itemId == android.R.id.home) {
             finish()

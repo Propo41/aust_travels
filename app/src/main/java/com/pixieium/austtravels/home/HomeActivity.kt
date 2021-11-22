@@ -30,7 +30,13 @@ import com.pixieium.austtravels.routes.RoutesActivity
 import kotlinx.coroutines.launch
 
 import android.view.Menu
+import android.widget.ImageView
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
+import com.pixieium.austtravels.models.UserInfo
 import com.pixieium.austtravels.volunteers.VolunteersActivity
+
 
 
 /* stop watch: https://stackoverflow.com/questions/3733867/stop-watch-logic*/
@@ -56,8 +62,31 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         mUid = Firebase.auth.currentUser?.uid.toString()
         setSupportActionBar(binding.topAppBar)
 
-        binding.loggedInAs.text =
-            getString(R.string.logged_in_as_s, Firebase.auth.currentUser?.email)
+        val userInfo: UserInfo? = mDatabase.getUserInfo()
+        if (userInfo != null) {
+            binding.loggedInAs.text =
+                getString(R.string.logged_in_as_s, userInfo.email)
+            binding.profileImage.loadSvg(userInfo.userImage)
+        }
+    }
+
+    /**
+     * By default, ImageViews don't support SVG formats.
+     * So, instead we are using the coil library to render svg files
+     */
+    private fun ImageView.loadSvg(url: String) {
+        val imageLoader = ImageLoader.Builder(this.context)
+            .componentRegistry { add(SvgDecoder(this@loadSvg.context)) }
+            .build()
+
+        val request = ImageRequest.Builder(this.context)
+            .crossfade(true)
+            .crossfade(2)
+            .data(url)
+            .target(this)
+            .build()
+
+        imageLoader.enqueue(request)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -361,7 +390,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     }
 
     fun onViewVolunteersClick(view: View) {
-        Toast.makeText(this,"volunteer",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
         val intent = Intent(this@HomeActivity, VolunteersActivity::class.java)
         startActivity(intent)
     }

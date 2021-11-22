@@ -132,6 +132,10 @@ class SignUpActivity : AppCompatActivity() {
             mBinding.name.error = "Field is required"
             return false
         }
+        if (userName.length > 20) {
+            mBinding.name.error = "Please enter a name of 20 characters"
+            return false;
+        }
         if (TextUtils.isEmpty(semester)) {
             mBinding.semester.error = "Field is required"
             return false

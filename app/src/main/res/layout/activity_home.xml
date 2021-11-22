@@ -15,18 +15,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="@dimen/item_spacing"
+        app:layout_constraintBottom_toBottomOf="@+id/loggedInAs"
+        app:layout_constraintEnd_toStartOf="@+id/loggedInAs"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/loggedInAs" />
+
     <TextView
         android:id="@+id/loggedInAs"
         style="@style/TextAppearance.App.Subtitle1"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
         android:text="@string/logged_in_as_s"
+        android:textAlignment="center"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="@+id/view5" />
+
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -52,8 +66,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/window_margin"
-        android:layout_marginEnd="@dimen/window_margin"
         android:layout_marginTop="@dimen/item_spacing_large"
+        android:layout_marginEnd="@dimen/window_margin"
         android:backgroundTint="@color/yellow"
         android:onClick="onLiveTrackBusClick"
         android:padding="@dimen/button_padding"

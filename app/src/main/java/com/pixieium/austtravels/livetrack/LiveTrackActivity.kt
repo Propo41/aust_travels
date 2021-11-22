@@ -41,13 +41,16 @@ import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
+import com.pixieium.austtravels.home.ProminentDisclosureDialog
+import com.pixieium.austtravels.home.SelectBusDialog
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.launch
 import java.util.*
 
 
 // watch this for setting location permission at run time: https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime
-class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
+class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
+    ProminentDisclosureDialog.FragmentListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityLiveTrackBinding
@@ -325,10 +328,13 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.isMyLocationEnabled = true
             fetchLocationInfo(mSelectedBusName, mSelectedBusTime)
         } else {
-            // Show rationale and request permission.
+            // show prominent disclosure dialog
+            // after the user accepts the agreement,
+            // build an alert dialog requesting for permission
+            ProminentDisclosureDialog.newInstance()
+                .show(supportFragmentManager, ProminentDisclosureDialog.TAG)
             Toast.makeText(applicationContext, "You need to enable your GPS", Toast.LENGTH_SHORT)
                 .show()
-            buildAlertMessageNoGps()
         }
     }
 
@@ -438,6 +444,11 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
+    }
+
+    override fun onDisclosureAcceptClick() {
+        // after user accepts the agreement, request for permission to enable GPS
+        buildAlertMessageNoGps()
     }
 
 

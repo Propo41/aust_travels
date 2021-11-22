@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 /* stop watch: https://stackoverflow.com/questions/3733867/stop-watch-logic*/
 
 class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
+    ProminentDisclosureDialog.FragmentListener,
     SelectBusDialog.FragmentListener {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var mLocationManager: LocationManager
@@ -136,11 +137,12 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(
-                this@HomeActivity, "Requires location permission",
-                Toast.LENGTH_SHORT
-            ).show()
-            buildAlertMessageNoPermission()
+
+            // show prominent disclosure dialog
+            // after the user accepts the agreement,
+            // build an alert dialog requesting for permission
+            ProminentDisclosureDialog.newInstance()
+                .show(supportFragmentManager, ProminentDisclosureDialog.TAG)
             return
         }
 
@@ -168,10 +170,10 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     private inner class MyLocationListener : LocationListener {
         override fun onLocationChanged(location: Location) {
             mDatabase.updateLocation(mUid, mSelectedBusName, mSelectedBusTime, location)
-          /*  Toast.makeText(
-                this@HomeActivity, "Location changed!",
-                Toast.LENGTH_SHORT
-            ).show()*/
+            /*  Toast.makeText(
+                  this@HomeActivity, "Location changed!",
+                  Toast.LENGTH_SHORT
+              ).show()*/
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
@@ -241,12 +243,12 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
                 startLocationSharing()
                 // createNotification();
             }
-            REQUEST_DIRECTIONS -> {
-                val intent = Intent(this@HomeActivity, DirectionsActivity::class.java)
-                intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
-                intent.putExtra("SELECTED_BUS_TIME", selectedBusTime)
-                startActivity(intent)
-            }
+            /*   REQUEST_DIRECTIONS -> {
+                   val intent = Intent(this@HomeActivity, DirectionsActivity::class.java)
+                   intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
+                   intent.putExtra("SELECTED_BUS_TIME", selectedBusTime)
+                   startActivity(intent)
+               }*/
             REQUEST_LIVE_TRACK -> {
                 val intent = Intent(this@HomeActivity, LiveTrackActivity::class.java)
                 intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
@@ -388,8 +390,16 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     }
 
     fun onViewVolunteersClick(view: View) {
-       // Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
         val intent = Intent(this@HomeActivity, VolunteersActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun onDisclosureAcceptClick() {
+        Toast.makeText(
+            this@HomeActivity, "Requires location permission",
+            Toast.LENGTH_SHORT
+        ).show()
+        buildAlertMessageNoPermission()
     }
 }

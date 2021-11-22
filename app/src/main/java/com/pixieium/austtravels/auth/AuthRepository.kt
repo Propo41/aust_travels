@@ -1,10 +1,11 @@
 package com.pixieium.austtravels.auth
 
+import android.net.Uri
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.pixieium.austtravels.models.Route
 import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
@@ -34,16 +35,19 @@ class AuthRepository {
         return departmentList
     }
 
-    suspend fun createNewUser(userInfo: UserInfo, uid: String): Boolean {
+    suspend fun createNewUser(userInfo: UserInfo, uid: String, user: FirebaseUser): Boolean {
         val database = Firebase.database
+        val profileUpdates = userProfileChangeRequest {
+            displayName = userInfo.name
+            photoUri = Uri.parse(userInfo.userImage)
+        }
         return try {
-            val snapshot = database.getReference("users/$uid").setValue(userInfo).await()
+            user.updateProfile(profileUpdates).await()
+            database.getReference("users/$uid").setValue(userInfo).await()
             true
         } catch (e: Exception) {
             e.printStackTrace()
             false
         }
-
-
     }
 }

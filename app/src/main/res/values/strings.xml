@@ -42,6 +42,7 @@
     <string name="web_client_id">714054307139-qd93ng69or950o7fc53qegt7jp39v0n5.apps.googleusercontent.com</string>
     <string name="enter_your_university_id">Enter your university ID</string>
     <string name="logged_in_as_s">Logged in as: %s</string>
+    <string name="marker_prompt">Tap here to view directions</string>
 
 
 </resources>

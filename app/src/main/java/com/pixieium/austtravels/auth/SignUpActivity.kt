@@ -5,13 +5,10 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.databinding.ActivitySignupBinding
 import com.pixieium.austtravels.models.UserInfo
@@ -62,6 +59,9 @@ class SignUpActivity : AppCompatActivity() {
                 ) { task ->
                     if (task.isSuccessful) {
                         val user = mAuth.currentUser
+                        // uses the dicebears http api to get an image
+                        // refer to https://avatars.dicebear.com/docs/http-api
+                        val userImage = "https://avatars.dicebear.com/api/bottts/${userName}.svg"
                         if (user != null) {
                             val userInfo =
                                 UserInfo(
@@ -69,10 +69,11 @@ class SignUpActivity : AppCompatActivity() {
                                     userName,
                                     semester,
                                     department,
-                                    universityId
+                                    universityId,
+                                    userImage
                                 )
                             lifecycleScope.launch {
-                                if (mDatabase.createNewUser(userInfo, user.uid)) {
+                                if (mDatabase.createNewUser(userInfo, user.uid, user)) {
                                     val intent =
                                         Intent(this@SignUpActivity, HomeActivity::class.java)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

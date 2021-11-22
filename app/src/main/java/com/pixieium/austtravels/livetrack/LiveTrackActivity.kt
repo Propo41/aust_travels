@@ -17,7 +17,7 @@ import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.location.Location
+import android.graphics.Color
 
 import android.provider.Settings
 import android.net.Uri
@@ -34,17 +34,28 @@ import com.google.firebase.auth.ktx.auth
 
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
-import com.pixieium.austtravels.home.HomeRepository
-import com.pixieium.austtravels.models.BusInfo
 import android.text.format.DateUtils
 import android.view.Menu
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.model.*
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
+import android.location.Address
+import android.location.Geocoder
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener
+
+import com.google.android.gms.maps.model.Marker
+import android.widget.TextView
+
+import android.graphics.Typeface
+
+import android.view.Gravity
+import android.view.View
+
+import android.widget.LinearLayout
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 
 
 // watch this for setting location permission at run time: https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime
@@ -57,6 +68,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mSelectedBusName: String
     private lateinit var mSelectedBusTime: String
 
+    private lateinit var mBusLocation: LatLng
     private var mBusMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,8 +119,8 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 if (dataSnapshot.exists()) {
                     val lat = dataSnapshot.child("lat").value.toString().toDouble()
                     val long = dataSnapshot.child("long").value.toString().toDouble()
-                    val location = LatLng(lat, long)
-                    moveToCurrentLocation(location)
+                    mBusLocation = LatLng(lat, long)
+                    moveToCurrentLocation(mBusLocation)
                     val lastUpdated = dataSnapshot.child("lastUpdatedTime").value.toString()
                     binding.lastUpdated.text =
                         getString(R.string.last_updated, getRelativeTime(lastUpdated.toLong()))
@@ -152,13 +164,21 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         setBusStopMarkers()
     }
 
+    private fun buildMapUrl(origin: String, destination: String): String {
+        return "https://www.google.com/maps/dir/?api=1&" +
+                "origin=$origin&" +
+                "destination=$destination&" +
+                "travelmode=driving"
+    }
+
     private fun setBusStopMarkers() {
         lifecycleScope.launch {
             val list: ArrayList<Route> = mDatabase.fetchBusRoute(mSelectedBusName, mSelectedBusTime)
             for (route: Route in list) {
-                val loc: LatLng = LatLng(route.latitude.toDouble(), route.longitude.toDouble())
+                val loc = LatLng(route.latitude.toDouble(), route.longitude.toDouble())
+
                 val markerOptions = MarkerOptions().position(loc)
-                    .title(route.place)
+                    .title(route.mapPlaceName)
                     .snippet("Est. Time: ${route.estTime}")
                     .icon(
                         bitmapDescriptorFromVector(
@@ -166,11 +186,142 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                             R.drawable.ic_baseline_directions_24
                         )
                     )
+
+                customizeMapMarkers()
                 mMap.addMarker(markerOptions)
             }
-
         }
     }
+
+
+    private fun customizeMapMarkers() {
+        // make the dialog boxes clickable
+        mMap.setOnInfoWindowClickListener { arg0 ->
+            // build a map URL from the current bus location to selected bus stop
+            val busCurrentLocationName: String? = getPlaceNameFromCords(mBusLocation)
+            if (busCurrentLocationName != null) {
+                // building the map url
+                // follow https://developers.google.com/maps/documentation/urls/get-started#directions-action
+                val mapUrl = buildMapUrl(
+                    encodePlaceName(busCurrentLocationName),
+                    encodePlaceName(arg0.title)
+                )
+
+                Toast.makeText(
+                    baseContext,
+                    "Opening directions in map from : $busCurrentLocationName to ${arg0.title}",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                createMapsIntent(mapUrl)
+
+            } else {
+                Toast.makeText(
+                    baseContext,
+                    "Couldn't find a suitable name for the bus location. Please try reloading the page",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        // customize the dialog contents
+        mMap.setInfoWindowAdapter(object : InfoWindowAdapter {
+            override fun getInfoWindow(arg0: Marker): View? {
+                return null
+            }
+
+            override fun getInfoContents(marker: Marker): View {
+                val info = LinearLayout(baseContext)
+                info.orientation = LinearLayout.VERTICAL
+
+                val title = TextView(baseContext)
+                title.setTextColor(Color.BLACK)
+                title.gravity = Gravity.CENTER
+                title.setTypeface(null, Typeface.BOLD)
+                title.text = marker.title
+                title.setTextAppearance(R.style.TextAppearance_AppCompat_Caption)
+
+                val snippet = TextView(baseContext)
+                snippet.setTextColor(Color.GRAY)
+                snippet.setTextAppearance(R.style.TextAppearance_AppCompat_Body1)
+                snippet.text = marker.snippet
+
+                val prompt = TextView(baseContext)
+                prompt.setTextColor(Color.BLUE)
+                prompt.setTextAppearance(R.style.TextAppearance_AppCompat_Body2)
+                prompt.text = getString(R.string.marker_prompt)
+
+                info.addView(title)
+                info.addView(snippet)
+                info.addView(prompt)
+
+                return info
+            }
+        })
+
+    }
+
+    /**
+     * creating an intent to open the URI in google maps
+     */
+    private fun createMapsIntent(mapUrl: String) {
+        val gmmIntentUri = Uri.parse(mapUrl)
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        // if the client device has ability to handle the intent, then do so
+        if (mapIntent.resolveActivity(packageManager) != null) {
+            startActivity(mapIntent)
+        } else {
+            Toast.makeText(
+                baseContext,
+                "Couldn't open the map. Do you have the latest version of Google Maps installed?",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    /**
+     * Converts empty spaces to + to be usable by MAP URLs
+     * Converts ',' to %2C
+     */
+    private fun encodePlaceName(str: String?): String {
+        var newStr = ""
+        if (str != null) {
+            for (ch: Char in str) {
+                when (ch) {
+                    '/' -> {
+                        newStr += "%2F"
+                    }
+                    ',' -> {
+                        newStr += "%2C"
+                    }
+                    ' ' -> {
+                        newStr += "+"
+                    }
+                    else -> {
+                        newStr += ch
+                    }
+                }
+            }
+        }
+        return newStr
+    }
+
+
+    /**
+     * Refer to
+     * https://stackoverflow.com/questions/2296377/how-to-get-city-name-from-latitude-and-longitude-coordinates-in-google-maps
+     */
+    private fun getPlaceNameFromCords(location: LatLng): String? {
+        val gcd = Geocoder(this, Locale.getDefault())
+        val addresses: List<Address> = gcd.getFromLocation(location.latitude, location.longitude, 1)
+        return if (addresses.isNotEmpty()) {
+            addresses[0].getAddressLine(0)
+        } else {
+            null
+        }
+    }
+
 
     private fun enableCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(
@@ -270,6 +421,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             .snippet("Start time: $mSelectedBusTime")
             .icon(bitmapDescriptorFromVector(this, R.drawable.ic_bus))
 
+        // removing the previous marker
         if (mBusMarker != null) {
             mBusMarker!!.remove()
         }

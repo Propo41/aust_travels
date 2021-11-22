@@ -32,11 +32,23 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="TextAppearance.AppCompat.Caption" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/saira_bold</item>
+        <item name="android:fontFamily">@font/saira_bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+
     <style name="TextAppearance.AppCompat.Body1" parent="TextAppearance.MaterialComponents.Body1">
         <item name="fontFamily">@font/saira_medium</item>
         <item name="android:fontFamily">@font/saira_medium</item>
         <item name="android:textColor">@color/black</item>
+    </style>
 
+    <style name="TextAppearance.AppCompat.Body2" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/saira_bold</item>
+        <item name="android:fontFamily">@font/saira_bold</item>
+        <item name="android:textColor">@color/orange</item>
     </style>
 
     <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">

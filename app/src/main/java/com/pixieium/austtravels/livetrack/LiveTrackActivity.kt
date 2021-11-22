@@ -68,6 +68,8 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        binding.lastUpdated.visibility = View.GONE
+
         mSelectedBusName = intent.getStringExtra("SELECTED_BUS_NAME").toString()
         mSelectedBusTime = intent.getStringExtra("SELECTED_BUS_TIME").toString()
 
@@ -76,7 +78,9 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        // bus name
         binding.sec.text = getString(R.string.selected_bus, mSelectedBusName)
+        // bus start time
         binding.start.text = getString(R.string.starting_time, mSelectedBusTime)
 
     }
@@ -102,6 +106,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun fetchLocationInfo(busName: String, busTime: String) {
+        binding.lastUpdated.visibility = View.VISIBLE
         val locListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -325,7 +330,6 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 .show()
             buildAlertMessageNoGps()
         }
-
     }
 
     private fun buildAlertMessageNoGps() {
@@ -371,6 +375,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                         ) == PackageManager.PERMISSION_GRANTED
                     ) {
                         mMap.isMyLocationEnabled = true
+                        fetchLocationInfo(mSelectedBusName, mSelectedBusTime)
                     }
 
                 } else {

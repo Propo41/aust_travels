@@ -45,6 +45,5 @@
     <string name="marker_prompt">Tap here to view directions</string>
     <string name="username">%s</string>
     <string name="universityId">%s</string>
-
-
+    <string name="google_maps_api">AIzaSyCdhFmZBWJajjLP2dw6MWhDB6lHR5tc33E</string>
 </resources>

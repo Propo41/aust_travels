@@ -42,10 +42,34 @@ class RoutesActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        mBinding.name.isEnabled = false
+        mBinding.time.isEnabled = false
+        mBinding.select.isEnabled = false
+
         lifecycleScope.launch {
-            val list: ArrayList<BusInfo> = mDatabase.fetchAllBusInfo()
-            mBinding.time.isEnabled = false
-            initSpinnerName(list)
+            try {
+                val list: ArrayList<BusInfo> = mDatabase.fetchAllBusInfo()
+                if (list.size != 0) {
+                    initSpinnerName(list)
+                } else {
+                    Toast.makeText(
+                        baseContext,
+                        "Couldn't fetch data from database. Please check your connection",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+
+            } catch (e: Exception) {
+                //e.printStackTrace()
+                Toast.makeText(
+                    baseContext,
+                    "Couldn't fetch data from database. Please check your connection",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
+
         }
     }
 
@@ -75,6 +99,8 @@ class RoutesActivity : AppCompatActivity() {
         for (busInfo: BusInfo in list) {
             items.add(busInfo.name)
         }
+        mBinding.name.isEnabled = true
+
         val adapter = ArrayAdapter(baseContext, R.layout.item_spinner, items)
         (mBinding.name.editText as? AutoCompleteTextView)?.setAdapter(adapter)
         mBinding.name.editText?.addTextChangedListener(object : TextWatcher {
@@ -92,6 +118,7 @@ class RoutesActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 //Toast.makeText(this@RoutesActivity, s.toString(), Toast.LENGTH_SHORT).show()
                 initSpinnerTime(s.toString(), list)
+                mBinding.select.isEnabled = true
             }
         })
 

@@ -14,10 +14,10 @@ import kotlinx.coroutines.tasks.await
 class HomeRepository {
 
     suspend fun fetchAllBusInfo(): ArrayList<BusInfo> {
+        val list: ArrayList<BusInfo> = ArrayList()
         // Write a message to the database
         val database = Firebase.database
         val snapshot = database.getReference("availableBusInfo").get().await()
-        val list: ArrayList<BusInfo> = ArrayList()
         if (snapshot.exists()) {
             // iterate over the timing
             for (snap: DataSnapshot in snapshot.children) {

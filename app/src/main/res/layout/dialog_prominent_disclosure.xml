@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
+        android:textSize="18sp"
         android:text="@string/use_your_location"
         android:textAlignment="center"
         android:textColor="@color/white"

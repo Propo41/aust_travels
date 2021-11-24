@@ -2,8 +2,6 @@ package com.pixieium.austtravels.auth
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -42,18 +40,22 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun createNewUser() {
-        val email = mBinding.eduMail.editText!!.text.toString()
-        val password = mBinding.password.editText!!.text.toString()
-        val userName = mBinding.name.editText!!.text.toString()
-        val semester = mBinding.semester.editText!!.text.toString()
-        val department = mBinding.semester.editText!!.text.toString()
-        val universityId = mBinding.universityId.editText!!.text.toString()
+        val email = mBinding.eduMail.editText?.text.toString()
+        val password = mBinding.password.editText?.text.toString()
+        val userName = mBinding.name.editText?.text.toString()
+        val semester = mBinding.semester.editText?.text.toString()
+        val department = mBinding.semester.editText?.text.toString()
+        val universityId = mBinding.universityId.editText?.text.toString()
 
-        if (!isInputValid()) {
+        val userImage = "https://avatars.dicebear.com/api/bottts/${userName}.svg"
+        val userInfo =
+            UserInfo(email, password, userName, semester, department, universityId, userImage)
+
+        if (!userInfo.validateInput(mBinding)) {
             Toast.makeText(this, "Please enter your information correctly", Toast.LENGTH_SHORT)
                 .show()
         } else {
-            mAuth.createUserWithEmailAndPassword(email, password)
+            /*mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(
                     this
                 ) { task ->
@@ -61,17 +63,7 @@ class SignUpActivity : AppCompatActivity() {
                         val user = mAuth.currentUser
                         // uses the dicebears http api to get an image
                         // refer to https://avatars.dicebear.com/docs/http-api
-                        val userImage = "https://avatars.dicebear.com/api/bottts/${userName}.svg"
                         if (user != null) {
-                            val userInfo =
-                                UserInfo(
-                                    email,
-                                    userName,
-                                    semester,
-                                    department,
-                                    universityId,
-                                    userImage
-                                )
                             lifecycleScope.launch {
                                 if (mDatabase.createNewUser(userInfo, user.uid, user)) {
                                     val intent =
@@ -89,63 +81,17 @@ class SignUpActivity : AppCompatActivity() {
                         }
                     } else {
                         // If sign in fails, display a message to the user.
-                       // Log.d("signUp", task.exception.toString())
+                        // Log.d("signUp", task.exception.toString())
                         //task.exception?.printStackTrace()
                         Toast.makeText(
                             applicationContext, "Authentication failed.",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                }
-        }
-    }
-
-    private fun isInputValid(): Boolean {
-        val email = mBinding.eduMail.editText!!.text.toString()
-        val password = mBinding.password.editText!!.text.toString()
-        val userName = mBinding.name.editText!!.text.toString()
-        val semester = mBinding.semester.editText!!.text.toString()
-        val department = mBinding.semester.editText!!.text.toString()
-        val universityId = mBinding.universityId.editText!!.text.toString()
-
-        if (email.split('@')[1] != "aust.edu") {
-            //println(email.split('@')[1])
-            mBinding.eduMail.error = "You must enter your institutional mail"
-            return false
+                }*/
         }
 
-        if (TextUtils.isEmpty(email)) {
-            mBinding.eduMail.error = "Field is required"
-            return false
-        }
 
-        if (TextUtils.isEmpty(universityId)) {
-            mBinding.universityId.error = "Field is required"
-            return false
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            mBinding.password.error = "Field is required"
-            return false
-        }
-        if (TextUtils.isEmpty(userName)) {
-            mBinding.name.error = "Field is required"
-            return false
-        }
-        if (userName.length > 20) {
-            mBinding.name.error = "Please enter a name of 20 characters"
-            return false;
-        }
-        if (TextUtils.isEmpty(semester)) {
-            mBinding.semester.error = "Field is required"
-            return false
-        }
-        if (TextUtils.isEmpty(department)) {
-            mBinding.department.error = "Field is required"
-            return false
-        }
-
-        return true
     }
 
     private fun initSpinnerSemester(items: ArrayList<String>) {

@@ -28,6 +28,10 @@ Refer to our <a href="https://github.com/Propo41/aust_travels/blob/main/contribu
 
 <h2>Screenshots</h2>
 
-![1637578082082](https://user-images.githubusercontent.com/46298019/142873509-3dec968d-e21c-4871-897c-2ee914df8daf.jpg)
-![1637578082101](https://user-images.githubusercontent.com/46298019/142873518-98a73a85-587d-46b5-858a-064989d15422.jpg)
-![1637578082110](https://user-images.githubusercontent.com/46298019/142873519-56934f03-4da0-4a0c-9a9b-3a422be6db52.jpg)
+![257665150_485494346111673_2233233698688838218_n](https://user-images.githubusercontent.com/46298019/143294955-d7b4e1a1-b016-476f-998b-2ac8f8d423c4.jpg)
+![1637578082082](https://user-images.githubusercontent.com/46298019/143294674-5b1ae814-4e63-4914-9320-53d60869cba1.jpg)
+![1637578082101](https://user-images.githubusercontent.com/46298019/143294319-7a538ad0-c4a5-46da-aad7-f73a47174ef9.jpg)
+![1637578082110](https://user-images.githubusercontent.com/46298019/143294323-6ca6fe47-d8fe-42ef-af19-f8e3b6365e52.jpg)
+![1637578082082](https://user-images.githubusercontent.com/46298019/143294928-f0c1a1fe-726d-42d6-af44-e7be2d45e673.jpg)
+
+

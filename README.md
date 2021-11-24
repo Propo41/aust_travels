@@ -1,5 +1,11 @@
 # aust_travels
 
+<a href="https://github.com/Propo41/aust_travels/releases/tag/v0.5-beta"><img src="https://img.shields.io/badge/release-v0.5--beta-blue" alt="release"/></a>
+<a href="https://github.com/Propo41/aust_travels/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-orange" alt="license"/></a>
+<a href="https://github.com/Propo41/aust_travels/network/members"><img src="https://img.shields.io/github/forks/Propo41/aust_travels" alt="forks"/></a>
+<a href="https://github.com/Propo41/aust_travels/stargazers"><img src="https://img.shields.io/github/stars/Propo41/aust_travels" alt="stars"/></a>
+<a href="https://github.com/Propo41/aust_travels/issues"><img src="https://img.shields.io/github/issues/Propo41/aust_travels" alt="issues"/></a>
+
 Never miss your university bus again with this free bus tracking application 🚌
 
 In this country 🌏 of ours, we face severe traffic in our day to day lives. As a result, it gets very difficult to estimate when our bus arrives at our nearest bus stop 🚏. With this simple-to-use bus tracking application, you can always keep track of your bus and never have to miss it again.
@@ -10,7 +16,8 @@ In this country 🌏 of ours, we face severe traffic in our day to day lives. As
 - View the current list of the volunteers
 - View the distance between the bus and your preferred bus-stop 📍
 
-<h2>Installation</h2>
+Installation
+---------
 
 **Follow the steps to clone this project:**
 1. Open your terminal and type `git clone https://github.com/Propo41/aust_travels.git`
@@ -18,15 +25,20 @@ In this country 🌏 of ours, we face severe traffic in our day to day lives. As
 3. Run `MainActivity.kt`
 
 
-<h2>Resources</h2>
+Resources
+---------
 
 1. User interface design: [figma](https://www.figma.com/file/kBarxgD5M27m2v9LG5J9W6/Bus?node-id=257%3A344)
 
-<h2>Contributing Guidelines</h2>
+
+Contributing Guidelines
+---------
 Refer to our <a href="https://github.com/Propo41/aust_travels/blob/main/contributing.md">contributing guidelines</a> for more information on how to contribute to our project 
 
 
-<h2>Screenshots</h2>
+
+Screenshots
+---------
 
 ![257665150_485494346111673_2233233698688838218_n](https://user-images.githubusercontent.com/46298019/143294955-d7b4e1a1-b016-476f-998b-2ac8f8d423c4.jpg)
 ![1637578082101](https://user-images.githubusercontent.com/46298019/143294319-7a538ad0-c4a5-46da-aad7-f73a47174ef9.jpg)

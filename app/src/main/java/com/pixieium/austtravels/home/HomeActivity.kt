@@ -29,7 +29,6 @@ import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityHomeBinding
-import com.pixieium.austtravels.directions.DirectionsActivity
 import com.pixieium.austtravels.livetrack.LiveTrackActivity
 import com.pixieium.austtravels.models.UserInfo
 import com.pixieium.austtravels.routes.RoutesActivity

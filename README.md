@@ -51,3 +51,7 @@ Screenshots
 ![1637578082082](https://user-images.githubusercontent.com/46298019/143294928-f0c1a1fe-726d-42d6-af44-e7be2d45e673.jpg)
 
 
+
+License
+-------
+[MIT](https://github.com/Propo41/aust_travels/blob/main/LICENSE.md)  

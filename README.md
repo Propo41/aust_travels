@@ -20,7 +20,7 @@ In this country 🌏 of ours, we face severe traffic in our day to day lives. As
 
 <h2>Resources</h2>
 
-1. User interface design: ![figma](https://www.figma.com/file/kBarxgD5M27m2v9LG5J9W6/Bus?node-id=257%3A344)
+1. User interface design: [figma](https://www.figma.com/file/kBarxgD5M27m2v9LG5J9W6/Bus?node-id=257%3A344)
 
 <h2>Contributing Guidelines</h2>
 Refer to our <a href="https://github.com/Propo41/aust_travels/blob/main/contributing.md">contributing guidelines</a> for more information on how to contribute to our project 

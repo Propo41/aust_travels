@@ -2,6 +2,8 @@ import Modal from '@mui/material/Modal';
 import { Button,Box,FormControl,Select,MenuItem,OutlinedInput } from '@mui/material';
 import * as React from 'react';
 import useStyles from '../../styles/SelectBus';
+import Appbar from 'src/components/Appbar';
+import { Paper } from '@mui/material';
 
 const Style = {
   position: 'absolute',
@@ -30,10 +32,14 @@ const ViewBusPage = () =>{
         setbusStartTime(event.target.value);
     };
     return(
-    <div>
-        <div className={classes.topdiv}>
-            <Button onClick={handleOpen} className={classes.topdivButton}>SELECT BUS</Button>
-        </div>
+    <div style={{height:"100%"}}>
+        <Appbar/>
+        <h2 style={{textAlign:"center",marginTop:"2%"}}>BUSES</h2>
+        <Paper elevation={3} className={classes.paperdiv}>
+            <div className={classes.topdiv}>
+                <Button onClick={handleOpen} className={classes.topdivButton}>SELECT BUS</Button>
+            </div>
+        </Paper>
         
         <Modal
             open={open}

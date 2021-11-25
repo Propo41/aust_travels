@@ -2,19 +2,28 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
 
+paperdiv:
+{
+    textAlign: "left",
+    padding: "5rem 5rem !important",
+    borderRadius:"20px !important",
+    margin: "2% 10% 5% 10% !important",
+    height:"70% !important",
+    
+},
+
 topdiv:{
     borderBottom: "1px solid black",
-    margin: "5% 10% 5% 10%",
 },
 
 topdivButton:
 {
-    width:"10%",
+    width:"15%",
     backgroundColor:"#FFC107 !important",
     color:"black",
-    lineHeight:"3",
+    lineHeight:"2",
     fontSize:"1.5rem",
-    marginBottom:"1%",
+    marginBottom:"1.5%",
 },
 
 paper:{

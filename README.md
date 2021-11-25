@@ -6,11 +6,12 @@ Follow the following steps to install the app:
 2. Install dependencies using `yarn install`
 3. Run the app using `yarn start`
 
-# Contribution Guidelines
-
+Contribution Guidelines
+------
 1. To change the color of items, use the colors defined in `theme.palatte.admin.*` which can be found in the path: `src/theme/palette.js`
-2. Only use the material UI library in the app. Refer to: https://mui.com/
-2. To create your own custom styles, follow the following steps in the component file:
+2. Only use the material UI library in the app. Refer to: [docs](https://mui.com/)
+3. Do not use any .css or module css files. Only use the convention used in material UI docs that uses JSS based styling system. To more about the different method of styling, refer to: [here](https://www.smashingmagazine.com/2020/05/styling-components-react)
+4. To create your own custom styles, follow the following steps in the component file:
 
 ```js
 import { useTheme } from "@mui/material/styles";

@@ -9,6 +9,7 @@ Follow the following steps to install the app:
 # Contribution Guidelines
 
 1. To change the color of items, use the colors defined in `theme.palatte.admin.*` which can be found in the path: `src/theme/palette.js`
+2. Only use the material UI library in the app. Refer to: https://mui.com/
 2. To create your own custom styles, follow the following steps in the component file:
 
 ```js

@@ -1,5 +1,7 @@
 import { Navigate, useRoutes } from "react-router-dom";
 import Users from "./pages/Users";
+import HomePage from "./pages/HomePage/home";
+import ViewBusPage from "./pages/SelectBus/modal";
 // layouts
 // import DashboardLayout from './layouts/dashboard';
 // import LogoOnlyLayout from './layouts/LogoOnlyLayout';
@@ -20,6 +22,14 @@ export default function Router() {
       path: "/users",
       element: <Users />,
     },
+    {
+      path: "/",
+      element: <HomePage/>
+    },
+    {
+      path: "/viewbus",
+      element: <ViewBusPage/>
+    }
     // {
     //   path: "/",
     //   element: <LogoOnlyLayout />,

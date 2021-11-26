@@ -2,6 +2,8 @@ import { Navigate, useRoutes } from "react-router-dom";
 import Users from "./pages/Users";
 import HomePage from "./pages/HomePage/home";
 import ViewBusPage from "./pages/SelectBus/modal";
+import SemesterPage from "./pages/Semester/semester";
+import DepartmentPage from "./pages/Department/department";
 // layouts
 // import DashboardLayout from './layouts/dashboard';
 // import LogoOnlyLayout from './layouts/LogoOnlyLayout';
@@ -20,7 +22,7 @@ export default function Router() {
   return useRoutes([
     {
       path: "/users",
-      element: <Users />,
+      element: <Users/>,
     },
     {
       path: "/",
@@ -29,7 +31,16 @@ export default function Router() {
     {
       path: "/viewbus",
       element: <ViewBusPage/>
+    },
+    {
+      path: "/semseter",
+      element: <SemesterPage/>
+    },
+    {
+      path: "/department",
+      element: <DepartmentPage/>
     }
+
     // {
     //   path: "/",
     //   element: <LogoOnlyLayout />,

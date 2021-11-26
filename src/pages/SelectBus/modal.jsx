@@ -4,6 +4,8 @@ import * as React from 'react';
 import useStyles from '../../styles/SelectBus';
 import Appbar from 'src/components/Appbar';
 import { Paper } from '@mui/material';
+import busNamelist from './busname';
+import busStartTimelist from './busStartTime';
 
 const Style = {
   position: 'absolute',
@@ -31,6 +33,17 @@ const ViewBusPage = () =>{
     const handleChangebusStartTime = (event) => {
         setbusStartTime(event.target.value);
     };
+
+    function createBusNamelist(busNamelist)
+    {
+        return (<MenuItem value={busNamelist.value}>{busNamelist.name}</MenuItem>);
+    }
+
+    function createBusStartTimelist(busStartTimelist)
+    {
+        return (<MenuItem value={busStartTimelist.value}>{busStartTimelist.time}</MenuItem>);
+    }
+
     return(
     <div style={{height:"100%"}}>
         <Appbar/>
@@ -62,11 +75,12 @@ const ViewBusPage = () =>{
                                     displayEmpty
                                     input={<OutlinedInput />}
                                     onChange={handleChangebusName}>
+
                                     <MenuItem disabled value="">
                                         ENTER BUS NAME
                                     </MenuItem>
-                                    <MenuItem value={1}>Demo 1</MenuItem>
-                                    <MenuItem value={2}>Demo 2</MenuItem>
+
+                                    {busNamelist.map(createBusNamelist)}
 
                                 </Select>      
                             </FormControl>  
@@ -79,11 +93,12 @@ const ViewBusPage = () =>{
                                     displayEmpty
                                     input={<OutlinedInput />}
                                     onChange={handleChangebusStartTime}>
+
                                     <MenuItem disabled value="">
                                        ENTER BUS START TIME
                                     </MenuItem>
-                                    <MenuItem value={3}>Demo 1</MenuItem>
-                                    <MenuItem value={4}>Demo 2</MenuItem>
+                                    
+                                    {busStartTimelist.map(createBusStartTimelist)}
 
                                 </Select>      
                             </FormControl>  

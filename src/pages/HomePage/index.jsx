@@ -60,19 +60,30 @@ const HomePage = () => {
 
               <div style={{ textAlign: "left", marginTop: "40px" }}>
                 <h2>UNIVERSITY</h2>
-                <Button
-                  variant="contained"
-                  className={classes.button_university}
+                <Link
+                  to={{ pathname: "/semester" }}
+                  style={{ textDecoration: "none" }}
                 >
-                  SEMESTER
-                </Button>
-                <Button
-                  variant="contained"
-                  className={classes.button_university}
-                  style={{ marginTop: "15px" }}
+                  <Button
+                    variant="contained"
+                    className={classes.button_university}
+                  >
+                    SEMESTER
+                  </Button>
+                </Link>
+
+                <Link
+                  to={{ pathname: "/department" }}
+                  style={{ textDecoration: "none" }}
                 >
-                  DEPARTMENTS
-                </Button>
+                  <Button
+                    variant="contained"
+                    className={classes.button_university}
+                    style={{ marginTop: "15px" }}
+                  >
+                    DEPARTMENTS
+                  </Button>
+                </Link>
               </div>
             </Paper>
           </Grid>

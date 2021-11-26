@@ -26,7 +26,7 @@ grid:{
 paper:{
     textAlign: "center",
     padding: "3rem 6rem 5rem",
-    marginTop:"120px !important",
+    marginTop:"15% !important",
     borderRadius:"20px !important",
 },
 

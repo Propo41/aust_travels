@@ -39,12 +39,16 @@ const HomePage = () =>{
 
                         <div style={{textAlign:"left",marginTop:"40px"}}>
                             <h2>UNIVERSITY</h2>
-                            <Button variant="contained" className={classes.button_university}>
-                                SEMESTER
-                            </Button>
-                             <Button variant="contained" className={classes.button_university} style={{marginTop:"15px"}}>
-                                DEPARTMENTS
-                            </Button>
+                            <Link  to={{pathname: '/semseter'}} style={{textDecoration: "none"}}>
+                                <Button variant="contained" className={classes.button_university}>
+                                    SEMESTERS
+                                </Button>
+                            </Link>
+                            <Link  to={{pathname: '/department'}} style={{textDecoration: "none"}}>
+                                <Button variant="contained" className={classes.button_university} style={{marginTop:"15px"}}>
+                                    DEPARTMENTS
+                                </Button>
+                            </Link>
                         </div>
 
                     </Paper>

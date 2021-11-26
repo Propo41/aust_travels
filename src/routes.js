@@ -1,7 +1,8 @@
 import { Navigate, useRoutes } from "react-router-dom";
 import Users from "./pages/Users";
-import HomePage from "./pages/HomePage/home";
-import ViewBusPage from "./pages/SelectBus/modal";
+import HomePage from "./pages/HomePage";
+import ViewBusPage from "./pages/SelectBus";
+import Volunteers from "pages/Volunteers";
 // layouts
 // import DashboardLayout from './layouts/dashboard';
 // import LogoOnlyLayout from './layouts/LogoOnlyLayout';
@@ -23,24 +24,18 @@ export default function Router() {
       element: <Users />,
     },
     {
+      path: "/volunteers",
+      element: <Volunteers />,
+    },
+    {
       path: "/",
-      element: <HomePage/>
+      element: <HomePage />,
     },
     {
       path: "/viewbus",
-      element: <ViewBusPage/>
-    }
-    // {
-    //   path: "/",
-    //   element: <LogoOnlyLayout />,
-    //   children: [
-    //     { path: "login", element: <Login /> },
-    //     { path: "register", element: <Register /> },
-    //     { path: "404", element: <NotFound /> },
-    //     { path: "/", element: <Navigate to="/dashboard" /> },
-    //     { path: "*", element: <Navigate to="/404" /> },
-    //   ],
-    // },
-    // { path: "*", element: <Navigate to="/404" replace /> },
+      element: <ViewBusPage />,
+    },
+
+    { path: "*", element: <Navigate to="/404" replace /> },
   ]);
 }

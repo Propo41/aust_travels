@@ -4,7 +4,7 @@ import { sample } from "lodash";
 
 // ----------------------------------------------------------------------
 
-const users = [...Array(24)].map((_, index) => ({
+const volunteers = [...Array(24)].map((_, index) => ({
   id: faker.datatype.uuid(),
   avatarUrl: "https://avatars.dicebear.com/api/bottts/ali%20ahnaf.svg",
   name: faker.name.findName(),
@@ -12,7 +12,7 @@ const users = [...Array(24)].map((_, index) => ({
   semester: (faker.datatype.number() % 6) + 1 + ".1",
   dept: sample(["CSE", "MPE", "IPE", "EEE"]),
   roll: faker.datatype.uuid(),
-  isVerified: sample(["Yes", "No"]),
+  isPending: sample(["Active", "Pending"]),
 }));
 
-export default users;
+export default volunteers;

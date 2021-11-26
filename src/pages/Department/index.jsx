@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Card, Paper, Button, FormControl, OutlinedInput, CardActions} from '@mui/material';
-import Appbar from 'src/components/Appbar';
-import useStyles from 'src/styles/Department';
+import Appbar from 'components/Appbar';
+import useStyles from 'styles/Department';
 import { Icon } from '@iconify/react';
 import { Link } from "react-router-dom";
 

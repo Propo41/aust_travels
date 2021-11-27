@@ -27,7 +27,7 @@ Installation
 3. Run `MainActivity.kt`
 
 <hr>
-<a href="insert-link-here">
+<a href="https://play.google.com/store/apps/details?id=com.pixieium.austtravels">
     <img alt="Get it on Google Play" height="80" src="docs/graphics/google-badge.png" />
 </a>
 

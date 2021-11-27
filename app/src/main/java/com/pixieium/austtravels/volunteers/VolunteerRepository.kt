@@ -1,11 +1,9 @@
 package com.pixieium.austtravels.volunteers
 
-import android.provider.ContactsContract
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.pixieium.austtravels.models.Route
 import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.tasks.await
 

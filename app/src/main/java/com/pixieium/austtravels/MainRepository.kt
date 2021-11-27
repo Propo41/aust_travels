@@ -4,7 +4,9 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.models.BusTiming
 import com.pixieium.austtravels.models.Route
-import java.util.HashMap
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.set
 
 class MainRepository {
     fun setUniversityInfo() {

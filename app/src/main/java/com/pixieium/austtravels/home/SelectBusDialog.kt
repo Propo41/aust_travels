@@ -18,7 +18,6 @@ import com.pixieium.austtravels.databinding.DialogSelectBusBinding
 import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
 import kotlinx.coroutines.launch
-import java.lang.RuntimeException
 
 class SelectBusDialog : DialogFragment() {
 
@@ -54,19 +53,39 @@ class SelectBusDialog : DialogFragment() {
         mBinding = DialogSelectBusBinding.inflate(layoutInflater)
         mContext = mBinding.root.context
 
+        mBinding.selectTime.isEnabled = false
+        mBinding.selectName.isEnabled = false
+        mBinding.selectBtn.isEnabled = false
 
         lifecycleScope.launch {
-            val list: ArrayList<BusInfo> = mDatabase.fetchAllBusInfo()
-            mBinding.selectTime.isEnabled = false
-            initSpinnerName(list)
+            try {
+                val list: ArrayList<BusInfo> = mDatabase.fetchAllBusInfo()
+                if (list.size != 0) {
+                    initSpinnerName(list)
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Couldn't fetch data from database. Please check your connection",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            } catch (e: Exception) {
+                //e.printStackTrace()
+                Toast.makeText(
+                    context,
+                    "Couldn't fetch data from database. Please check your connection",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
         }
 
         mBinding.selectBtn.setOnClickListener {
             val selectedBusName = mBinding.selectName.editText?.text.toString()
             val selectedBusTime = mBinding.selectTime.editText?.text.toString()
 
-            Toast.makeText(context, "$selectedBusName is selected!", Toast.LENGTH_SHORT).show()
-
+            //Toast.makeText(context, "$selectedBusName is selected!", Toast.LENGTH_SHORT).show()
             listener?.onBusSelectClick(selectedBusName, selectedBusTime, REQUESTER)
             dismiss()
         }
@@ -79,6 +98,7 @@ class SelectBusDialog : DialogFragment() {
         for (busInfo: BusInfo in list) {
             items.add(busInfo.name)
         }
+        mBinding.selectName.isEnabled = true
         val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner, items)
         (mBinding.selectName.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
@@ -100,8 +120,10 @@ class SelectBusDialog : DialogFragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Toast.makeText(requireContext(), s.toString(), Toast.LENGTH_SHORT).show()
+                // Toast.makeText(requireContext(), s.toString(), Toast.LENGTH_SHORT).show()
                 initSpinnerTime(s.toString(), list)
+                mBinding.selectBtn.isEnabled = true
+
             }
         })
 

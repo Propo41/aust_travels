@@ -10,16 +10,14 @@ import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
 import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.tasks.await
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class HomeRepository {
 
     suspend fun fetchAllBusInfo(): ArrayList<BusInfo> {
+        val list: ArrayList<BusInfo> = ArrayList()
         // Write a message to the database
         val database = Firebase.database
         val snapshot = database.getReference("availableBusInfo").get().await()
-        val list: ArrayList<BusInfo> = ArrayList()
         if (snapshot.exists()) {
             // iterate over the timing
             for (snap: DataSnapshot in snapshot.children) {
@@ -41,37 +39,39 @@ class HomeRepository {
     suspend fun createVolunteer(uid: String): Boolean {
         val database = Firebase.database
         return try {
-            database.getReference("volunteers/$uid").setValue(true).await()
+            database.getReference("volunteers/$uid").setValue(false).await()
             true
         } catch (e: Exception) {
-            e.printStackTrace()
+            //e.printStackTrace()
             false
         }
     }
 
     suspend fun isVolunteer(uid: String): Boolean {
-        val database = Firebase.database
-        return try {
+        try {
+            val database = Firebase.database
             val snapshot = database.getReference("volunteers/$uid").get().await()
-            snapshot.exists()
+            if (snapshot.exists() && snapshot != null) {
+                return snapshot.getValue<Boolean>() == true
+            }
         } catch (e: Exception) {
-            e.printStackTrace()
-            false
+            return false
         }
+        return false
     }
 
 
     fun updateLocation(
-        uid: String,
-        mSelectedBusName: String,
-        mSelectedBusTime: String,
-        location: Location
+            uid: String,
+            mSelectedBusName: String,
+            mSelectedBusTime: String,
+            location: Location
     ) {
         val payload = mapOf(
-            "lat" to location.latitude.toString(),
-            "long" to location.longitude.toString(),
-            "lastUpdatedTime" to System.currentTimeMillis().toString(),
-            "lastUpdatedVolunteer" to uid
+                "lat" to location.latitude.toString(),
+                "long" to location.longitude.toString(),
+                "lastUpdatedTime" to System.currentTimeMillis().toString(),
+                "lastUpdatedVolunteer" to uid
         ) as HashMap<String, String>
         val database = Firebase.database
         database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/location").setValue(payload)

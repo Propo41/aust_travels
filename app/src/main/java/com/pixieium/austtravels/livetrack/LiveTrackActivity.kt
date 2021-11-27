@@ -2,64 +2,54 @@ package com.pixieium.austtravels.livetrack
 
 import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
-
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-
-import android.provider.Settings
+import android.graphics.Typeface
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
+import android.os.Bundle
+import android.provider.Settings
+import android.text.format.DateUtils
+import android.view.Gravity
+import android.view.Menu
 import android.view.MenuItem
-
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.*
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.auth.ktx.auth
-
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
-import android.text.format.DateUtils
-import android.view.Menu
-import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.maps.model.*
+import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
+import com.pixieium.austtravels.home.ProminentDisclosureDialog
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
-import android.location.Address
-import android.location.Geocoder
-import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener
-
-import com.google.android.gms.maps.model.Marker
-import android.widget.TextView
-
-import android.graphics.Typeface
-
-import android.view.Gravity
-import android.view.View
-
-import android.widget.LinearLayout
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 
 
 // watch this for setting location permission at run time: https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime
-class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
+class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
+        ProminentDisclosureDialog.FragmentListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityLiveTrackBinding
@@ -70,6 +60,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mBusLocation: LatLng
     private var mBusMarker: Marker? = null
+    private var isFirstTime: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,15 +71,19 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        binding.lastUpdated.visibility = View.GONE
+
         mSelectedBusName = intent.getStringExtra("SELECTED_BUS_NAME").toString()
         mSelectedBusTime = intent.getStringExtra("SELECTED_BUS_TIME").toString()
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+                .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        // bus name
         binding.sec.text = getString(R.string.selected_bus, mSelectedBusName)
+        // bus start time
         binding.start.text = getString(R.string.starting_time, mSelectedBusTime)
 
     }
@@ -114,6 +109,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun fetchLocationInfo(busName: String, busTime: String) {
+        binding.lastUpdated.visibility = View.VISIBLE
         val locListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -123,10 +119,10 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                     moveToCurrentLocation(mBusLocation)
                     val lastUpdated = dataSnapshot.child("lastUpdatedTime").value.toString()
                     binding.lastUpdated.text =
-                        getString(R.string.last_updated, getRelativeTime(lastUpdated.toLong()))
+                            getString(R.string.last_updated, getRelativeTime(lastUpdated.toLong()))
                 } else {
                     binding.lastUpdated.text =
-                        getString(R.string.last_updated, "Never")
+                            getString(R.string.last_updated, "Never")
                     // center the map around AUST if no location available
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(23.763863, 90.406255)))
                     mMap.animateCamera(CameraUpdateFactory.zoomIn());
@@ -134,12 +130,12 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(15F), 2000, null)
 
                     Toast.makeText(baseContext, "Oops. No location data found!", Toast.LENGTH_SHORT)
-                        .show()
+                            .show()
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                databaseError.toException().printStackTrace()
+                //databaseError.toException().printStackTrace()
             }
         }
         val database = Firebase.database
@@ -154,7 +150,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         val currentDate = Date()
         val currentDateLong: Long = currentDate.time
         val relativeTime = DateUtils
-            .getRelativeTimeSpanString(oldDate, currentDateLong, 0L)
+                .getRelativeTimeSpanString(oldDate, currentDateLong, 0L)
         return relativeTime.toString()
     }
 
@@ -178,14 +174,14 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 val loc = LatLng(route.latitude.toDouble(), route.longitude.toDouble())
 
                 val markerOptions = MarkerOptions().position(loc)
-                    .title(route.mapPlaceName)
-                    .snippet("Est. Time: ${route.estTime}")
-                    .icon(
-                        bitmapDescriptorFromVector(
-                            baseContext,
-                            R.drawable.ic_baseline_directions_24
+                        .title(route.mapPlaceName)
+                        .snippet("Est. Time: ${route.estTime}")
+                        .icon(
+                                bitmapDescriptorFromVector(
+                                        baseContext,
+                                        R.drawable.ic_baseline_directions_24
+                                )
                         )
-                    )
 
                 customizeMapMarkers()
                 mMap.addMarker(markerOptions)
@@ -203,23 +199,23 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 // building the map url
                 // follow https://developers.google.com/maps/documentation/urls/get-started#directions-action
                 val mapUrl = buildMapUrl(
-                    encodePlaceName(busCurrentLocationName),
-                    encodePlaceName(arg0.title)
+                        encodePlaceName(busCurrentLocationName),
+                        encodePlaceName(arg0.title)
                 )
 
                 Toast.makeText(
-                    baseContext,
-                    "Opening directions in map from : $busCurrentLocationName to ${arg0.title}",
-                    Toast.LENGTH_SHORT
+                        baseContext,
+                        "Opening directions in map from : $busCurrentLocationName to ${arg0.title}",
+                        Toast.LENGTH_SHORT
                 ).show()
 
                 createMapsIntent(mapUrl)
 
             } else {
                 Toast.makeText(
-                    baseContext,
-                    "Couldn't find a suitable name for the bus location. Please try reloading the page",
-                    Toast.LENGTH_SHORT
+                        baseContext,
+                        "Couldn't find a suitable name for the bus location. Please try reloading the page",
+                        Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -273,9 +269,9 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             startActivity(mapIntent)
         } else {
             Toast.makeText(
-                baseContext,
-                "Couldn't open the map. Do you have the latest version of Google Maps installed?",
-                Toast.LENGTH_SHORT
+                    baseContext,
+                    "Couldn't open the map. Do you have the latest version of Google Maps installed?",
+                    Toast.LENGTH_SHORT
             ).show()
         }
     }
@@ -325,50 +321,52 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun enableCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
         ) {
             mMap.isMyLocationEnabled = true
             fetchLocationInfo(mSelectedBusName, mSelectedBusTime)
         } else {
-            // Show rationale and request permission.
+            // show prominent disclosure dialog
+            // after the user accepts the agreement,
+            // build an alert dialog requesting for permission
+            ProminentDisclosureDialog.newInstance()
+                    .show(supportFragmentManager, ProminentDisclosureDialog.TAG)
             Toast.makeText(applicationContext, "You need to enable your GPS", Toast.LENGTH_SHORT)
-                .show()
-            buildAlertMessageNoGps()
+                    .show()
         }
-
     }
 
     private fun buildAlertMessageNoGps() {
         AlertDialog.Builder(this)
-            .setTitle("Location Permission Needed")
-            .setMessage("This app needs the Location permission, please accept to use location functionality")
-            .setPositiveButton(
-                "OK"
-            ) { _, _ ->
-                //Prompt the user to request permission
-                requestLocationPermission()
-            }
-            .create()
-            .show()
+                .setTitle("Location Permission Needed")
+                .setMessage("This app needs the Location permission, please accept to use location functionality")
+                .setPositiveButton(
+                        "OK"
+                ) { _, _ ->
+                    //Prompt the user to request permission
+                    requestLocationPermission()
+                }
+                .create()
+                .show()
     }
 
     private fun requestLocationPermission() {
         ActivityCompat.requestPermissions(
-            this,
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            ),
-            MY_PERMISSIONS_REQUEST_LOCATION
+                this,
+                arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                ),
+                MY_PERMISSIONS_REQUEST_LOCATION
         )
     }
 
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -378,34 +376,35 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                     // permission was granted, yay! Do the
                     // location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        ) == PackageManager.PERMISSION_GRANTED
+                                    this,
+                                    Manifest.permission.ACCESS_FINE_LOCATION
+                            ) == PackageManager.PERMISSION_GRANTED
                     ) {
                         mMap.isMyLocationEnabled = true
+                        fetchLocationInfo(mSelectedBusName, mSelectedBusTime)
                     }
 
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(
-                        this,
-                        "Permission denied! Please enable location permission to access this feature",
-                        Toast.LENGTH_LONG
+                            this,
+                            "Permission denied! Please enable location permission to access this feature",
+                            Toast.LENGTH_LONG
                     ).show()
 
                     // Check if we are in a state where the user has denied the permission and
                     // selected Don't ask again
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                            this,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        )
+                                    this,
+                                    Manifest.permission.ACCESS_FINE_LOCATION
+                            )
                     ) {
                         startActivity(
-                            Intent(
-                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.fromParts("package", this.packageName, null),
-                            ),
+                                Intent(
+                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                        Uri.fromParts("package", this.packageName, null),
+                                ),
                         )
                     }
                 }
@@ -417,9 +416,9 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun moveToCurrentLocation(currentLocation: LatLng) {
         val markerOptions = MarkerOptions().position(currentLocation)
-            .title(mSelectedBusName)
-            .snippet("Start time: $mSelectedBusTime")
-            .icon(bitmapDescriptorFromVector(this, R.drawable.ic_bus))
+                .title(mSelectedBusName)
+                .snippet("Start time: $mSelectedBusTime")
+                .icon(bitmapDescriptorFromVector(this, R.drawable.ic_bus))
 
         // removing the previous marker
         if (mBusMarker != null) {
@@ -427,17 +426,20 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         mBusMarker = mMap.addMarker(markerOptions)
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
-        mMap.animateCamera(CameraUpdateFactory.zoomIn());
-        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15F), 2000, null)
+        if (isFirstTime) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+            // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(15F), 2000, null)
+            isFirstTime = false
+        }
     }
 
     private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
         return ContextCompat.getDrawable(context, vectorResId)?.run {
             setBounds(0, 0, intrinsicWidth, intrinsicHeight)
             val bitmap =
-                Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+                    Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
             draw(Canvas(bitmap))
             BitmapDescriptorFactory.fromBitmap(bitmap)
         }
@@ -445,6 +447,11 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
+    }
+
+    override fun onDisclosureAcceptClick() {
+        // after user accepts the agreement, request for permission to enable GPS
+        buildAlertMessageNoGps()
     }
 
 

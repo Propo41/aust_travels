@@ -42,14 +42,14 @@ class DirectionsActivity : AppCompatActivity() {
 
                 val mapUrl: String? = buildMapUrl(routeList)
                 if (mapUrl != null) {
-                    println(mapUrl)
+                    //println(mapUrl)
                     binding.webView.loadUrl(mapUrl)
                 }
             }
         }
 
         setSupportActionBar(binding.toolbar)
-        Toast.makeText(this, "$selectedBusName $selectedBusTime", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "$selectedBusName $selectedBusTime", Toast.LENGTH_SHORT).show()
     }
 
 

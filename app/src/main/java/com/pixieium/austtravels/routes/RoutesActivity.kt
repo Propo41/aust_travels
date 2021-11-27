@@ -1,7 +1,6 @@
 package com.pixieium.austtravels.routes
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,18 +10,18 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.pixieium.austtravels.models.Route
-import androidx.recyclerview.widget.RecyclerView
-import com.pixieium.austtravels.R
-import com.pixieium.austtravels.auth.SignInActivity
-import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
-import com.pixieium.austtravels.databinding.ActivityRoutesBinding
-import com.pixieium.austtravels.models.BusInfo
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.pixieium.austtravels.models.BusTiming
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.pixieium.austtravels.R
+import com.pixieium.austtravels.auth.SignInActivity
+import com.pixieium.austtravels.databinding.ActivityRoutesBinding
+import com.pixieium.austtravels.models.BusInfo
+import com.pixieium.austtravels.models.BusTiming
+import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.launch
 
 class RoutesActivity : AppCompatActivity() {
@@ -43,10 +42,34 @@ class RoutesActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        mBinding.name.isEnabled = false
+        mBinding.time.isEnabled = false
+        mBinding.select.isEnabled = false
+
         lifecycleScope.launch {
-            val list: ArrayList<BusInfo> = mDatabase.fetchAllBusInfo()
-            mBinding.time.isEnabled = false
-            initSpinnerName(list)
+            try {
+                val list: ArrayList<BusInfo> = mDatabase.fetchAllBusInfo()
+                if (list.size != 0) {
+                    initSpinnerName(list)
+                } else {
+                    Toast.makeText(
+                        baseContext,
+                        "Couldn't fetch data from database. Please check your connection",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+
+            } catch (e: Exception) {
+                //e.printStackTrace()
+                Toast.makeText(
+                    baseContext,
+                    "Couldn't fetch data from database. Please check your connection",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
+
         }
     }
 
@@ -76,6 +99,8 @@ class RoutesActivity : AppCompatActivity() {
         for (busInfo: BusInfo in list) {
             items.add(busInfo.name)
         }
+        mBinding.name.isEnabled = true
+
         val adapter = ArrayAdapter(baseContext, R.layout.item_spinner, items)
         (mBinding.name.editText as? AutoCompleteTextView)?.setAdapter(adapter)
         mBinding.name.editText?.addTextChangedListener(object : TextWatcher {
@@ -91,8 +116,9 @@ class RoutesActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Toast.makeText(this@RoutesActivity, s.toString(), Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@RoutesActivity, s.toString(), Toast.LENGTH_SHORT).show()
                 initSpinnerTime(s.toString(), list)
+                mBinding.select.isEnabled = true
             }
         })
 

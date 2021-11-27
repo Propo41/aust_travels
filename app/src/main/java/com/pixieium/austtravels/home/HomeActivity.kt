@@ -9,8 +9,10 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -19,29 +21,25 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.pixieium.austtravels.livetrack.LiveTrackActivity
-import com.pixieium.austtravels.R
-import com.pixieium.austtravels.auth.SignInActivity
-import com.pixieium.austtravels.databinding.ActivityHomeBinding
-import com.pixieium.austtravels.directions.DirectionsActivity
-import com.pixieium.austtravels.routes.RoutesActivity
-import kotlinx.coroutines.launch
-
-import android.view.Menu
-import android.widget.ImageView
 import coil.ImageLoader
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.pixieium.austtravels.R
+import com.pixieium.austtravels.auth.SignInActivity
+import com.pixieium.austtravels.databinding.ActivityHomeBinding
+import com.pixieium.austtravels.livetrack.LiveTrackActivity
 import com.pixieium.austtravels.models.UserInfo
+import com.pixieium.austtravels.routes.RoutesActivity
 import com.pixieium.austtravels.volunteers.VolunteersActivity
-
+import kotlinx.coroutines.launch
 
 
 /* stop watch: https://stackoverflow.com/questions/3733867/stop-watch-logic*/
 
 class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
+    ProminentDisclosureDialog.FragmentListener,
     SelectBusDialog.FragmentListener {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var mLocationManager: LocationManager
@@ -138,13 +136,22 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(
-                this@HomeActivity, "Requires location permission",
-                Toast.LENGTH_SHORT
-            ).show()
-            buildAlertMessageNoPermission()
+
+            // show prominent disclosure dialog
+            // after the user accepts the agreement,
+            // build an alert dialog requesting for permission
+            ProminentDisclosureDialog.newInstance()
+                .show(supportFragmentManager, ProminentDisclosureDialog.TAG)
             return
         }
+
+        // start sharing location
+        binding.shareLocation.text = getString(R.string.stop_sharing_location)
+        binding.cardView.visibility = View.VISIBLE
+        isLocationSharing = true
+
+        binding.busName.text = getString(R.string.bus_jamuna, mSelectedBusName)
+        binding.busTime.text = getString(R.string.time_6_45_am, mSelectedBusTime)
 
         // check if GPS is enabled or not
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -170,10 +177,10 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     private inner class MyLocationListener : LocationListener {
         override fun onLocationChanged(location: Location) {
             mDatabase.updateLocation(mUid, mSelectedBusName, mSelectedBusTime, location)
-            Toast.makeText(
-                this@HomeActivity, "Location changed!",
-                Toast.LENGTH_SHORT
-            ).show()
+            /*  Toast.makeText(
+                  this@HomeActivity, "Location changed!",
+                  Toast.LENGTH_SHORT
+              ).show()*/
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
@@ -229,26 +236,17 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     ) {
         when (requestCode) {
             REQUEST_SHARE_LOCATION -> {
-                // start sharing location
-                binding.shareLocation.text = getString(R.string.stop_sharing_location)
-                binding.cardView.visibility = View.VISIBLE
-                isLocationSharing = true
-
                 mSelectedBusName = selectedBusName
                 mSelectedBusTime = selectedBusTime
-
-                binding.busName.text = getString(R.string.bus_jamuna, selectedBusName)
-                binding.busTime.text = getString(R.string.time_6_45_am, selectedBusTime)
-
                 startLocationSharing()
                 // createNotification();
             }
-            REQUEST_DIRECTIONS -> {
-                val intent = Intent(this@HomeActivity, DirectionsActivity::class.java)
-                intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
-                intent.putExtra("SELECTED_BUS_TIME", selectedBusTime)
-                startActivity(intent)
-            }
+            /*   REQUEST_DIRECTIONS -> {
+                   val intent = Intent(this@HomeActivity, DirectionsActivity::class.java)
+                   intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
+                   intent.putExtra("SELECTED_BUS_TIME", selectedBusTime)
+                   startActivity(intent)
+               }*/
             REQUEST_LIVE_TRACK -> {
                 val intent = Intent(this@HomeActivity, LiveTrackActivity::class.java)
                 intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
@@ -390,8 +388,16 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     }
 
     fun onViewVolunteersClick(view: View) {
-        Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
         val intent = Intent(this@HomeActivity, VolunteersActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun onDisclosureAcceptClick() {
+        Toast.makeText(
+            this@HomeActivity, "Requires location permission",
+            Toast.LENGTH_SHORT
+        ).show()
+        buildAlertMessageNoPermission()
     }
 }

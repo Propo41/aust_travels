@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="text_input_padding">15dp</dimen>
+    <dimen name="text_input_padding">18dp</dimen>
+    <dimen name="button_padding">18dp</dimen>
+    <dimen name="window_margin">30dp</dimen>
+    <dimen name="item_spacing">10dp</dimen>
+    <dimen name="item_spacing_small">5dp</dimen>
+
+    <dimen name="item_spacing_large">30dp</dimen>
 </resources>

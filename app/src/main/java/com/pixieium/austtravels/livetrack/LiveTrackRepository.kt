@@ -4,8 +4,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.pixieium.austtravels.home.HomeRepository
-import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.tasks.await
 

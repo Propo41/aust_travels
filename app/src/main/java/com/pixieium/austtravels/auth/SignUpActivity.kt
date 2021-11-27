@@ -1,21 +1,25 @@
 package com.pixieium.austtravels.auth
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.databinding.ActivitySignupBinding
+import com.pixieium.austtravels.home.HomeActivity
 import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.launch
-import java.util.ArrayList
-import android.content.Intent
-import com.pixieium.austtravels.home.HomeActivity
+import java.util.*
+import android.app.Activity
+import android.view.inputmethod.InputMethodManager
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -39,17 +43,22 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         mBinding.signup.setOnClickListener { createNewUser() }
+
     }
 
     private fun createNewUser() {
-        val email = mBinding.eduMail.editText!!.text.toString()
-        val password = mBinding.password.editText!!.text.toString()
-        val userName = mBinding.name.editText!!.text.toString()
-        val semester = mBinding.semester.editText!!.text.toString()
-        val department = mBinding.semester.editText!!.text.toString()
-        val universityId = mBinding.universityId.editText!!.text.toString()
+        val email = mBinding.eduMail.editText?.text.toString()
+        val password = mBinding.password.editText?.text.toString()
+        val userName = mBinding.name.editText?.text.toString()
+        val semester = mBinding.semester.editText?.text.toString()
+        val department = mBinding.department.editText?.text.toString()
+        val universityId = mBinding.universityId.editText?.text.toString()
 
-        if (!isInputValid()) {
+        val userImage = "https://avatars.dicebear.com/api/bottts/${userName}.svg"
+        val userInfo =
+            UserInfo(email, password, userName, semester, department, universityId, userImage)
+
+        if (!userInfo.validateInput(mBinding)) {
             Toast.makeText(this, "Please enter your information correctly", Toast.LENGTH_SHORT)
                 .show()
         } else {
@@ -61,23 +70,11 @@ class SignUpActivity : AppCompatActivity() {
                         val user = mAuth.currentUser
                         // uses the dicebears http api to get an image
                         // refer to https://avatars.dicebear.com/docs/http-api
-                        val userImage = "https://avatars.dicebear.com/api/bottts/${userName}.svg"
                         if (user != null) {
-                            val userInfo =
-                                UserInfo(
-                                    email,
-                                    userName,
-                                    semester,
-                                    department,
-                                    universityId,
-                                    userImage
-                                )
                             lifecycleScope.launch {
-                                if (mDatabase.createNewUser(userInfo, user.uid, user)) {
-                                    val intent =
-                                        Intent(this@SignUpActivity, HomeActivity::class.java)
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                    startActivity(intent)
+                                if (mDatabase.saveNewUserInfo(userInfo, user.uid, user)) {
+                                    sentVerificationEmail()
+
                                 } else {
                                     Toast.makeText(
                                         this@SignUpActivity,
@@ -87,67 +84,42 @@ class SignUpActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.d("signUp", task.exception.toString())
-                        task.exception?.printStackTrace()
-                        Toast.makeText(
-                            applicationContext, "Authentication failed.",
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
                 }
+                    .addOnFailureListener(this){
+                        Toast.makeText(
+                                applicationContext, it.localizedMessage,
+                                Toast.LENGTH_SHORT
+                        ).show()
+
+                    }
         }
+
+
     }
 
-    private fun isInputValid(): Boolean {
-        val email = mBinding.eduMail.editText!!.text.toString()
-        val password = mBinding.password.editText!!.text.toString()
-        val userName = mBinding.name.editText!!.text.toString()
-        val semester = mBinding.semester.editText!!.text.toString()
-        val department = mBinding.semester.editText!!.text.toString()
-        val universityId = mBinding.universityId.editText!!.text.toString()
+    private fun sentVerificationEmail(){
+        val currentUser:FirebaseUser? = mAuth.currentUser
+        currentUser?.sendEmailVerification()?.addOnCompleteListener(this){
+            task->
+            if (task.isSuccessful)
+            {
 
-        if (email.split('@')[1] != "aust.edu") {
-            println(email.split('@')[1])
-            mBinding.eduMail.error = "You must enter your institutional mail"
-            return false
-        }
+                Toast.makeText(
+                        this@SignUpActivity,
+                        "Email verification link sent to your email",
+                        Toast.LENGTH_SHORT
+                ).show()
 
-        if (TextUtils.isEmpty(email)) {
-            mBinding.eduMail.error = "Field is required"
-            return false
-        }
+                Firebase.auth.signOut()
+                val intent =
+                        Intent(this@SignUpActivity, SignInActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+            }
 
-        if (TextUtils.isEmpty(universityId)) {
-            mBinding.universityId.error = "Field is required"
-            return false
         }
-
-        if (TextUtils.isEmpty(password)) {
-            mBinding.password.error = "Field is required"
-            return false
-        }
-        if (TextUtils.isEmpty(userName)) {
-            mBinding.name.error = "Field is required"
-            return false
-        }
-        if (userName.length > 20) {
-            mBinding.name.error = "Please enter a name of 20 characters"
-            return false;
-        }
-        if (TextUtils.isEmpty(semester)) {
-            mBinding.semester.error = "Field is required"
-            return false
-        }
-        if (TextUtils.isEmpty(department)) {
-            mBinding.department.error = "Field is required"
-            return false
-        }
-
-        return true
     }
-
     private fun initSpinnerSemester(items: ArrayList<String>) {
         val arrayAdapter: ArrayAdapter<String> =
             ArrayAdapter(this, R.layout.item_spinner, items)
@@ -159,4 +131,6 @@ class SignUpActivity : AppCompatActivity() {
             ArrayAdapter(this, R.layout.item_spinner, items)
         mBinding.departmentDropdown.setAdapter(arrayAdapter)
     }
+
+
 }

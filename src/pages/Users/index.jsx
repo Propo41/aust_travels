@@ -27,9 +27,8 @@ import { UserListHead, UserMoreMenu } from "components/users";
 //
 import USERLIST from "_mocks_/user";
 import Appbar from "components/Appbar";
-import { useTheme } from "@emotion/react";
-import { makeStyles } from "@mui/styles";
 import UserListToolbar from "components/users/UserListToolbar";
+import { useAuth } from "auth/firebaseAuth";
 
 // ----------------------------------------------------------------------
 
@@ -85,6 +84,9 @@ export default function Users() {
   const [filterName, setFilterName] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
+
+  const firebaseUser = useAuth();
+  console.log(firebaseUser);
 
   useEffect(() => {
     setFilteredUsers(

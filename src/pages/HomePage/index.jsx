@@ -49,6 +49,10 @@ const HomePage = () => {
                     VIEW BUSES
                   </Button>
                 </Link>
+                <Link
+                  to={{ pathname: "/createbus" }}
+                  style={{ textDecoration: "none" }}
+                >
                 <Button
                   variant="contained"
                   className={classes.button_buses}
@@ -56,6 +60,7 @@ const HomePage = () => {
                 >
                   CREATE NEW BUS
                 </Button>
+                </Link>
               </div>
 
               <div style={{ textAlign: "left", marginTop: "40px" }}>

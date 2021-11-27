@@ -30,7 +30,7 @@ const CardComponent=(props)=>{
 
                 <CardActions>
                     <p className={classes.title}>Map Place Id : </p>
-                    <p >{props.Map_Place_Id}</p>
+                    <p >{props.Map_Place_ID}</p>
                 </CardActions>
 
                 <CardActions>
@@ -46,7 +46,7 @@ const CardComponent=(props)=>{
             </div>
 
             <div className={classes.section3}>
-                <Button style={{display:props.display}} className={classes.cardbutton}><Icon icon="icomoon-free:bin2" /></Button>
+                <Button style={{display:props.display}} onClick={()=>props.deleteRouteInfo(props.id)} className={classes.cardbutton}><Icon icon="icomoon-free:bin2" /></Button>
             </div>
             </CardActions>
         </Card>

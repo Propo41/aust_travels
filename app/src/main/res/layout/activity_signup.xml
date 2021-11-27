@@ -67,14 +67,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name"
             app:startIconDrawable="@drawable/ic_roll"
-            app:startIconTint="@color/black">
+            app:startIconTint="@color/black"
+
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/text_input_padding"
                 android:textAppearance="@style/TextAppearance.App.Subtitle1"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:inputType="phone"
+                />
 
         </com.google.android.material.textfield.TextInputLayout>
 

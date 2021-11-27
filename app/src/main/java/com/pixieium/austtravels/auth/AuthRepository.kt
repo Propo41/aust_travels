@@ -34,7 +34,7 @@ class AuthRepository {
         return departmentList
     }
 
-    suspend fun createNewUser(userInfo: UserInfo, uid: String, user: FirebaseUser): Boolean {
+    suspend fun saveNewUserInfo(userInfo: UserInfo, uid: String, user: FirebaseUser): Boolean {
         val database = Firebase.database
         val profileUpdates = userProfileChangeRequest {
             displayName = userInfo.name

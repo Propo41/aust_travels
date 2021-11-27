@@ -8,6 +8,8 @@ We have tons of issues ready to be resolved and we are open to your contribution
 - Becoming an active maintainer
 - Documenting
 
+Here is a list of some of the features we are looking to develop: [google docs](https://docs.google.com/document/d/1Yt98951ieODFlDX5dAFXWnPNEoxDURQh0MJ2_c-LU_I/edit?usp=sharing)
+
 <h2>What do I need to know to help?</h2>
 If you are looking to help with a code contribution, our project uses the following:
 

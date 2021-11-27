@@ -6,7 +6,11 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.databinding.ActivitySignInBinding
 import com.pixieium.austtravels.home.HomeActivity
 
@@ -46,17 +50,52 @@ class SignInActivity : AppCompatActivity() {
                 ) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        val intent = Intent(baseContext, HomeActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        startActivity(intent)
+                        checkVerifiedEmail()
+
                     } else {
-                        //task.exception?.printStackTrace()
+                        task.exception?.printStackTrace()
                         Toast.makeText(
                             applicationContext, "Authentication failed.",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
+
+        }
+    }
+
+    private fun checkVerifiedEmail()
+    {
+        val currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+
+        if(currentUser?.isEmailVerified == true){
+            val intent = Intent(baseContext, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+        }
+
+        else{
+            val snakbar: Snackbar = Snackbar.make(mBinding.signinLayout,"Please verify your email",Snackbar.LENGTH_LONG)
+                    .setAction("Resend email", View.OnClickListener {
+                        currentUser?.sendEmailVerification()?.addOnCompleteListener(this){
+                            task->
+                            if (task.isSuccessful)
+                            {
+
+                                Toast.makeText(
+                                        this@SignInActivity,
+                                        "Email verification link sent to your email",
+                                        Toast.LENGTH_SHORT
+                                ).show()
+
+                            }
+
+                        }
+                    })
+
+            snakbar.show()
+
+            Firebase.auth.signOut()
         }
     }
 }

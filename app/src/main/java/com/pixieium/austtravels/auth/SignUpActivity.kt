@@ -1,5 +1,6 @@
 package com.pixieium.austtravels.auth
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -8,12 +9,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.databinding.ActivitySignupBinding
 import com.pixieium.austtravels.home.HomeActivity
 import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.launch
 import java.util.*
+import android.app.Activity
+import android.view.inputmethod.InputMethodManager
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -37,6 +43,7 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         mBinding.signup.setOnClickListener { createNewUser() }
+
     }
 
     private fun createNewUser() {
@@ -44,7 +51,7 @@ class SignUpActivity : AppCompatActivity() {
         val password = mBinding.password.editText?.text.toString()
         val userName = mBinding.name.editText?.text.toString()
         val semester = mBinding.semester.editText?.text.toString()
-        val department = mBinding.semester.editText?.text.toString()
+        val department = mBinding.department.editText?.text.toString()
         val universityId = mBinding.universityId.editText?.text.toString()
 
         val userImage = "https://avatars.dicebear.com/api/bottts/${userName}.svg"
@@ -55,7 +62,7 @@ class SignUpActivity : AppCompatActivity() {
             Toast.makeText(this, "Please enter your information correctly", Toast.LENGTH_SHORT)
                 .show()
         } else {
-            /*mAuth.createUserWithEmailAndPassword(email, password)
+            mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(
                     this
                 ) { task ->
@@ -65,11 +72,9 @@ class SignUpActivity : AppCompatActivity() {
                         // refer to https://avatars.dicebear.com/docs/http-api
                         if (user != null) {
                             lifecycleScope.launch {
-                                if (mDatabase.createNewUser(userInfo, user.uid, user)) {
-                                    val intent =
-                                        Intent(this@SignUpActivity, HomeActivity::class.java)
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                    startActivity(intent)
+                                if (mDatabase.saveNewUserInfo(userInfo, user.uid, user)) {
+                                    sentVerificationEmail()
+
                                 } else {
                                     Toast.makeText(
                                         this@SignUpActivity,
@@ -79,21 +84,42 @@ class SignUpActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        // Log.d("signUp", task.exception.toString())
-                        //task.exception?.printStackTrace()
-                        Toast.makeText(
-                            applicationContext, "Authentication failed.",
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
-                }*/
+                }
+                    .addOnFailureListener(this){
+                        Toast.makeText(
+                                applicationContext, it.localizedMessage,
+                                Toast.LENGTH_SHORT
+                        ).show()
+
+                    }
         }
 
 
     }
 
+    private fun sentVerificationEmail(){
+        val currentUser:FirebaseUser? = mAuth.currentUser
+        currentUser?.sendEmailVerification()?.addOnCompleteListener(this){
+            task->
+            if (task.isSuccessful)
+            {
+
+                Toast.makeText(
+                        this@SignUpActivity,
+                        "Email verification link sent to your email",
+                        Toast.LENGTH_SHORT
+                ).show()
+
+                Firebase.auth.signOut()
+                val intent =
+                        Intent(this@SignUpActivity, SignInActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+            }
+
+        }
+    }
     private fun initSpinnerSemester(items: ArrayList<String>) {
         val arrayAdapter: ArrayAdapter<String> =
             ArrayAdapter(this, R.layout.item_spinner, items)
@@ -105,4 +131,6 @@ class SignUpActivity : AppCompatActivity() {
             ArrayAdapter(this, R.layout.item_spinner, items)
         mBinding.departmentDropdown.setAdapter(arrayAdapter)
     }
+
+
 }

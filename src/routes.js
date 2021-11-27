@@ -5,6 +5,7 @@ import ViewBusPage from "./pages/SelectBus";
 import Volunteers from "pages/Volunteers";
 import SemesterPage from "./pages/Semester";
 import DepartmentPage from "./pages/Department";
+import CreateBusPage from "./pages/CreateBus";
 
 export default function Router() {
   return useRoutes([
@@ -23,6 +24,10 @@ export default function Router() {
     {
       path: "/viewbus",
       element: <ViewBusPage />,
+    },
+    {
+      path: "/createbus",
+      element: <CreateBusPage />,
     },
     {
       path: "/semester",

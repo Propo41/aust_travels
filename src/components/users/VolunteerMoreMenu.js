@@ -7,7 +7,7 @@ import { Menu, MenuItem, IconButton, ListItemText } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu(props) {
+export default function VolunteerMoreMenu(props) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -17,16 +17,10 @@ export default function UserMoreMenu(props) {
     props.onDeleteClick(props.id);
   };
 
-  const onEnableClick = (e) => {
+  const onApproveClick = (e) => {
     e.preventDefault();
     setIsOpen(false);
-    props.onEnableAccountClick(props.id);
-  };
-
-  const onMakeVolunteerClick = (e) => {
-    e.preventDefault();
-    setIsOpen(false);
-    props.onMakeVolunteerClick(props.id);
+    props.onApproveClick(props.id);
   };
 
   return (
@@ -59,21 +53,9 @@ export default function UserMoreMenu(props) {
           sx={{ color: "text.secondary" }}
         >
           <ListItemText
-            primary="Enable Account"
+            primary="Approve"
+            onClick={onApproveClick}
             primaryTypographyProps={{ variant: "body2" }}
-            onClick={onEnableClick}
-          />
-        </MenuItem>
-
-        <MenuItem
-          component={RouterLink}
-          to="#"
-          sx={{ color: "text.secondary" }}
-        >
-          <ListItemText
-            primary="Make Volunteer"
-            primaryTypographyProps={{ variant: "body2" }}
-            onClick={onMakeVolunteerClick}
           />
         </MenuItem>
       </Menu>

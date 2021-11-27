@@ -1,5 +1,5 @@
 import { Card, CardActions,Button } from "@mui/material";
-import useStyles from "src/styles/cardstyle";
+import useStyles from "../../styles/cardstyle";
 import { Icon } from '@iconify/react';
 
 

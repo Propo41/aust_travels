@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
+import { signOut } from "auth/firebaseAuth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,6 +20,11 @@ const useStyles = makeStyles((theme) => ({
       flexGrow: 1,
     },
   },
+  button: {
+    marginLeft: 60,
+    fontSize: "1.5rem",
+    color: "red",
+  },
   logoText: {
     color: theme.palette.admin.black,
     textDecoration: "none",
@@ -26,9 +32,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Appbar = () => {
-  const theme = useTheme();
   const classes = useStyles();
-  // const mobileViewBreakpoint = useMediaQuery("(max-width: 599px)");
+
+  const onLogoutClick = () => {
+    signOut();
+    console.log("logging out!");
+    window.location.href = "/";
+  };
 
   return (
     <div className={classes.root}>
@@ -39,6 +49,10 @@ const Appbar = () => {
             Home
           </Link>
         </Typography>
+
+        <Button variant="h4" className={classes.button} onClick={onLogoutClick}>
+          Logout
+        </Button>
       </Toolbar>
     </div>
   );

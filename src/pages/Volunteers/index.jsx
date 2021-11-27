@@ -23,17 +23,17 @@ import {
 import Page from "components/Page";
 import Label from "components/Label";
 import { UserListHead, VolunteerMoreMenu } from "components/users";
-
-//
-import VOLUNTEERLIST from "_mocks_/volunteers";
 import Appbar from "components/Appbar";
 import UserListToolbar from "components/users/UserListToolbar";
+import { useAuth } from "auth/firebaseAuth";
+import { getDatabase, onValue, ref, set } from "@firebase/database";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: "name", label: "Name", alignRight: false },
   { id: "email", label: "Email", alignRight: false },
+  { id: "uid", label: "UID", alignRight: false },
   { id: "semester", label: "Semester", alignRight: false },
   { id: "dept", label: "Dept", alignRight: false },
   { id: "roll", label: "Roll", alignRight: false },
@@ -83,27 +83,54 @@ export default function Volunteers() {
   const [filterName, setFilterName] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setFilteredUsers(
-      applySortFilter(VOLUNTEERLIST, getComparator(order, orderBy), filterName)
+    const db = getDatabase();
+    const volRef = ref(db, "volunteers");
+    const volunteerList = [];
+
+    onValue(
+      volRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          snapshot.forEach((childSnapshot) => {
+            // get the uid of the user from volunteers/uid
+            const uid = childSnapshot.key;
+            const isPending = childSnapshot.val() ? "Active" : "Pending";
+
+            const userRef = ref(db, `users/${uid}`);
+            // get the user data from users/uid
+            onValue(userRef, (snapshot) => {
+              const user = snapshot.val();
+              user.id = uid;
+              user.isPending = isPending;
+              volunteerList.push(user);
+            });
+
+            console.log(volunteerList);
+
+            setFilteredUsers(
+              applySortFilter(
+                volunteerList,
+                getComparator(order, orderBy),
+                filterName
+              )
+            );
+            setIsLoading(false);
+          });
+        }
+      },
+      {
+        onlyOnce: true,
+      }
     );
   }, []);
-  
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = VOLUNTEERLIST.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -116,11 +143,29 @@ export default function Volunteers() {
   };
 
   const onDeleteClick = (id) => {
+    const db = getDatabase();
+    set(ref(db, `volunteers/${id}`), null)
+      .then(() => {
+        console.log("data saved!");
+      })
+      .catch((err) => {
+        console.trace("error when making volunteer!", err);
+      });
+
     console.log("Deleted!", id);
     setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
   };
 
   const onApproveClick = (id) => {
+    const db = getDatabase();
+    set(ref(db, `volunteers/${id}`), true)
+      .then(() => {
+        console.log("data saved!");
+      })
+      .catch((err) => {
+        console.trace("error when making volunteer!", err);
+      });
+
     console.log("Approved!", id);
     setFilteredUsers(
       filteredUsers.map((user) => {
@@ -139,7 +184,7 @@ export default function Volunteers() {
     setFilterName(event.target.value);
     setFilteredUsers(
       applySortFilter(
-        VOLUNTEERLIST,
+        filteredUsers,
         getComparator(order, orderBy),
         event.target.value
       )
@@ -147,9 +192,13 @@ export default function Volunteers() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - VOLUNTEERLIST.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredUsers.length) : 0;
 
   const isUserNotFound = filteredUsers.length === 0;
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -188,10 +237,9 @@ export default function Volunteers() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={VOLUNTEERLIST.length}
+                  rowCount={filteredUsers.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers
@@ -200,11 +248,11 @@ export default function Volunteers() {
                       const {
                         id,
                         name,
-                        avatarUrl,
+                        userImage,
                         email,
                         semester,
-                        dept,
-                        roll,
+                        department,
+                        universityId,
                         isPending,
                       } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
@@ -228,16 +276,17 @@ export default function Volunteers() {
                               alignItems="center"
                               spacing={2}
                             >
-                              <Avatar alt={name} src={avatarUrl} />
+                              <Avatar alt={name} src={userImage} />
                               <Typography variant="subtitle2" noWrap>
                                 {name}
                               </Typography>
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{id}</TableCell>
                           <TableCell align="left">{semester}</TableCell>
-                          <TableCell align="left">{dept}</TableCell>
-                          <TableCell align="left">{roll}</TableCell>
+                          <TableCell align="left">{department}</TableCell>
+                          <TableCell align="left">{universityId}</TableCell>
 
                           <TableCell align="left">
                             <Label
@@ -282,7 +331,7 @@ export default function Volunteers() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={VOLUNTEERLIST.length}
+              count={filteredUsers.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

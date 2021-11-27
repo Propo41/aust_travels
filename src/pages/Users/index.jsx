@@ -24,17 +24,17 @@ import Page from "components/Page";
 import Label from "components/Label";
 import { UserListHead, UserMoreMenu } from "components/users";
 
-//
-import USERLIST from "_mocks_/user";
 import Appbar from "components/Appbar";
 import UserListToolbar from "components/users/UserListToolbar";
 import { useAuth } from "auth/firebaseAuth";
 
 // ----------------------------------------------------------------------
+import { getDatabase, ref, onValue, set } from "firebase/database";
 
 const TABLE_HEAD = [
   { id: "name", label: "Name", alignRight: false },
   { id: "email", label: "Email", alignRight: false },
+  { id: "uid", label: "UID", alignRight: false },
   { id: "semester", label: "Semester", alignRight: false },
   { id: "dept", label: "Dept", alignRight: false },
   { id: "roll", label: "Roll", alignRight: false },
@@ -85,20 +85,44 @@ export default function Users() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
-  const firebaseUser = useAuth();
-  console.log(firebaseUser);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setFilteredUsers(
-      applySortFilter(USERLIST, getComparator(order, orderBy), filterName)
+    const db = getDatabase();
+    const userRef = ref(db, "users");
+    const userList = [];
+
+    onValue(
+      userRef,
+      (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+          const user = childSnapshot.val();
+          user.id = childSnapshot.key;
+          user.isVerified = "Yes"; // todo: remove this when implementing the backend api using firebase admin
+          userList.push(user);
+        });
+
+        console.log(userList);
+        setFilteredUsers(
+          applySortFilter(userList, getComparator(order, orderBy), filterName)
+        );
+        setIsLoading(false);
+      },
+      {
+        onlyOnce: true,
+      }
     );
+
+    // setFilteredUsers(
+    //   applySortFilter(USERLIST, getComparator(order, orderBy), filterName)
+    // );
   }, []);
 
   const handleFilterByName = (event) => {
     setFilterName(event.target.value);
     setFilteredUsers(
       applySortFilter(
-        USERLIST,
+        filteredUsers,
         getComparator(order, orderBy),
         event.target.value
       )
@@ -113,7 +137,7 @@ export default function Users() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = filteredUsers.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -130,33 +154,46 @@ export default function Users() {
   };
 
   const onDeleteClick = (id) => {
-    console.log("Deleted!", id);
-    setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
+    // TODO: implement it in the backend
+    // console.log("Deleted!", id);
+    // setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
   };
 
   const onMakeVolunteerClick = (id) => {
-    console.log("make volunteer!", id);
+    const db = getDatabase();
+    set(ref(db, `volunteers/${id}`), true)
+      .then(() => {
+        console.log("data saved!");
+      })
+      .catch((err) => {
+        console.trace("error when making volunteer!", err);
+      });
   };
 
   const onEnableAccountClick = (id) => {
-    console.log("on enable click!", id);
-    setFilteredUsers(
-      filteredUsers.map((user) => {
-        if (user.id === id) {
-          return {
-            ...user,
-            isVerified: "Yes",
-          };
-        }
-        return user;
-      })
-    );
+    // TODO: implement it in the backend
+    // console.log("on enable click!", id);
+    // setFilteredUsers(
+    //   filteredUsers.map((user) => {
+    //     if (user.id === id) {
+    //       return {
+    //         ...user,
+    //         isVerified: "Yes",
+    //       };
+    //     }
+    //     return user;
+    //   })
+    // );
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredUsers.length) : 0;
 
   const isUserNotFound = filteredUsers.length === 0;
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -195,7 +232,7 @@ export default function Users() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={filteredUsers.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -207,11 +244,11 @@ export default function Users() {
                       const {
                         id,
                         name,
-                        avatarUrl,
+                        userImage,
                         email,
                         semester,
-                        dept,
-                        roll,
+                        department,
+                        universityId,
                         isVerified,
                       } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
@@ -235,16 +272,17 @@ export default function Users() {
                               alignItems="center"
                               spacing={2}
                             >
-                              <Avatar alt={name} src={avatarUrl} />
+                              <Avatar alt={name} src={userImage} />
                               <Typography variant="subtitle2" noWrap>
                                 {name}
                               </Typography>
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{id}</TableCell>
                           <TableCell align="left">{semester}</TableCell>
-                          <TableCell align="left">{dept}</TableCell>
-                          <TableCell align="left">{roll}</TableCell>
+                          <TableCell align="left">{department}</TableCell>
+                          <TableCell align="left">{universityId}</TableCell>
 
                           <TableCell align="left">
                             <Label
@@ -289,7 +327,7 @@ export default function Users() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={USERLIST.length}
+              count={filteredUsers.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

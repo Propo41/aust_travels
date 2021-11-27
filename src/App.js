@@ -6,12 +6,12 @@ const { default: ThemeConfig } = require("./theme");
 
 function App() {
   const user = useAuth();
-  console.log("App.js user:", user);
 
   return (
     <ThemeConfig>
       <GlobalStyles />
-      {user ? <PrivateRouter /> : <PublicRouter />}
+      <PrivateRouter />
+      {/* {user ? <PrivateRouter /> : <PublicRouter />} */}
     </ThemeConfig>
   );
 }

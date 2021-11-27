@@ -8,20 +8,21 @@ paperdiv:
     padding: "5rem 5rem !important",
     borderRadius:"20px !important",
     margin: "2% 10% 5% 10% !important",
-    height:"70% !important",
     
 },
 
 topdiv:{
     borderBottom: "1px solid black",
+    display:"flex !important",
+    flexDirection:"row !important",
 },
 
 topdivButton:
 {
-    width:"15%",
-    backgroundColor:"#FFC107 !important",
+    width:"12%",
+    backgroundColor:"#FFD856 !important",
     color:"black",
-    lineHeight:"2",
+    lineHeight:"3",
     fontSize:"1.5rem",
     marginBottom:"1.5%",
 },
@@ -88,6 +89,34 @@ button_select:{
     borderRadius:"10px !important",
     backgroundColor:"#FFC107 !important",
 },
+
+message:{
+  textAlign:"center",
+  fontFamily:"Saira Semi Condensed, sans-serif",
+  fontSize:"3rem",
+  padding:"10%",
+},
+
+businfo: {
+  fontFamily:"Saira Semi Condensed, sans-serif !important",
+  fontSize:"1.5rem !important",
+  marginLeft:"8%",
+  marginTop:"0.5%",
+  width:"15%",
+},
+
+businfoContainer:{
+  display:"flex !important",
+  flexDirection:"row !important",
+},
+
+deletebutton:{
+    fontSize:"3rem !important",
+    marginLeft:"60%",
+    color:"#FF6536",
+    
+},
+
 
 });
 

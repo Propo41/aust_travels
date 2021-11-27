@@ -14,7 +14,7 @@ const SemesterPage = () =>{
     const [semesterlist,setSemesterlist] = useState([]);
 
     useEffect(() => {
-        const json = localStorage.getItem("my-semesterlist");
+        const json = sessionStorage.getItem("my-semesterlist");
         const savedSemesters = JSON.parse(json);
         if (savedSemesters) {
             setSemesterlist(savedSemesters);
@@ -23,7 +23,7 @@ const SemesterPage = () =>{
 
     useEffect(() => {
         const json = JSON.stringify(semesterlist);
-        localStorage.setItem("my-semesterlist", json);
+        sessionStorage.setItem("my-semesterlist", json);
     }, [semesterlist]);
 
 

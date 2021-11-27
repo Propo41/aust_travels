@@ -1,26 +1,26 @@
 const busNamelist = [
 {
-    value:1,
+    value:"PADMA",
     name:"PADMA",
 },
 {
-    value:2,
+    value:"MEGHNA",
     name:"MEGHNA",
 },
 {
-    value:3,
+    value:"JAMUNA",
     name:"JAMUNA",
 },
 {
-    value:4,
+    value:"SURMA",
     name:"SURMA",
 },
 {
-    value:5,
+    value:"KARNAPHULI",
     name:"KARNAPHULI",
 },
 {
-    value:6,
+    value:"KAPOTAKKHO",
     name:"KAPOTAKKHO",
 }
 ]

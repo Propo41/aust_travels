@@ -1,18 +1,18 @@
 const busStartTime = [
     {
-        value:1,
+        value:"6:15 AM",
         time:"6:15 AM",
     },
     {
-        value:2,
+        value:"6:30 AM",
         time:"6:30 AM",
     },
     {
-        value:3,
+        value:"6:45 AM",
         time:"6:45 AM",
     },
     {
-        value:4,
+        value:"8:30 AM",
         time:"8:30 AM",
     },
 ]

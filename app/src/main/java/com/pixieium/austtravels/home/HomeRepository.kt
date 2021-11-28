@@ -39,7 +39,7 @@ class HomeRepository {
     suspend fun createVolunteer(uid: String): Boolean {
         val database = Firebase.database
         return try {
-            database.getReference("volunteers/$uid").setValue(false).await()
+            database.getReference("volunteers/$uid/status").setValue(false).await()
             true
         } catch (e: Exception) {
             //e.printStackTrace()
@@ -50,7 +50,7 @@ class HomeRepository {
     suspend fun isVolunteer(uid: String): Boolean {
         try {
             val database = Firebase.database
-            val snapshot = database.getReference("volunteers/$uid").get().await()
+            val snapshot = database.getReference("volunteers/$uid/status").get().await()
             if (snapshot.exists() && snapshot != null) {
                 return snapshot.getValue<Boolean>() == true
             }
@@ -62,16 +62,16 @@ class HomeRepository {
 
 
     fun updateLocation(
-            uid: String,
-            mSelectedBusName: String,
-            mSelectedBusTime: String,
-            location: Location
+        uid: String,
+        mSelectedBusName: String,
+        mSelectedBusTime: String,
+        location: Location
     ) {
         val payload = mapOf(
-                "lat" to location.latitude.toString(),
-                "long" to location.longitude.toString(),
-                "lastUpdatedTime" to System.currentTimeMillis().toString(),
-                "lastUpdatedVolunteer" to uid
+            "lat" to location.latitude.toString(),
+            "long" to location.longitude.toString(),
+            "lastUpdatedTime" to System.currentTimeMillis().toString(),
+            "lastUpdatedVolunteer" to uid
         ) as HashMap<String, String>
         val database = Firebase.database
         database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/location").setValue(payload)

@@ -1,12 +1,16 @@
 package com.pixieium.austtravels.home
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Menu
@@ -14,6 +18,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -30,13 +35,15 @@ import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityHomeBinding
 import com.pixieium.austtravels.livetrack.LiveTrackActivity
+import com.pixieium.austtravels.home.stopwatch.StopwatchHandler
 import com.pixieium.austtravels.models.UserInfo
 import com.pixieium.austtravels.routes.RoutesActivity
 import com.pixieium.austtravels.volunteers.VolunteersActivity
 import kotlinx.coroutines.launch
+import android.app.PendingIntent
 
+import android.content.SharedPreferences
 
-/* stop watch: https://stackoverflow.com/questions/3733867/stop-watch-logic*/
 
 class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
     ProminentDisclosureDialog.FragmentListener,
@@ -48,10 +55,16 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     private val REQUEST_LIVE_TRACK = 0
     private val REQUEST_DIRECTIONS = 1
     private val REQUEST_SHARE_LOCATION = 2
+    private val MSG_START_TIMER = 0
+    private val MSG_STOP_TIMER = 1
+    private val MSG_UPDATE_TIMER = 2
+    private val NOTIFICATION_ID = 12044
 
     private lateinit var mSelectedBusName: String
     private lateinit var mSelectedBusTime: String
     private lateinit var mUid: String
+
+    private lateinit var mStopwatchHandler: StopwatchHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,12 +73,46 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         mUid = Firebase.auth.currentUser?.uid.toString()
         setSupportActionBar(binding.topAppBar)
 
+        isLocationSharing = readSharedPref()
+        println("isLocationSharing: $isLocationSharing")
+
+        mStopwatchHandler = StopwatchHandler(binding.sharingYourLocation)
+
         val userInfo: UserInfo? = mDatabase.getUserInfo()
         if (userInfo != null) {
             binding.loggedInAs.text =
                 getString(R.string.logged_in_as_s, userInfo.email)
             binding.profileImage.loadSvg(userInfo.userImage)
         }
+
+        if (isLocationSharing) {
+            binding.shareLocation.text = getString(R.string.stop_sharing_location)
+            binding.cardView.visibility = View.VISIBLE
+        } else {
+            binding.cardView.visibility = View.GONE
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        saveToSharedPref(false)
+    }
+
+    private fun readSharedPref(): Boolean {
+        val prefs: SharedPreferences = this.getSharedPreferences(
+            "com.pixieium.austtravels", MODE_PRIVATE
+        )
+        return prefs.getBoolean("isLocationSharing", false)
+    }
+
+
+    private fun saveToSharedPref(res: Boolean) {
+        val prefs = getSharedPreferences(
+            "com.pixieium.austtravels", MODE_PRIVATE
+        )
+        val editor = prefs.edit()
+        editor.putBoolean("isLocationSharing", res)
+        editor.apply()
     }
 
     /**
@@ -92,15 +139,50 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         return true
     }
 
-    /*todo: incomplete*/
+
+    private fun clearNotification() {
+        val notificationManager =
+            applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(NOTIFICATION_ID)
+    }
+
     private fun createNotification() {
+        // creating an onclick intent
+        val notificationIntent = Intent(this, HomeActivity::class.java)
+        notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val intent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+
         val builder = NotificationCompat.Builder(this, CHANNEL_ID.toString())
             .setSmallIcon(R.drawable.ic_bus)
             .setContentTitle("Location sharing on")
-            .setContentText("you are sharing your location")
+            .setContentIntent(intent)
+            .setContentText("You are currently sharing your location in the background")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        val notificationManager = NotificationManagerCompat.from(this)
-        notificationManager.notify(69, builder.build())
+            .setOngoing(true)
+        //Before you can deliver the notification on Android 8.0 and higher, you must
+        // register your app's notification channel with the system by passing an
+        // instance of NotificationChannel to createNotificationChannel()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel()
+        }
+        with(NotificationManagerCompat.from(this)) {
+            // notificationId is a unique int for each notification that you must define
+            notify(NOTIFICATION_ID, builder.build())
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel() {
+        val name = getString(R.string.channel_name)
+        val descriptionText = getString(R.string.channel_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(CHANNEL_ID.toString(), name, importance).apply {
+            description = descriptionText
+        }
+        // Register the channel with the system
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
     private fun stopLocationSharing() {
@@ -110,7 +192,6 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         ).show()
         mLocationManager.removeUpdates(myLocationListener)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
@@ -146,6 +227,9 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         }
 
         // start sharing location
+        createNotification()
+        saveToSharedPref(true)
+
         binding.shareLocation.text = getString(R.string.stop_sharing_location)
         binding.cardView.visibility = View.VISIBLE
         isLocationSharing = true
@@ -173,6 +257,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
             Toast.LENGTH_SHORT
         ).show()
     }
+
 
     private inner class MyLocationListener : LocationListener {
         override fun onLocationChanged(location: Location) {
@@ -229,6 +314,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         }
     }
 
+
     override fun onBusSelectClick(
         selectedBusName: String,
         selectedBusTime: String,
@@ -239,14 +325,9 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
                 mSelectedBusName = selectedBusName
                 mSelectedBusTime = selectedBusTime
                 startLocationSharing()
+                startStopwatch()
                 // createNotification();
             }
-            /*   REQUEST_DIRECTIONS -> {
-                   val intent = Intent(this@HomeActivity, DirectionsActivity::class.java)
-                   intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
-                   intent.putExtra("SELECTED_BUS_TIME", selectedBusTime)
-                   startActivity(intent)
-               }*/
             REQUEST_LIVE_TRACK -> {
                 val intent = Intent(this@HomeActivity, LiveTrackActivity::class.java)
                 intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
@@ -255,6 +336,14 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
             }
         }
 
+    }
+
+    private fun startStopwatch() {
+        mStopwatchHandler.sendEmptyMessage(MSG_START_TIMER)
+    }
+
+    private fun stopStopwatch() {
+        mStopwatchHandler.sendEmptyMessage(MSG_STOP_TIMER)
     }
 
 
@@ -382,16 +471,21 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
             // stop sharing location
             binding.shareLocation.text = getString(R.string.share_location)
             stopLocationSharing()
+            stopStopwatch()
+            clearNotification()
+            saveToSharedPref(false)
             binding.cardView.visibility = View.GONE
             isLocationSharing = false
         }
     }
+
 
     fun onViewVolunteersClick(view: View) {
         // Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
         val intent = Intent(this@HomeActivity, VolunteersActivity::class.java)
         startActivity(intent)
     }
+
 
     override fun onDisclosureAcceptClick() {
         Toast.makeText(
@@ -401,3 +495,5 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         buildAlertMessageNoPermission()
     }
 }
+
+

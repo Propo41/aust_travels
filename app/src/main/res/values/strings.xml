@@ -37,7 +37,7 @@
     <string name="currently_sharing_location"><b>You are currently sharing you location</b></string>
     <string name="stop_sharing_location">STOP SHARING LOCATION</string>
     <string name="become_a_volunteer">BECOME A VOLUNTEER</string>
-    <string name="volunteer_prompt">You will be responsible for sharing your location <b>ONLY</b> when you are on the bus. <br/>Your location data will be continuously shared with other relevant users while your location sharing is active. <br/> <br/><b>Do you wish to continue?</b></string>
+    <string name="volunteer_prompt">You will be responsible for sharing your location <b>ONLY</b> when you are on the bus. <br />Your location data will be continuously shared with other relevant users while your location sharing is active. <br /> <br /><b>Do you wish to continue?</b></string>
 
     <string name="prominent_disclosure">This app collects location data to enable relevant users to track your location <b>while you’re riding on the bus</b> even when the app is closed or not in use.<br /> <br /><b>Do you wish to continue?</b> </string>
 
@@ -51,4 +51,12 @@
     <string name="universityId">%s</string>
     <string name="google_maps_api">AIzaSyCdhFmZBWJajjLP2dw6MWhDB6lHR5tc33E</string>
     <string name="use_your_location">USE YOUR LOCATION</string>
+    <string name="warning">WARNING</string>
+    <string name="deleting_your_account">Deleting your account will result in all of <br />your personal data being removed from <br />your servers. This action is <b>irreversible</b> <br />and we advice you to think twice before<br /> deleting the account.</string>
+    <string name="i_confirm">I CONFIRM</string>
+    <string name="contribute_to_the_community">Contribute to the community by routinely<br/>sharing your location</string>
+    <string name="privacy_policy"><![CDATA[Privacy & Policy]]></string>
+    <string name="view_the_privacy_policy">View the privacy policy of the application</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_everything">Delete everything associated with your<br/>account</string>
 </resources>

@@ -32,7 +32,6 @@ import coil.request.ImageRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
-import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityHomeBinding
 import com.pixieium.austtravels.livetrack.LiveTrackActivity
 import com.pixieium.austtravels.home.stopwatch.StopwatchHandler
@@ -41,11 +40,11 @@ import com.pixieium.austtravels.routes.RoutesActivity
 import com.pixieium.austtravels.volunteers.VolunteersActivity
 import kotlinx.coroutines.launch
 import android.app.PendingIntent
-
 import android.content.SharedPreferences
+import com.pixieium.austtravels.settings.SettingsActivity
 
 
-class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
+class HomeActivity : AppCompatActivity(),
     ProminentDisclosureDialog.FragmentListener,
     SelectBusDialog.FragmentListener {
     private lateinit var binding: ActivityHomeBinding
@@ -63,6 +62,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     private lateinit var mSelectedBusName: String
     private lateinit var mSelectedBusTime: String
     private lateinit var mUid: String
+    private var mIsVolunteer: Boolean = false
 
     private lateinit var mStopwatchHandler: StopwatchHandler
 
@@ -83,6 +83,14 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
             binding.loggedInAs.text =
                 getString(R.string.logged_in_as_s, userInfo.email)
             binding.profileImage.loadSvg(userInfo.userImage)
+        }
+        lifecycleScope.launch {
+            mIsVolunteer = mDatabase.isVolunteer(mUid)
+            if (!mIsVolunteer) {
+                binding.shareLocation.visibility = View.GONE
+            } else {
+                binding.shareLocation.visibility = View.VISIBLE
+            }
         }
 
         if (isLocationSharing) {
@@ -194,11 +202,8 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.logout) {
-            Toast.makeText(this, "Signing out!", Toast.LENGTH_SHORT).show()
-            Firebase.auth.signOut()
-            val intent = Intent(this, SignInActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        if (item.itemId == R.id.settings) {
+            val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
             return true
         }
@@ -294,26 +299,6 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         private const val CHANNEL_ID = 745
         private var isLocationSharing = false
     }
-
-    /*volunteer select dialog*/
-    override fun onVolunteerApprovalClick() {
-        lifecycleScope.launch {
-            if (mDatabase.createVolunteer(mUid)) {
-                Toast.makeText(
-                    this@HomeActivity,
-                    "You are now a volunteer! Start sharing your location!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                Toast.makeText(
-                    this@HomeActivity,
-                    "Couldn't make you a volunteer at this moment. Try again later!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
 
     override fun onBusSelectClick(
         selectedBusName: String,
@@ -453,20 +438,9 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
 
     fun onShareLocationClick(view: View) {
         if (!isLocationSharing) {
-            lifecycleScope.launch {
-                val isVolunteer = mDatabase.isVolunteer(mUid)
-                // if user is a volunteer
-                if (isVolunteer) {
-                    // open dialog to select bus
-                    SelectBusDialog.newInstance(REQUEST_SHARE_LOCATION)
-                        .show(supportFragmentManager, SelectBusDialog.TAG)
-                } else {
-                    // open dialog to prompt user to become a volunteer
-                    PromptVolunteerDialog.newInstance()
-                        .show(supportFragmentManager, PromptVolunteerDialog.TAG)
-                }
-            }
-
+            // open dialog to select bus
+            SelectBusDialog.newInstance(REQUEST_SHARE_LOCATION)
+                .show(supportFragmentManager, SelectBusDialog.TAG)
         } else {
             // stop sharing location
             binding.shareLocation.text = getString(R.string.share_location)

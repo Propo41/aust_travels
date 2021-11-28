@@ -1,71 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/text_input_padding"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/shape_rounded"
-    >
+    android:paddingBottom="@dimen/text_input_padding">
 
 
-
-    <com.google.android.material.textfield.TextInputLayout
+    <TextView
         android:id="@+id/text_title"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/yellow_light"
-        app:startIconDrawable="@drawable/ic_baseline_warning_24"
+        android:padding="20dp"
+        android:text="@string/warning"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_subtitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textView"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:textSize="18sp"
-            android:background="@color/yellow_light"
-            android:text="@string/warning"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:enabled="false"
-
-
-            />
-
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/text_layout"
+    <TextView
+        android:id="@+id/prompt"
+        style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:padding="20dp"
+        android:text="@string/deleting_your_account"
+        android:textAlignment="center"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_title">
-
-        <TextView
-            android:id="@+id/prompt"
-            style="@style/TextAppearance.AppCompat.Body1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:text="@string/deleting_your_account"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/text_title" />
 
 
     <Button
@@ -74,7 +43,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/window_margin"
-        android:layout_marginTop="@dimen/text_input_padding"
         android:layout_marginRight="@dimen/window_margin"
         android:backgroundTint="@color/orange"
         android:padding="@dimen/button_padding"
@@ -82,6 +50,6 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/prompt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

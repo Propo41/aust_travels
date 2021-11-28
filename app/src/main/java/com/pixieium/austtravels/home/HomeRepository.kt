@@ -36,16 +36,6 @@ class HomeRepository {
         return list
     }
 
-    suspend fun createVolunteer(uid: String): Boolean {
-        val database = Firebase.database
-        return try {
-            database.getReference("volunteers/$uid/status").setValue(false).await()
-            true
-        } catch (e: Exception) {
-            //e.printStackTrace()
-            false
-        }
-    }
 
     suspend fun isVolunteer(uid: String): Boolean {
         try {

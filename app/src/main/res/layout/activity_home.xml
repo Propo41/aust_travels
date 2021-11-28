@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -72,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/logged_in_as_s"
                 android:textAlignment="center"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_subtitle"
                 app:layout_constraintBottom_toBottomOf="@+id/view5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -120,6 +118,8 @@
                 style="@style/Widget.App.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/window_margin"
+                android:layout_marginEnd="@dimen/window_margin"
                 android:backgroundTint="@color/yellow"
                 android:onClick="onViewRoutesClick"
                 android:padding="@dimen/button_padding"
@@ -127,9 +127,9 @@
                 app:icon="@drawable/ic_map"
                 app:iconGravity="textStart"
                 app:iconPadding="20dp"
-                app:layout_constraintEnd_toEndOf="@+id/live_track"
-                app:layout_constraintStart_toStartOf="@+id/live_track"
-                app:layout_constraintTop_toBottomOf="@+id/view_direction" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/live_track" />
 
             <TextView
                 android:id="@+id/textView"
@@ -170,15 +170,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/orange"
+                android:layout_marginStart="@dimen/window_margin"
+                android:layout_marginEnd="@dimen/window_margin"
                 android:onClick="onShareLocationClick"
                 android:padding="@dimen/button_padding"
                 android:text="@string/share_location"
                 android:textColor="@color/white"
+                android:visibility="gone"
                 app:icon="@drawable/ic_location"
                 app:iconGravity="textStart"
                 app:iconPadding="20dp"
-                app:layout_constraintEnd_toEndOf="@+id/view_routes"
-                app:layout_constraintStart_toStartOf="@+id/view_routes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
                 app:startIconTint="@color/white" />
 
@@ -188,14 +191,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/green_vibrant"
+                android:layout_marginStart="@dimen/window_margin"
+                android:layout_marginEnd="@dimen/window_margin"
                 android:onClick="onViewVolunteersClick"
                 android:padding="@dimen/button_padding"
                 android:text="@string/view_volunteers"
                 app:icon="@drawable/ic_volunteers"
                 app:iconGravity="textStart"
                 app:iconPadding="20dp"
-                app:layout_constraintEnd_toEndOf="@+id/share_location"
-                app:layout_constraintStart_toStartOf="@+id/share_location"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView"
                 app:startIconTint="@color/white" />
 

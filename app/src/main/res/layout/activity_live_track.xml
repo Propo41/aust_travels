@@ -61,7 +61,7 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:text="@string/selected_bus"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_subtitle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

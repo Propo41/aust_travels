@@ -32,14 +32,13 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
-import com.pixieium.austtravels.auth.SignInActivity
+import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
 import com.pixieium.austtravels.home.ProminentDisclosureDialog
 import com.pixieium.austtravels.models.Route
@@ -94,11 +93,8 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.logout) {
-            Toast.makeText(this, "Signing out!", Toast.LENGTH_SHORT).show()
-            Firebase.auth.signOut()
-            val intent = Intent(this, SignInActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        if (item.itemId == R.id.settings) {
+            val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
             return true
         } else if (item.itemId == android.R.id.home) {

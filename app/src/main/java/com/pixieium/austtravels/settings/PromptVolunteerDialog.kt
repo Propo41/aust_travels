@@ -1,4 +1,4 @@
-package com.pixieium.austtravels.home
+package com.pixieium.austtravels.settings
 
 import android.content.Context
 import android.os.Bundle
@@ -40,7 +40,6 @@ class PromptVolunteerDialog : DialogFragment() {
         mBinding = DialogPromptVolunteerBinding.inflate(layoutInflater)
         mContext = mBinding.root.context
         mBinding.selectBtn.setOnClickListener {
-            Toast.makeText(context, "You are now a volunteer!", Toast.LENGTH_SHORT).show()
             listener?.onVolunteerApprovalClick()
             dismiss()
         }

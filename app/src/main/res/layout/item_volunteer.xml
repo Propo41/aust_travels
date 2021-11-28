@@ -23,7 +23,7 @@
         android:paddingLeft="@dimen/item_spacing"
         android:paddingRight="@dimen/item_spacing"
         android:text="@string/username"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_size_subtitle"
         app:layout_constraintEnd_toStartOf="@+id/time_shared"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="@+id/profile_image" />

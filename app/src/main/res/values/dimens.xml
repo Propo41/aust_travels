@@ -3,8 +3,12 @@
     <dimen name="text_input_padding">18dp</dimen>
     <dimen name="button_padding">18dp</dimen>
     <dimen name="window_margin">30dp</dimen>
+    <dimen name="window_margin_small">20dp</dimen>
+
     <dimen name="item_spacing">10dp</dimen>
     <dimen name="item_spacing_small">5dp</dimen>
 
     <dimen name="item_spacing_large">30dp</dimen>
+    <dimen name="settings_img_icon">50dp</dimen>
+    <dimen name="text_size_subtitle">18sp</dimen>
 </resources>

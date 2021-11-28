@@ -19,6 +19,7 @@ import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.launch
 import java.util.*
 import android.app.Activity
+import android.content.Context
 import android.view.inputmethod.InputMethodManager
 
 
@@ -42,8 +43,22 @@ class SignUpActivity : AppCompatActivity() {
             initSpinnerDepartment(departments)
         }
 
-        mBinding.signup.setOnClickListener { createNewUser() }
+        mBinding.signup.setOnClickListener {
+            try {
+                hideKeyboard()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            createNewUser()
+        }
 
+    }
+
+    private fun hideKeyboard() {
+        // hide the keyboard
+        val imm: InputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(mBinding.root.windowToken, 0)
     }
 
     private fun createNewUser() {

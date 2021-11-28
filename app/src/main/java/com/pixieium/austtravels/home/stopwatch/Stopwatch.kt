@@ -41,13 +41,13 @@ class Stopwatch {
             return elapsed
         }
 
-    val elapsedTimeMin: Double
+    val elapsedTimeMin: Long
         get() {
-            var elapsed = 0.0
+            var elapsed: Long = 0
             if (running) {
-                elapsed = ((System.currentTimeMillis() - startTime) / 1000.0 / 60.0)
+                elapsed = ((System.currentTimeMillis() - startTime) / 1000 / 60)
             }
-            return String.format("%.1f", elapsed).toDouble()
+            return elapsed
         }
 
     val elapsedTimeHour: Long

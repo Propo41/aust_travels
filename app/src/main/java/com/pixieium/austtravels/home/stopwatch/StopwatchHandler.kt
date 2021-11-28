@@ -2,12 +2,11 @@ package com.pixieium.austtravels.home.stopwatch
 
 import android.os.Handler
 import android.os.Message
-import android.provider.Settings.Global.getString
 import android.widget.TextView
 import com.pixieium.austtravels.R
 
 
-class StopwatchHandler(private val tvTextView: TextView) : Handler() {
+class StopwatchHandler(private val timerTextView: TextView) : Handler() {
     private val MSG_START_TIMER = 0
     private val MSG_STOP_TIMER = 1
     private val MSG_UPDATE_TIMER = 2
@@ -26,10 +25,10 @@ class StopwatchHandler(private val tvTextView: TextView) : Handler() {
             }
             MSG_UPDATE_TIMER -> {
                 totalTimeElapsed = timer.elapsedTimeMilli
-                tvTextView.text =
-                    tvTextView.context.getString(
+                timerTextView.text =
+                    timerTextView.context.getString(
                         R.string.currently_sharing_location,
-                        timer.elapsedTimeMin.toString()
+                        timer.elapsedTimeMin.toString(), timer.elapsedTimeSecs.toString()
                     )
                 this.sendEmptyMessageDelayed(
                     MSG_UPDATE_TIMER,
@@ -39,8 +38,8 @@ class StopwatchHandler(private val tvTextView: TextView) : Handler() {
             MSG_STOP_TIMER -> {
                 this.removeMessages(MSG_UPDATE_TIMER) // no more updates.
                 timer.stop() //stop timer
-                tvTextView.text =
-                    totalTimeElapsed.toString()
+                // todo: save data to database
+
             }
             else -> {
             }

@@ -1,46 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none"
     tools:context=".home.HomeActivity">
-
-    <View
-        android:id="@+id/view5"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:background="@color/ash"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/profile_image"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_margin="@dimen/item_spacing"
-        app:layout_constraintBottom_toBottomOf="@+id/loggedInAs"
-        app:layout_constraintEnd_toStartOf="@+id/loggedInAs"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/loggedInAs" />
-
-    <TextView
-        android:id="@+id/loggedInAs"
-        style="@style/TextAppearance.App.Subtitle1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/logged_in_as_s"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/profile_image"
-        app:layout_constraintTop_toTopOf="@+id/view5" />
-
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -60,186 +28,237 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <Button
-        android:id="@+id/live_track"
-        style="@style/Widget.App.Button"
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/window_margin"
-        android:layout_marginTop="@dimen/item_spacing_large"
-        android:layout_marginEnd="@dimen/window_margin"
-        android:backgroundTint="@color/yellow"
-        android:onClick="onLiveTrackBusClick"
-        android:padding="@dimen/button_padding"
-        android:text="@string/live_track_bus"
-        app:icon="@drawable/ic_bus"
-        app:iconGravity="textStart"
-        app:iconPadding="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
-
-
-    <Button
-        android:id="@+id/view_direction"
-        style="@style/Widget.App.Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/yellow"
-        android:onClick="onViewDirectionsClick"
-        android:padding="@dimen/button_padding"
-        android:text="@string/view_directions"
-        android:visibility="gone"
-        app:icon="@drawable/ic_password"
-        app:iconGravity="textStart"
-        app:iconPadding="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/live_track" />
-
-    <Button
-        android:id="@+id/view_routes"
-        style="@style/Widget.App.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/yellow"
-        android:onClick="onViewRoutesClick"
-        android:padding="@dimen/button_padding"
-        android:text="@string/view_routes"
-        app:icon="@drawable/ic_map"
-        app:iconGravity="textStart"
-        app:iconPadding="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/live_track"
-        app:layout_constraintStart_toStartOf="@+id/live_track"
-        app:layout_constraintTop_toBottomOf="@+id/view_direction" />
-
-    <TextView
-        android:id="@+id/textView"
-        style="@style/TextAppearance.AppCompat.Body1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text="@string/contribute"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_routes" />
-
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="1.2dp"
-        android:background="@color/ash"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
-        app:layout_constraintEnd_toStartOf="@+id/textView"
-        app:layout_constraintStart_toStartOf="@+id/view_routes"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
-
-    <View
-        android:id="@+id/view2"
-        android:layout_width="0dp"
-        android:layout_height="1.2dp"
-        android:background="@color/ash"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="@+id/view_routes"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
-
-    <Button
-        android:id="@+id/share_location"
-        style="@style/Widget.App.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/orange"
-        android:onClick="onShareLocationClick"
-        android:padding="@dimen/button_padding"
-        android:text="@string/share_location"
-        android:textColor="@color/white"
-        app:icon="@drawable/ic_location"
-        app:iconGravity="textStart"
-        app:iconPadding="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/view_routes"
-        app:layout_constraintStart_toStartOf="@+id/view_routes"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:startIconTint="@color/white" />
-
-    <Button
-        android:id="@+id/view_volunteers"
-        style="@style/Widget.App.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/green_vibrant"
-        android:onClick="onViewVolunteersClick"
-        android:padding="@dimen/button_padding"
-        android:text="@string/view_volunteers"
-        app:icon="@drawable/ic_volunteers"
-        app:iconGravity="textStart"
-        app:iconPadding="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/share_location"
-        app:layout_constraintStart_toStartOf="@+id/share_location"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
-        app:startIconTint="@color/white" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:visibility="gone"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/share_location"
-        app:layout_constraintStart_toStartOf="@+id/share_location"
-        app:layout_constraintTop_toBottomOf="@+id/share_location">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp">
+
+            <View
+                android:id="@+id/view5"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/ash"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_volunteers"
+                app:layout_constraintVertical_bias="1" />
+
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="@dimen/item_spacing"
+                app:layout_constraintBottom_toBottomOf="@+id/loggedInAs"
+                app:layout_constraintEnd_toStartOf="@+id/loggedInAs"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/loggedInAs" />
 
             <TextView
-                android:id="@+id/sharing_your_location"
-                style="@style/TextAppearance.AppCompat.Body1"
-                android:layout_width="0dp"
+                android:id="@+id/loggedInAs"
+                style="@style/TextAppearance.App.Subtitle1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/light_ash"
-                android:padding="10dp"
-                android:text="@string/currently_sharing_location"
+                android:text="@string/logged_in_as_s"
                 android:textAlignment="center"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/view5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/profile_image"
+                app:layout_constraintTop_toTopOf="@+id/view5" />
+
+            <Button
+                android:id="@+id/live_track"
+                style="@style/Widget.App.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/window_margin"
+                android:layout_marginEnd="@dimen/window_margin"
+                android:backgroundTint="@color/yellow"
+                android:onClick="onLiveTrackBusClick"
+                android:padding="@dimen/button_padding"
+                android:text="@string/live_track_bus"
+                app:icon="@drawable/ic_bus"
+                app:iconGravity="textStart"
+                app:iconPadding="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
+
+            <Button
+                android:id="@+id/view_direction"
+                style="@style/Widget.App.Button"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@color/ash"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/yellow"
+                android:onClick="onViewDirectionsClick"
+                android:padding="@dimen/button_padding"
+                android:text="@string/view_directions"
+                android:visibility="gone"
+                app:icon="@drawable/ic_password"
+                app:iconGravity="textStart"
+                app:iconPadding="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sharing_your_location">
+                app:layout_constraintTop_toBottomOf="@+id/live_track" />
 
-                <TextView
-                    android:id="@+id/bus_name"
-                    style="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bus_jamuna"
-                    android:textAlignment="center" />
+            <Button
+                android:id="@+id/view_routes"
+                style="@style/Widget.App.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/yellow"
+                android:onClick="onViewRoutesClick"
+                android:padding="@dimen/button_padding"
+                android:text="@string/view_routes"
+                app:icon="@drawable/ic_map"
+                app:iconGravity="textStart"
+                app:iconPadding="20dp"
+                app:layout_constraintEnd_toEndOf="@+id/live_track"
+                app:layout_constraintStart_toStartOf="@+id/live_track"
+                app:layout_constraintTop_toBottomOf="@+id/view_direction" />
 
-                <TextView
-                    android:id="@+id/bus_time"
-                    style="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/time_6_45_am"
-                    android:textAlignment="center" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/textView"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:text="@string/contribute"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_routes" />
 
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="1.2dp"
+                android:background="@color/ash"
+                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintEnd_toStartOf="@+id/textView"
+                app:layout_constraintStart_toStartOf="@+id/view_routes"
+                app:layout_constraintTop_toTopOf="@+id/textView" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="0dp"
+                android:layout_height="1.2dp"
+                android:background="@color/ash"
+                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintEnd_toEndOf="@+id/view_routes"
+                app:layout_constraintStart_toEndOf="@+id/textView"
+                app:layout_constraintTop_toTopOf="@+id/textView" />
+
+            <Button
+                android:id="@+id/share_location"
+                style="@style/Widget.App.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:onClick="onShareLocationClick"
+                android:padding="@dimen/button_padding"
+                android:text="@string/share_location"
+                android:textColor="@color/white"
+                app:icon="@drawable/ic_location"
+                app:iconGravity="textStart"
+                app:iconPadding="20dp"
+                app:layout_constraintEnd_toEndOf="@+id/view_routes"
+                app:layout_constraintStart_toStartOf="@+id/view_routes"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                app:startIconTint="@color/white" />
+
+            <Button
+                android:id="@+id/view_volunteers"
+                style="@style/Widget.App.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/green_vibrant"
+                android:onClick="onViewVolunteersClick"
+                android:padding="@dimen/button_padding"
+                android:text="@string/view_volunteers"
+                app:icon="@drawable/ic_volunteers"
+                app:iconGravity="textStart"
+                app:iconPadding="20dp"
+                app:layout_constraintEnd_toEndOf="@+id/share_location"
+                app:layout_constraintStart_toStartOf="@+id/share_location"
+                app:layout_constraintTop_toBottomOf="@+id/cardView"
+                app:startIconTint="@color/white" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:visibility="gone"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="@+id/share_location"
+                app:layout_constraintStart_toStartOf="@+id/share_location"
+                app:layout_constraintTop_toBottomOf="@+id/share_location">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/sharing_your_location"
+                        style="@style/TextAppearance.AppCompat.Body1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@color/light_ash"
+                        android:padding="10dp"
+                        android:text="@string/currently_sharing_location"
+                        android:textAlignment="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:background="@color/ash"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/sharing_your_location">
+
+                        <TextView
+                            android:id="@+id/bus_name"
+                            style="@style/TextAppearance.AppCompat.Body1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bus_jamuna"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            android:id="@+id/bus_time"
+                            style="@style/TextAppearance.AppCompat.Body1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/time_6_45_am"
+                            android:textAlignment="center" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -34,14 +34,11 @@
     <string name="app_title">AUST TRAVELS</string>
     <string name="bus_jamuna"><b>Bus</b>: %s</string>
     <string name="time_6_45_am"><b>Time</b>: %s</string>
-    <string name="currently_sharing_location"><b>You are currently sharing you location</b></string>
+    <string name="currently_sharing_location"><b>You are currently sharing you location for the last %s mins</b></string>
     <string name="stop_sharing_location">STOP SHARING LOCATION</string>
     <string name="become_a_volunteer">BECOME A VOLUNTEER</string>
-    <string name="volunteer_prompt">You will be responsible for sharing your location <b>ONLY</b> when you are on the bus. <br/>Your location data will be continuously shared with other relevant users while your location sharing is active. <br/> <br/><b>Do you wish to continue?</b></string>
-
+    <string name="volunteer_prompt">You will be responsible for sharing your location <b>ONLY</b> when you are on the bus. <br />Your location data will be continuously shared with other relevant users while your location sharing is active. <br /> <br /><b>Do you wish to continue?</b></string>
     <string name="prominent_disclosure">This app collects location data to enable relevant users to track your location <b>while you’re riding on the bus</b> even when the app is closed or not in use.<br /> <br /><b>Do you wish to continue?</b> </string>
-
-
     <string name="btn_continue">continue</string>
     <string name="web_client_id">714054307139-qd93ng69or950o7fc53qegt7jp39v0n5.apps.googleusercontent.com</string>
     <string name="enter_your_university_id">Enter your university ID</string>
@@ -51,4 +48,5 @@
     <string name="universityId">%s</string>
     <string name="google_maps_api">AIzaSyCdhFmZBWJajjLP2dw6MWhDB6lHR5tc33E</string>
     <string name="use_your_location">USE YOUR LOCATION</string>
+    <string name="time_shared">%s</string>
 </resources>

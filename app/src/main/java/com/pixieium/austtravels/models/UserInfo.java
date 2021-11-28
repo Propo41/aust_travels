@@ -92,56 +92,52 @@ public class UserInfo {
         this.universityId = universityId;
     }
 
-
     private Boolean isValidEmail(CharSequence target) {
-        return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        return !target.toString().isEmpty() && email.matches(emailPattern);
     }
 
-    public Boolean validateInput(ActivitySignupBinding binding) {
-        boolean isValid = true;
+    public String validateInput() {
+        String errorMessage = null;
+        String fieldRequired = "Field is required";
+
         if (!isValidEmail(this.email)) {
-            binding.eduMail.setError("Please enter a valid email");
-            isValid = false;
+            errorMessage = "Please enter a valid email";
         } else {
             if (!email.split("@")[1].equals("aust.edu")) {
-                //println(email.split('@')[1])
-                binding.eduMail.setError("You must enter your institutional mail");
-                isValid = false;
+                errorMessage = "You must enter your institutional mail";
             }
         }
 
-        if (TextUtils.isEmpty(email)) {
-            binding.eduMail.setError("Field is required");
-            isValid = false;
+        if (email.isEmpty()) {
+            errorMessage = "You must enter your institutional mail";
         }
 
-        if (TextUtils.isEmpty(universityId)) {
-            binding.universityId.setError("Field is required");
-            isValid = false;
+        if (universityId.isEmpty()) {
+            errorMessage = fieldRequired;
         }
 
-        if (TextUtils.isEmpty(password)) {
-            binding.password.setError("Field is required");
-            isValid = false;
+        if (password.isEmpty()) {
+            errorMessage = fieldRequired;
+
         }
-        if (TextUtils.isEmpty(name)) {
-            binding.name.setError("Field is required");
-            isValid = false;
+        if (name.isEmpty()) {
+            errorMessage = fieldRequired;
+
         }
         if (name.length() > 20) {
-            binding.name.setError("Please enter a name of 20 characters");
-            isValid = false;
+            errorMessage = "Please enter a name of 20 characters";
+
         }
-        if (TextUtils.isEmpty(semester)) {
-            binding.semester.setError("Field is required");
-            isValid = false;
+        if (semester.isEmpty()) {
+            errorMessage = fieldRequired;
+
         }
-        if (TextUtils.isEmpty(department)) {
-            binding.department.setError("Field is required");
-            isValid = false;
+        if (semester.isEmpty()) {
+            errorMessage = fieldRequired;
         }
 
-        return isValid;
+        return errorMessage;
     }
 
 }

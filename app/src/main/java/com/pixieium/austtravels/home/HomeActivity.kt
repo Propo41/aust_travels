@@ -30,13 +30,11 @@ import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityHomeBinding
 import com.pixieium.austtravels.livetrack.LiveTrackActivity
+import com.pixieium.austtravels.home.stopwatch.StopwatchHandler
 import com.pixieium.austtravels.models.UserInfo
 import com.pixieium.austtravels.routes.RoutesActivity
 import com.pixieium.austtravels.volunteers.VolunteersActivity
 import kotlinx.coroutines.launch
-
-
-/* stop watch: https://stackoverflow.com/questions/3733867/stop-watch-logic*/
 
 class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
     ProminentDisclosureDialog.FragmentListener,
@@ -48,10 +46,15 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
     private val REQUEST_LIVE_TRACK = 0
     private val REQUEST_DIRECTIONS = 1
     private val REQUEST_SHARE_LOCATION = 2
+    private val MSG_START_TIMER = 0
+    private val MSG_STOP_TIMER = 1
+    private val MSG_UPDATE_TIMER = 2
 
     private lateinit var mSelectedBusName: String
     private lateinit var mSelectedBusTime: String
     private lateinit var mUid: String
+
+    private lateinit var mStopwatchHandler: StopwatchHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +62,8 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         setContentView(binding.root)
         mUid = Firebase.auth.currentUser?.uid.toString()
         setSupportActionBar(binding.topAppBar)
+
+        mStopwatchHandler = StopwatchHandler(binding.sharingYourLocation)
 
         val userInfo: UserInfo? = mDatabase.getUserInfo()
         if (userInfo != null) {
@@ -229,6 +234,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         }
     }
 
+
     override fun onBusSelectClick(
         selectedBusName: String,
         selectedBusTime: String,
@@ -239,14 +245,9 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
                 mSelectedBusName = selectedBusName
                 mSelectedBusTime = selectedBusTime
                 startLocationSharing()
+                startStopwatch()
                 // createNotification();
             }
-            /*   REQUEST_DIRECTIONS -> {
-                   val intent = Intent(this@HomeActivity, DirectionsActivity::class.java)
-                   intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
-                   intent.putExtra("SELECTED_BUS_TIME", selectedBusTime)
-                   startActivity(intent)
-               }*/
             REQUEST_LIVE_TRACK -> {
                 val intent = Intent(this@HomeActivity, LiveTrackActivity::class.java)
                 intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
@@ -255,6 +256,14 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
             }
         }
 
+    }
+
+    private fun startStopwatch() {
+        mStopwatchHandler.sendEmptyMessage(MSG_START_TIMER)
+    }
+
+    private fun stopStopwatch() {
+        mStopwatchHandler.sendEmptyMessage(MSG_STOP_TIMER)
     }
 
 
@@ -382,6 +391,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
             // stop sharing location
             binding.shareLocation.text = getString(R.string.share_location)
             stopLocationSharing()
+            stopStopwatch()
             binding.cardView.visibility = View.GONE
             isLocationSharing = false
         }
@@ -393,6 +403,7 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         startActivity(intent)
     }
 
+
     override fun onDisclosureAcceptClick() {
         Toast.makeText(
             this@HomeActivity, "Requires location permission",
@@ -401,3 +412,5 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         buildAlertMessageNoPermission()
     }
 }
+
+

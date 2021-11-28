@@ -16,6 +16,7 @@ import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityVolunteersBinding
 import com.pixieium.austtravels.models.UserInfo
+import com.pixieium.austtravels.models.Volunteer
 import kotlinx.coroutines.launch
 
 class VolunteersActivity : AppCompatActivity() {
@@ -34,7 +35,7 @@ class VolunteersActivity : AppCompatActivity() {
         setSupportActionBar(mBinding.toolbar)
 
         lifecycleScope.launch {
-            val volunteers: ArrayList<UserInfo> = mDatabase.fetchVolunteers()
+            val volunteers: ArrayList<Volunteer> = mDatabase.fetchVolunteers()
             initRecyclerView(volunteers)
         }
 
@@ -45,7 +46,7 @@ class VolunteersActivity : AppCompatActivity() {
         return true
     }
 
-    private fun initRecyclerView(volunteers: ArrayList<UserInfo>) {
+    private fun initRecyclerView(volunteers: ArrayList<Volunteer>) {
         mRecyclerView = findViewById(R.id.vrecyclerView)
         mLayoutManager = LinearLayoutManager(this)
         mAdapter = VolunteerAdapter(volunteers)

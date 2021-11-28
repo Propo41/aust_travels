@@ -65,9 +65,9 @@
         <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.App.Subtitle1.Light"
             android:inputType="none"
-            android:padding="@dimen/text_input_padding" />
+            android:padding="@dimen/text_input_padding"
+            android:textAppearance="@style/TextAppearance.App.Subtitle1.Light" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -77,11 +77,11 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:hint="@string/select_time"
         android:paddingLeft="@dimen/window_margin"
         android:paddingTop="@dimen/item_spacing"
         android:paddingRight="@dimen/window_margin"
-        android:enabled="false"
         app:layout_constraintEnd_toEndOf="@+id/view3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name"
@@ -92,8 +92,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
-            android:textAppearance="@style/TextAppearance.App.Subtitle1.Light"
-            android:padding="@dimen/text_input_padding" />
+            android:padding="@dimen/text_input_padding"
+            android:textAppearance="@style/TextAppearance.App.Subtitle1.Light" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -105,8 +105,8 @@
         android:layout_marginLeft="@dimen/window_margin"
         android:layout_marginTop="@dimen/item_spacing"
         android:layout_marginRight="@dimen/window_margin"
+        android:backgroundTint="@color/green_dark"
         android:onClick="onBusSelectClick"
-        android:backgroundTint="@color/black"
         android:padding="@dimen/button_padding"
         android:text="@string/select"
         android:textColor="@color/white"
@@ -127,4 +127,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view4" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view4"
+        app:layout_constraintVertical_bias="0.2"
+        app:srcCompat="@drawable/bus_stop_placeholder" />
+
+    <TextView
+        android:id="@+id/textView3"
+        style="@style/TextAppearance.App.Subtitle1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/search_for_a_bus"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toStartOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/placeholder"
+        android:layout_width="wrap_content"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="imageView3, textView3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

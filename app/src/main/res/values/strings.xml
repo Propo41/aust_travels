@@ -51,5 +51,12 @@
     <string name="time_shared">%s</string>
     <string name="channel_name">location_sharing</string>
     <string name="channel_description">a notification showing the user that their location is being shared in the backgroun.</string>
-
+    <string name="warning">WARNING</string>
+    <string name="deleting_your_account">Deleting your account will result in all of <br />your personal data being removed from <br />your servers. This action is <b>irreversible</b> <br />and we advice you to think twice before<br /> deleting the account.</string>
+    <string name="i_confirm">I CONFIRM</string>
+    <string name="contribute_to_the_community">Contribute to the community by routinely<br/>sharing your location</string>
+    <string name="privacy_policy"><![CDATA[Privacy & Policy]]></string>
+    <string name="view_the_privacy_policy">View the privacy policy of the application</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_everything">Delete everything associated with your<br/>account</string>
 </resources>

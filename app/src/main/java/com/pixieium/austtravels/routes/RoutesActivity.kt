@@ -154,9 +154,13 @@ class RoutesActivity : AppCompatActivity() {
                     mBinding.name.editText?.text.toString(),
                     mBinding.time.editText?.text.toString()
                 )
-                initRecyclerView(list)
+                if (list.size == 0) {
+                    mBinding.placeholder.visibility = View.VISIBLE
+                } else {
+                    mBinding.placeholder.visibility = View.GONE
+                    initRecyclerView(list)
+                }
             }
-
         } else {
             Toast.makeText(
                 this,
@@ -164,6 +168,5 @@ class RoutesActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-
     }
 }

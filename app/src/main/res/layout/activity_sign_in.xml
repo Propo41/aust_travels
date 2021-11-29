@@ -20,7 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:trackColor="@color/orange" />
 
-
     <TextView
         android:id="@+id/textView"
         style="@style/TextAppearance.App.Subtitle1"

@@ -1,5 +1,6 @@
 package com.pixieium.austtravels.auth
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -7,6 +8,7 @@ import com.pixieium.austtravels.databinding.ActivityForgotPasswordBinding
 import android.util.Patterns
 
 import android.text.TextUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
@@ -28,6 +30,13 @@ class ForgotPasswordActivity : AppCompatActivity() {
     private fun isValidEmail(target: CharSequence): Boolean {
         return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target)
             .matches()
+    }
+
+    private fun hideKeyboard() {
+        // hide the keyboard
+        val imm: InputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(mBinding.root.windowToken, 0)
     }
 
 
@@ -53,18 +62,31 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         } else {
-            // todo: do the forgot password backend logic
-            // email is valid. Do the rest @fuad
+            hideKeyboard()
+            mBinding.sendBtn.isEnabled = false
+            mBinding.eduMail.editText?.text?.clear()
+            mBinding.progressBar.visibility = View.VISIBLE
+            // email is valid.
             FirebaseAuth.getInstance().sendPasswordResetEmail(text)
-                .addOnCompleteListener(OnCompleteListener<Void?> { task ->
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(
                             this,
                             "An email is sent to your institutional email",
                             Toast.LENGTH_SHORT
                         ).show()
+                        mBinding.progressBar.visibility = View.GONE
+                        mBinding.sendBtn.isEnabled = true
                     }
-                })
+                }.addOnFailureListener {
+                    Toast.makeText(
+                        this,
+                        it.localizedMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    mBinding.progressBar.visibility = View.GONE
+                    mBinding.sendBtn.isEnabled = true
+                }
         }
     }
 

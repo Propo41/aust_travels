@@ -37,7 +37,7 @@
     <string name="currently_sharing_location"><b>You are currently sharing you location for %s:%s</b></string>
     <string name="stop_sharing_location">STOP SHARING LOCATION</string>
     <string name="become_a_volunteer">BECOME A VOLUNTEER</string>
-    <string name="volunteer_prompt">By becoming a volunteer, you will be responsible for sharing your location <b>ONLY</b> when you are on the bus. Your location data will be continuously shared with other relevant users while your location sharing is active.<br/><br/> <b>Do you wish to continue?</b></string>
+    <string name="volunteer_prompt">By becoming a volunteer, you will be responsible for sharing your location <b>ONLY</b> when you are on the bus. Your location data will be continuously shared with other relevant users while your location sharing is active.<br /><br /> <b>Do you wish to continue?</b></string>
     <string name="prominent_disclosure">This app collects location data to enable relevant users to track your location <b>while you’re riding on the bus</b> even when the app is closed or not in use.<br /> <br /><b>Do you wish to continue?</b> </string>
     <string name="btn_continue">continue</string>
     <string name="web_client_id">714054307139-qd93ng69or950o7fc53qegt7jp39v0n5.apps.googleusercontent.com</string>
@@ -68,4 +68,9 @@
     <string name="_12hr">12hr</string>
     <string name="no_volunteers_found">no volunteers found!</string>
     <string name="top_position_name">%s</string>
+    <string name="send">SEND</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="forgot_password_title">Forgot password</string>
+    <string name="return_back">RETURN BACK</string>
+    <string name="forgot_pass_caption">We’ll send you a password reset link if the email you provide exists in our database</string>
 </resources>

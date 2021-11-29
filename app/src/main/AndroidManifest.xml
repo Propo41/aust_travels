@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AustTravels">
         <activity
+            android:name=".auth.ForgotPasswordActivity"
+            android:exported="true" />
+        <activity
             android:name=".settings.SettingsActivity"
             android:exported="false" />
 

@@ -131,4 +131,10 @@ class SignInActivity : AppCompatActivity() {
             Firebase.auth.signOut()
         }
     }
+
+    fun onForgotPasswordClick(view: View) {
+        val intent = Intent(baseContext, ForgotPasswordActivity::class.java)
+        startActivity(intent)
+
+    }
 }

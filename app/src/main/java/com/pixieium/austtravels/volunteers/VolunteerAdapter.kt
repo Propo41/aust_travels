@@ -24,6 +24,8 @@ class VolunteerAdapter(routeList: ArrayList<Volunteer>) :
         var id: TextView = itemView.findViewById(R.id.university_id)
         var imageUrl: ImageView = itemView.findViewById(R.id.profile_image)
         var timeShared: TextView = itemView.findViewById(R.id.time_shared)
+        var position: TextView = itemView.findViewById(R.id.position)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,6 +41,7 @@ class VolunteerAdapter(routeList: ArrayList<Volunteer>) :
         holder.name.text = currentItem.name
         holder.id.text = currentItem.universityId
         holder.imageUrl.loadSvg(currentItem.userImage)
+        holder.position.text = mContext.getString(R.string._14, (position + 2).toString())
         holder.timeShared.text = currentItem.totalContributionFormatted
     }
 

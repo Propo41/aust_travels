@@ -57,7 +57,7 @@
     </style>
 
     <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
-        <item name="cornerFamily">cut</item>
+        <item name="cornerFamily">rounded</item>
         <item name="cornerSize">4dp</item>
     </style>
 
@@ -67,6 +67,17 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="App.CardView.Volunteers" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlayVolunteers</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlayVolunteers" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomRight">30dp</item>
+        <item name="cornerSizeBottomLeft">30dp</item>
+    </style>
 
     <style name="ThemeOverlay.App.TextInputLayout" parent="">
         <item name="colorPrimary">@color/black</item>

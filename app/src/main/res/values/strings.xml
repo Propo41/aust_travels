@@ -65,4 +65,7 @@
     <string name="re_authenticate_yourself">RE-AUTHENTICATE YOURSELF</string>
     <string name="dismiss">DISMISS</string>
     <string name="_14">%s.</string>
+    <string name="_12hr">12hr</string>
+    <string name="no_volunteers_found">no volunteers found!</string>
+    <string name="top_position_name">%s</string>
 </resources>

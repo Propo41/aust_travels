@@ -36,7 +36,7 @@ class VolunteersActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val volunteers: ArrayList<Volunteer> = mDatabase.fetchVolunteers()
-            println("size:: " + volunteers.size)
+            //println("size:: " + volunteers.size)
             if (volunteers.size > 0) {
                 mBinding.notFoundPlaceholder.visibility = View.GONE
                 mBinding.topPosition.visibility = View.VISIBLE

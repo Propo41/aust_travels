@@ -25,16 +25,29 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
     private fun isValidEmail(target: CharSequence): Boolean {
         return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target)
-            .matches() && target.split("@").toTypedArray()[1] != "aust.edu"
+            .matches()
     }
+
+
+    private fun isEmailCorrect(target: CharSequence): String? {
+        if (!isValidEmail(target)) {
+            return "Please enter a valid email"
+        } else {
+            if (target.split("@").toTypedArray()[1] != "aust.edu") {
+                return "You must enter your institutional mail"
+            }
+        }
+        return null
+    }
+
 
     fun onSendClick(view: View) {
         val text = mBinding.eduMail.editText?.text.toString()
-
-        if (!isValidEmail(text)) {
+        val xx = isEmailCorrect(text)
+        if (xx != null) {
             Toast.makeText(
                 this,
-                "Email is invalid. Please enter your institutional email",
+                xx,
                 Toast.LENGTH_SHORT
             ).show()
         } else {

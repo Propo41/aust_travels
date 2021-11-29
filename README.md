@@ -35,6 +35,7 @@ Resources
 ---------
 
 1. User interface design: [figma](https://www.figma.com/file/kBarxgD5M27m2v9LG5J9W6/Bus?node-id=257%3A344)
+2. Admin Panel: [hosted on firebase](https://aust-travels.firebaseapp.com)
 
 
 Contributing Guidelines

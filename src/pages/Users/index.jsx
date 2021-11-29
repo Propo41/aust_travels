@@ -161,7 +161,7 @@ export default function Users() {
 
   const onMakeVolunteerClick = (id) => {
     const db = getDatabase();
-    set(ref(db, `volunteers/${id}`), true)
+    set(ref(db, `volunteers/${id}/status`), true)
       .then(() => {
         console.log("data saved!");
       })

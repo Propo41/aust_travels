@@ -29,11 +29,6 @@ const CardComponent=(props)=>{
                 </CardActions>
 
                 <CardActions>
-                    <p className={classes.title}>Map Place Id : </p>
-                    <p >{props.Map_Place_ID}</p>
-                </CardActions>
-
-                <CardActions>
                     <p className={classes.title}>Map Place Name : </p>
                     <p >{props.Map_Place_Name}</p>
                 </CardActions>

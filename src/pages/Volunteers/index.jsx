@@ -37,6 +37,7 @@ const TABLE_HEAD = [
   { id: "semester", label: "Semester", alignRight: false },
   { id: "dept", label: "Dept", alignRight: false },
   { id: "roll", label: "Roll", alignRight: false },
+  { id: "totalContribution", label: "Contribution (hrs)", alignRight: false },
   { id: "pendingStatus", label: "Status", alignRight: false },
   { id: "" },
 ];
@@ -97,7 +98,15 @@ export default function Volunteers() {
           snapshot.forEach((childSnapshot) => {
             // get the uid of the user from volunteers/uid
             const uid = childSnapshot.key;
-            const isPending = childSnapshot.val() ? "Active" : "Pending";
+            const isPending = childSnapshot.child("status").val()
+              ? "Active"
+              : "Pending";
+            var totalContribution = childSnapshot
+              .child("totalContribution")
+              .val();
+            if (!totalContribution) {
+              totalContribution = 0;
+            }
 
             const userRef = ref(db, `users/${uid}`);
             // get the user data from users/uid
@@ -105,6 +114,9 @@ export default function Volunteers() {
               const user = snapshot.val();
               user.id = uid;
               user.isPending = isPending;
+              user.totalContribution = (totalContribution / 1200000.0).toFixed(
+                4
+              );
               volunteerList.push(user);
             });
 
@@ -158,7 +170,7 @@ export default function Volunteers() {
 
   const onApproveClick = (id) => {
     const db = getDatabase();
-    set(ref(db, `volunteers/${id}`), true)
+    set(ref(db, `volunteers/${id}/status`), true)
       .then(() => {
         console.log("data saved!");
       })
@@ -254,6 +266,7 @@ export default function Volunteers() {
                         department,
                         universityId,
                         isPending,
+                        totalContribution,
                       } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
 
@@ -287,6 +300,9 @@ export default function Volunteers() {
                           <TableCell align="left">{semester}</TableCell>
                           <TableCell align="left">{department}</TableCell>
                           <TableCell align="left">{universityId}</TableCell>
+                          <TableCell align="left">
+                            {totalContribution}
+                          </TableCell>
 
                           <TableCell align="left">
                             <Label

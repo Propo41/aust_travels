@@ -10,8 +10,7 @@ function App() {
   return (
     <ThemeConfig>
       <GlobalStyles />
-      <PrivateRouter />
-      {/* {user ? <PrivateRouter /> : <PublicRouter />} */}
+      {user ? <PrivateRouter /> : <PublicRouter />}
     </ThemeConfig>
   );
 }

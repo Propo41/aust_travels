@@ -51,7 +51,6 @@ class MainRepository {
                 "Mohammadpur",
                 "6:45AM",
                 "Mohammadpur Bus Stand",
-                "ChIJl893rOq_VTcR33N-LYm16FY",
                 "23.757056",
                 "90.361334"
             )
@@ -61,7 +60,6 @@ class MainRepository {
                 "Shankar",
                 "6:50AM",
                 "Chhayanaut Shangskriti-Bhavan",
-                "ChIJnSqg11G_VTcR-h5xzrJhIKU",
                 "23.750767",
                 "90.368380"
             )
@@ -71,14 +69,13 @@ class MainRepository {
                 "Dhanmondi 15",
                 "6:55AM",
                 "15 No Bus Stand",
-                "ChIJf1nIdku_VTcRPzHP7aTpLzA",
                 "23.744144",
                 "90.372813"
             )
         )
         list.add(
             Route(
-                "Jigatola", "7:00AM", "Zigatola Bus Stand", "ChIJNU2SmMq4VTcR96mKYWZRdYA",
+                "Jigatola", "7:00AM", "Zigatola Bus Stand",
                 "23.739193", "90.375611"
             )
         )
@@ -87,7 +84,7 @@ class MainRepository {
                 "City College",
                 "7:05AM",
                 "City College Bus Stop",
-                "ChIJLUUO3re4VTcRh7hTzBQ5x-4",
+
                 "23.739430", "90.383068"
             )
         )
@@ -96,7 +93,6 @@ class MainRepository {
                 "Dhanmondi 6",
                 "7:10AM",
                 "Road No. 6",
-                "EiBSZCBOby4gNiwgRGhha2EgMTIwNSwgQmFuZ2xhZGVzaCIuKiwKFAoSCevE0-q2uFU3EWAQXREWw81NEhQKEgmBawKHsLhVNxHCBFndu2Oljw",
                 "23.743421", "90.382232"
             )
         )
@@ -105,7 +101,6 @@ class MainRepository {
                 "Kalabagan",
                 "7:15AM",
                 "Kalabagan Bus Stoppage",
-                "ChIJy6QbK3e5VTcR5LJ0opz09Ik",
                 "23.747743", "90.380171"
             )
         )
@@ -114,7 +109,6 @@ class MainRepository {
                 "Rasel Square",
                 "7:15AM",
                 "Kalabagan Bus Stoppage",
-                "ChIJy6QbK3e5VTcR5LJ0opz09Ik",
                 "23.751643", "90.378685"
             )
         )
@@ -123,7 +117,6 @@ class MainRepository {
                 "Panthapath",
                 "7:20AM",
                 "Basnhundhara City North Bus Stop",
-                "ChIJ58PGVLu4VTcRsUV-M6pcObs",
                 "23.751065", "90.387459"
             )
         )
@@ -132,7 +125,6 @@ class MainRepository {
                 "Karwan Bazar",
                 "7:25AM",
                 "Hatirjheel Rail Gate",
-                "ChIJu4yI75m4VTcRobgICzaj7cQ",
                 "23.750184", "90.393907"
             )
         )
@@ -141,7 +133,6 @@ class MainRepository {
                 "AUST",
                 "7:45AM",
                 "Ahsanullah University of Science and Technology",
-                "ChIJRfi17H3HVTcRkneGOy_d6sI",
                 "23.763879", "90.406258"
             )
         )

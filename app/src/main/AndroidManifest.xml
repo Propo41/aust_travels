@@ -56,9 +56,7 @@
             android:name=".auth.SignInActivity"
             android:exported="true"
             android:label="@string/title_activity_live_track" />
-        <activity
-            android:name=".directions.DirectionsActivity"
-            android:exported="false" />
+
         <activity
             android:name=".home.HomeActivity"
             android:exported="false" />

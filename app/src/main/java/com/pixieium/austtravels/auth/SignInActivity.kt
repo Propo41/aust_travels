@@ -38,7 +38,7 @@ class SignInActivity : AppCompatActivity() {
                 // hide the keyboard
                 hideKeyboard()
             } catch (e: Exception) {
-                e.printStackTrace()
+                //e.printStackTrace()
                 Toast.makeText(this, e.localizedMessage, Toast.LENGTH_SHORT).show()
             } finally {
                 signInUserByEmail()

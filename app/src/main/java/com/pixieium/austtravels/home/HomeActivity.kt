@@ -74,7 +74,7 @@ class HomeActivity : AppCompatActivity(),
         setSupportActionBar(binding.topAppBar)
 
         isLocationSharing = readSharedPref()
-        println("isLocationSharing: $isLocationSharing")
+        //println("isLocationSharing: $isLocationSharing")
 
         mStopwatchHandler = StopwatchHandler(binding.sharingYourLocation)
 

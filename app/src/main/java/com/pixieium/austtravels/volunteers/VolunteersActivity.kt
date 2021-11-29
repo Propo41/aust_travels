@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.databinding.ActivityVolunteersBinding
@@ -32,9 +36,40 @@ class VolunteersActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val volunteers: ArrayList<Volunteer> = mDatabase.fetchVolunteers()
-            initRecyclerView(volunteers)
+            println("size:: " + volunteers.size)
+            if (volunteers.size > 0) {
+                mBinding.notFoundPlaceholder.visibility = View.GONE
+                mBinding.topPosition.visibility = View.VISIBLE
+                mBinding.firstPosition.loadSvg(volunteers[0].userImage)
+                mBinding.firstTime.text = volunteers[0].totalContributionFormatted
+                mBinding.textView4.text = volunteers[0].name
+                volunteers.removeAt(0)
+                initRecyclerView(volunteers)
+            } else {
+                mBinding.notFoundPlaceholder.visibility = View.VISIBLE
+                mBinding.topPosition.visibility = View.GONE
+            }
         }
 
+    }
+
+    /**
+     * By default, ImageViews don't support SVG formats.
+     * So, instead we are using the coil library to render svg files
+     */
+    private fun ImageView.loadSvg(url: String) {
+        val imageLoader = ImageLoader.Builder(this.context)
+            .componentRegistry { add(SvgDecoder(this@loadSvg.context)) }
+            .build()
+
+        val request = ImageRequest.Builder(this.context)
+            .crossfade(true)
+            .crossfade(2)
+            .data(url)
+            .target(this)
+            .build()
+
+        imageLoader.enqueue(request)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

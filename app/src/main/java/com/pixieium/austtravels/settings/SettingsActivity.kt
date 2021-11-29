@@ -3,21 +3,18 @@ package com.pixieium.austtravels.settings
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
-import com.pixieium.austtravels.databinding.ActivityHomeBinding
 import com.pixieium.austtravels.databinding.ActivitySettingsBinding
 import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
-    DeleteConfirmationDialog.FragmentListener {
+    ReAuthenticateDialog.FragmentListener, DeleteConfirmationDialog.FragmentListener {
     private val mDatabase: SettingsRepository = SettingsRepository()
     private lateinit var mUid: String
     private lateinit var mBinding: ActivitySettingsBinding
@@ -45,9 +42,15 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
     }
 
     fun onDeleteClick(view: View) {
-        // re-verify user before deleting
+        // confirmation dialog
         DeleteConfirmationDialog.newInstance()
             .show(supportFragmentManager, DeleteConfirmationDialog.TAG)
+    }
+
+    override fun onDeleteConfirmClick() {
+        // re-verify user before deleting
+        ReAuthenticateDialog.newInstance()
+            .show(supportFragmentManager, ReAuthenticateDialog.TAG)
     }
 
     fun onPrivacyClick(view: View) {}
@@ -106,6 +109,8 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             }
         }
     }
+
+
 }
 
 

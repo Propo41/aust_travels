@@ -14,12 +14,16 @@ class VolunteerRepository {
 
         try {
             val database = Firebase.database
-            val snapshot = database.getReference("volunteers").get().await()
+            val snapshot =
+                database.getReference("volunteers").orderByChild("totalContribution").get().await()
             val x = snapshot.key
             for (snap: DataSnapshot in snapshot.children) {
                 val xy = snap.getValue<Volunteer>()
                 if (xy != null) {
                     if (xy.isStatus) {
+                        if (xy.totalContribution == null) {
+                            xy.totalContribution = 0
+                        }
                         val totalContributionFormatted =
                             convertContributionTime(xy.totalContribution / 1000)
                         val userInfo = getUserInfo(snap.key.toString())
@@ -28,7 +32,9 @@ class VolunteerRepository {
                     }
                 }
             }
-            return volunteers
+            // reverse the list since the list comes in ascending order
+
+            return volunteers.reversed() as ArrayList<Volunteer>
 
         } catch (e: Exception) {
             e.printStackTrace()

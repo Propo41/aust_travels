@@ -88,6 +88,17 @@ class RoutesActivity : AppCompatActivity() {
         return false
     }
 
+    private fun startLoading() {
+        mBinding.progressBar.visibility = View.VISIBLE
+        mBinding.select.isEnabled = false
+    }
+
+    private fun stopLoading() {
+        mBinding.progressBar.visibility = View.GONE
+        mBinding.select.isEnabled = true
+    }
+
+
     private fun initSpinnerName(list: ArrayList<BusInfo>) {
         val items: ArrayList<String> = ArrayList()
         for (busInfo: BusInfo in list) {
@@ -143,6 +154,7 @@ class RoutesActivity : AppCompatActivity() {
 
     fun onBusSelectClick(view: View) {
         if (!mBinding.time.editText?.text.isNullOrEmpty() && !mBinding.name.editText?.text.isNullOrEmpty()) {
+            startLoading()
             lifecycleScope.launch {
                 val list: ArrayList<Route> = mDatabase.fetchRouteList(
                     mBinding.name.editText?.text.toString(),
@@ -156,6 +168,7 @@ class RoutesActivity : AppCompatActivity() {
                     mBinding.placeholder.visibility = View.GONE
                     initRecyclerView(list)
                 }
+                stopLoading()
             }
         } else {
             Toast.makeText(

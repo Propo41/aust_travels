@@ -54,6 +54,17 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
+    private fun startLoading() {
+        mBinding.progressBar.visibility = View.VISIBLE
+        mBinding.signup.isEnabled = false
+    }
+
+    private fun stopLoading() {
+        mBinding.progressBar.visibility = View.GONE
+        mBinding.signup.isEnabled = true
+    }
+
+
     private fun hideKeyboard() {
         // hide the keyboard
         val imm: InputMethodManager =
@@ -78,6 +89,7 @@ class SignUpActivity : AppCompatActivity() {
             Toast.makeText(this, "Please enter your information correctly", Toast.LENGTH_SHORT)
                 .show()
         } else {
+            startLoading()
             mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(
                     this
@@ -98,16 +110,17 @@ class SignUpActivity : AppCompatActivity() {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
+                                stopLoading()
                             }
                         }
                     }
                 }
                 .addOnFailureListener(this) {
+                    stopLoading()
                     Toast.makeText(
                         applicationContext, it.localizedMessage,
                         Toast.LENGTH_SHORT
                     ).show()
-
                 }
         }
 

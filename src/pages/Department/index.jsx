@@ -3,6 +3,7 @@ import { Grid, Card, Paper, Button, FormControl, OutlinedInput, CardActions} fro
 import Appbar from 'components/Appbar';
 import useStyles from 'styles/Department';
 import { Icon } from '@iconify/react';
+import { getDatabase, ref, onValue,set,update} from "firebase/database";
 import { Link } from "react-router-dom";
 
 const DepartmentPage = () =>{
@@ -11,6 +12,25 @@ const DepartmentPage = () =>{
 
     const [department,setdepartment] = useState("");
     const [departmentlist,setDepartmentlist] = useState([]);
+
+    let id=0;
+
+    useEffect(()=>{
+        const db = getDatabase();
+        const departmentref = ref(db,'universityInfo/departments');
+        const departmentList = [];
+
+        onValue(departmentref, (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+            const dept = childSnapshot.val();
+            departmentList.push({department:dept});
+        });
+        setDepartmentlist(departmentList);
+        },
+        {
+            onlyOnce: true,
+        });
+    },[]);
 
     useEffect(() => {
         const json = sessionStorage.getItem("my-departmentlist");
@@ -30,13 +50,41 @@ const DepartmentPage = () =>{
         setdepartment(event.target.value);
     }
 
-    const handleclick = event =>{
-        event.preventDefault();
-        if(department)
+    const handleclick = () =>{
+        console.log(departmentlist);
+        const list = departmentlist.map((val,key)=>val.key);
+
+        const tmp= departmentlist.map((val)=>val.department);
+        console.log(tmp);
+
+        if(department && !tmp.includes(department))
         {
+            console.log(department);
+            console.log(id);
             setDepartmentlist([...departmentlist,{department:department}]);
         }
+
+
+        console.log(list);
+
         setdepartment("");
+    }
+
+    const handlesavechange =() =>{
+        const db = getDatabase();
+        const tmp= departmentlist.map((val)=>val.department);
+
+        update(ref(db, 'universityInfo/'), 
+        {
+            departments:tmp,
+        },
+        { merge: true }
+        )
+            
+        //update(ref(db), updates);
+      
+        
+
     }
 
     const deleteDepartment = (index) =>
@@ -66,7 +114,7 @@ const DepartmentPage = () =>{
                             
                             {
                                 departmentlist.map((val,key)=>(
-
+                                
                                 <Card className={classes.card}>
                                     <CardActions>
                                         <p className={classes.semestername}>{val.department}</p>
@@ -77,7 +125,7 @@ const DepartmentPage = () =>{
                                 ))
                             }
                             
-                            <Button variant="contained" className={classes.savebutton}>SAVE CHANGES</Button>
+                            <Button variant="contained" onClick={handlesavechange} className={classes.savebutton}>SAVE CHANGES</Button>
                         </Paper>
                     </Grid>
                 </Grid>

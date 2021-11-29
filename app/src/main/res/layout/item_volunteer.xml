@@ -61,7 +61,7 @@
         android:layout_marginEnd="@dimen/window_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_time" />
+        app:srcCompat="@drawable/ic_timelapse" />
 
     <TextView
         android:id="@+id/time_shared"

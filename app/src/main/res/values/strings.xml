@@ -64,4 +64,5 @@
     <string name="confirm">confirm</string>
     <string name="re_authenticate_yourself">RE-AUTHENTICATE YOURSELF</string>
     <string name="dismiss">DISMISS</string>
+    <string name="_14">%s.</string>
 </resources>

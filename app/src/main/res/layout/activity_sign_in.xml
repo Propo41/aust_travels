@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/signin_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signin_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/green_dark"
-    android:paddingStart="@dimen/window_margin"
-    android:paddingEnd="@dimen/window_margin"
     tools:context=".auth.SignInActivity">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:trackColor="@color/orange" />
 
     <TextView
         android:id="@+id/textView"
@@ -22,12 +32,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signin" />
 
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email"
         style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/window_margin"
         android:layout_marginTop="@dimen/item_spacing_large"
+        android:layout_marginEnd="@dimen/window_margin"
         android:hint="@string/enter_your_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,14 +62,16 @@
         style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/window_margin"
         android:layout_marginTop="@dimen/item_spacing"
+        android:layout_marginEnd="@dimen/window_margin"
         android:hint="@string/enter_your_password"
         app:endIconMode="password_toggle"
+        app:endIconTint="@color/green_vibrant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email"
         app:startIconDrawable="@drawable/ic_password"
-        app:endIconTint="@color/green_vibrant"
         app:startIconTint="@color/green_vibrant">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -72,7 +87,9 @@
         style="@style/Widget.App.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/window_margin"
         android:layout_marginTop="@dimen/item_spacing"
+        android:layout_marginEnd="@dimen/window_margin"
         android:padding="@dimen/button_padding"
         android:text="@string/sign_in"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,6 +101,8 @@
         style="@style/Widget.App.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/window_margin"
+        android:layout_marginEnd="@dimen/window_margin"
         android:backgroundTint="@color/yellow"
         android:padding="@dimen/button_padding"
         android:text="@string/sign_up_with_email"
@@ -109,6 +128,7 @@
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="1.5dp"
+        android:layout_marginStart="@dimen/window_margin"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintEnd_toStartOf="@+id/textView"
@@ -119,6 +139,7 @@
         android:id="@+id/view2"
         android:layout_width="0dp"
         android:layout_height="1.5dp"
+        android:layout_marginEnd="@dimen/window_margin"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"

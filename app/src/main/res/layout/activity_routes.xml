@@ -27,6 +27,18 @@
             app:title="@string/ROUTES" />
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view4"
+        app:trackColor="@color/orange" />
+
     <View
         android:id="@+id/view3"
         android:layout_width="match_parent"

@@ -46,6 +46,19 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
+    private fun startLoading() {
+        mBinding.progressBar.visibility = View.VISIBLE
+        mBinding.signin.isEnabled = false
+        mBinding.signup.isEnabled = false
+    }
+
+    private fun stopLoading() {
+        mBinding.progressBar.visibility = View.GONE
+        mBinding.signin.isEnabled = true
+        mBinding.signup.isEnabled = true
+    }
+
+
     private fun hideKeyboard() {
         // hide the keyboard
         val imm: InputMethodManager =
@@ -64,6 +77,7 @@ class SignInActivity : AppCompatActivity() {
                 mBinding.password.error = "Password cannot be empty"
             }
         } else {
+            startLoading()
             mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(
                     this
@@ -72,9 +86,14 @@ class SignInActivity : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         checkVerifiedEmail()
                     }
+                    stopLoading()
+
                 }
                 .addOnFailureListener {
+                    mBinding.progressBar.visibility = View.GONE
+                    mBinding.signin.isEnabled = true
                     Toast.makeText(this, it.localizedMessage, Toast.LENGTH_SHORT).show()
+                    stopLoading()
                 }
         }
     }

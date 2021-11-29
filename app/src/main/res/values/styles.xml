@@ -8,6 +8,11 @@
 
     </style>
 
+
+    <style name="App.CircularProgressBar" parent="@style/Theme.AppCompat">
+        <item name="colorAccent">@color/white</item>
+    </style>
+
     <style name="TextBottomSheetDialog">
         <item name="fontFamily">@font/saira_medium</item>
         <item name="android:fontFamily">@font/saira_bold</item>

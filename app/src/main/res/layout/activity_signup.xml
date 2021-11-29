@@ -13,6 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:indicatorColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/signup_txt"
+            app:trackColor="@color/orange" />
+
         <TextView
             android:id="@+id/signup_txt"
             style="@style/TextAppearance.AppCompat.Title"
@@ -92,6 +104,7 @@
             android:paddingLeft="@dimen/text_input_padding"
             android:paddingRight="@dimen/text_input_padding"
             android:layout_marginTop="@dimen/item_spacing"
+            android:paddingTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signup_txt"

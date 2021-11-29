@@ -37,7 +37,7 @@ class VolunteerRepository {
             return volunteers.reversed() as ArrayList<Volunteer>
 
         } catch (e: Exception) {
-            e.printStackTrace()
+            //e.printStackTrace()
         }
 
         return volunteers
@@ -80,7 +80,7 @@ class VolunteerRepository {
             }
             return null
         } catch (e: Exception) {
-            e.printStackTrace()
+            //e.printStackTrace()
         }
 
         return null

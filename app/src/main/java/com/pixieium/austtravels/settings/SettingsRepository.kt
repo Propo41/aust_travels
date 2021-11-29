@@ -23,7 +23,7 @@ class SettingsRepository {
                 Payload("Hey, hold your horses. We are reviewing your request!", false)
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            //e.printStackTrace()
             Payload("Something went horribly wrong. Try again later!", false)
         }
     }
@@ -46,10 +46,10 @@ class SettingsRepository {
             user.delete().await()
             true
         } catch (e: FirebaseAuthRecentLoginRequiredException) {
-            e.printStackTrace()
+            //e.printStackTrace()
             false
         } catch (e: Exception) {
-            e.printStackTrace()
+            //e.printStackTrace()
             false
         }
     }
@@ -61,7 +61,7 @@ class SettingsRepository {
             user.reauthenticate(credential).await()
             return true
         } catch (e: Exception) {
-            e.printStackTrace()
+            //e.printStackTrace()
         }
         return false
     }

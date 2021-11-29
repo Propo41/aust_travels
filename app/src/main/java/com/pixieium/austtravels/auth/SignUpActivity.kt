@@ -47,7 +47,7 @@ class SignUpActivity : AppCompatActivity() {
             try {
                 hideKeyboard()
             } catch (e: Exception) {
-                e.printStackTrace()
+                //e.printStackTrace()
             }
             createNewUser()
         }

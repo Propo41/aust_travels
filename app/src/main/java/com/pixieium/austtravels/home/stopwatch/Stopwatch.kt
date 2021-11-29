@@ -27,7 +27,7 @@ class Stopwatch {
         get() {
             var elapsed: Long = 0
             if (running) {
-                elapsed = (System.currentTimeMillis() - startTime) / 100
+                elapsed = (System.currentTimeMillis() - startTime)
             }
             return elapsed
         }

@@ -79,4 +79,10 @@ class HomeRepository {
         return null
     }
 
+    fun updateContribution(totalTimeElapsed: Long) {
+        val uid = Firebase.auth.currentUser?.uid
+        val database = Firebase.database
+        database.getReference("volunteers/$uid/totalContribution").setValue(totalTimeElapsed)
+    }
+
 }

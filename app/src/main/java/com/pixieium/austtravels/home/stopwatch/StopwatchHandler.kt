@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Message
 import android.widget.TextView
 import com.pixieium.austtravels.R
+import com.pixieium.austtravels.home.HomeRepository
 
 
 class StopwatchHandler(private val timerTextView: TextView) : Handler() {
@@ -14,6 +15,7 @@ class StopwatchHandler(private val timerTextView: TextView) : Handler() {
     private var timer: Stopwatch = Stopwatch()
     private val REFRESH_RATE = 100
 
+    private val mDatabase: HomeRepository = HomeRepository()
     private var totalTimeElapsed: Long = 0
 
     override fun handleMessage(msg: Message) {
@@ -38,10 +40,10 @@ class StopwatchHandler(private val timerTextView: TextView) : Handler() {
             MSG_STOP_TIMER -> {
                 this.removeMessages(MSG_UPDATE_TIMER) // no more updates.
                 timer.stop() //stop timer
-                // todo: save data to database
-
+                mDatabase.updateContribution(totalTimeElapsed)
             }
             else -> {
+                // invalid message
             }
         }
     }

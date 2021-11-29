@@ -4,12 +4,14 @@ import * as React from 'react';
 import useStyles from '../../styles/SelectBus';
 import Appbar from '../../components/Appbar';
 import { Paper } from '@mui/material';
-import busNamelist from '../../_mocks_/busname';
-import busStartTimelist from '../../_mocks_/busStartTime';
 import CardComponent from '../../components/Card';
-import bustracklist from '../../_mocks_/bustrack';
 import { useState ,useEffect } from 'react';
 import { Icon } from '@iconify/react';
+import { useAuth } from "auth/firebaseAuth";
+import firebaseConfig from 'auth/config';
+import { initializeApp } from '@firebase/app';
+import { getDatabase, ref,set, onValue} from "firebase/database";
+import { keys } from 'lodash';
 
 const Style = {
   position: 'absolute',
@@ -28,6 +30,10 @@ const ViewBusPage = () =>{
 
     const [click, isClicked] = useState(false);
 
+    const [buslist, setBuslist] = useState([]);
+    const [bustimelist, setBustimelist] = useState([]);
+    const [bustracklist, setBustracklist] = useState([]);
+
     const classes = useStyles();
 
     const [busName, setbusName] = React.useState('');
@@ -36,6 +42,52 @@ const ViewBusPage = () =>{
     const [tmpbusName,setTmpbusName]= React.useState('');
     const [tmpbusStartTime, settmpBusStartTime] = React.useState('');
 
+    useEffect(()=>{
+        const db = getDatabase();
+        const busref = ref(db,'availableBusInfo');
+        const busList = [];
+
+        onValue(busref, (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+            const bus = childSnapshot.val();
+            bus.id=childSnapshot.key;
+            busList.push(bus.id);
+        });
+
+        setBuslist(busList);
+        },
+        {
+            onlyOnce: true,
+        });
+    },[])
+    
+    useEffect(()=>{
+    const db = getDatabase();
+    const demo = ref(db,'routes');
+    onValue(demo, (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+            const bus = childSnapshot.val();
+            bus.id=childSnapshot.key;
+            console.log(bus.id);
+        });
+
+    });
+     },[])
+
+    useEffect(() => {
+        const json = sessionStorage.getItem("my-buslist");
+        const buslist = JSON.parse(json);
+        if (buslist) {
+            setBustracklist(buslist);
+        }
+    }, []);
+
+    useEffect(() => {
+        const json = JSON.stringify(bustracklist);
+        sessionStorage.setItem("my-buslist", json);
+    }, [bustracklist]);
+
+        
     useEffect(() => {
         const json = sessionStorage.getItem("my-open");
         const openstate = JSON.parse(json);
@@ -90,15 +142,39 @@ const ViewBusPage = () =>{
 
 
     const handleChangebusName = (event) => {
+
         setbusName(event.target.value);
+        const db = getDatabase();
+
+        console.log(busName);
+        const busref = ref(db,'availableBusInfo/'+event.target.value);
+        const bustimeList = [];
+
+        onValue(busref, (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+            childSnapshot.forEach((secondchildSnapshot) => {
+                if(secondchildSnapshot.key =='startTime')
+                {
+                    const time=secondchildSnapshot.val();
+                    console.log(time);
+                    bustimeList.push(time);
+                }
+            });
+        });
+
+        setBustimelist(bustimeList);
+        console.log(bustimeList);
+        });
+
         console.log(busName);
     };
+
     const handleChangebusStartTime = (event) => {
         setbusStartTime(event.target.value);
         console.log(busStartTime);
     };
 
-    let message,cardfound=0,notfound=false,found=false,index=0;
+    let message,cardfound=0,found=false;
 
     const handleclick = () =>{
        isClicked(true);
@@ -108,31 +184,69 @@ const ViewBusPage = () =>{
        setbusName('');
        setbusStartTime('');
        cardfound=0;
-       notfound=false;
        found=false;
-       index=0;
+       
+
+        const db = getDatabase();
+
+        console.log(busName);
+        const busref = ref(db,'bus/'+busName+'/'+busStartTime+'/routes/');
+        const buslist = [];
+
+        onValue(busref, (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+            const list = childSnapshot.val();
+
+            buslist.push({
+            busName:busName,
+            busStartTime:busStartTime,
+            estTime:list.estTime,
+            latitude:list.latitude,
+            longitude:list.longitude,
+            mapPlaceId:list.mapPlaceId,
+            mapPlaceName:list.mapExactPlaceName,
+            place:list.place,
+            });
+
+        });
+
+        setBustracklist(buslist);
+
+        });
+
+
+
+
     };
 
     const deletebuttonClick = () =>
     {
+        const db = getDatabase();
+        set(ref(db,'bus/'+tmpbusName+'/'+tmpbusStartTime+'/routes/'), {
+            
+        })
+
         isClicked(false);
         setOpen(false);
         setTmpbusName('');
         settmpBusStartTime('');
         cardfound=0;
-        notfound=false;
         found=false;
-        index=0;
     };
 
-    function createBusNamelist(busNamelist)
+    function createBusNamelist(buslist)
     {
-        return (<MenuItem value={busNamelist.value}>{busNamelist.name}</MenuItem>);
+        return (<MenuItem onClick={handleChangebusName} value={buslist}>{buslist}</MenuItem>);
     }
 
-    function createBusStartTimelist(busStartTimelist)
+    function createBusStartTimelist(bustimelist)
     {
-        return (<MenuItem value={busStartTimelist.value}>{busStartTimelist.time}</MenuItem>);
+        return (<MenuItem value={bustimelist}>{bustimelist}</MenuItem>);
+    }
+
+    function createlist()
+    {
+        
     }
 
     
@@ -142,8 +256,15 @@ const ViewBusPage = () =>{
         message = <p className={classes.message}>PLEASE SELECT A BUS TO CONTINUE</p>;
     }
 
+    const handleNotfoundmessage = (cardfound) =>
+    {
+        if(click && cardfound === 0) 
+        {
+            return <p className={classes.message}>BUS NOT FOUND</p>;
+        }
 
-
+    }
+   
     return(
     <div>
         <Appbar/>
@@ -151,11 +272,11 @@ const ViewBusPage = () =>{
         <Paper elevation={7} className={classes.paperdiv}>
             <div className={classes.topdiv}>
                 <Button onClick={handleOpen} className={classes.topdivButton}>SELECT BUS</Button>
-                
                 {   
+
                     bustracklist.map((val)=>
                     {
-                        if(tmpbusName === val.value && tmpbusStartTime === val.time && click && !found)
+                        if(tmpbusName && tmpbusStartTime && click && !found)
                         {
                             found=true;
                             return(
@@ -163,11 +284,11 @@ const ViewBusPage = () =>{
                                 <div className={classes.businfo}>
                                     <div className={classes.businfoContainer}>
                                         <p style={{fontWeight:"bold"}}>Bus name:</p>
-                                        <p style={{marginLeft:"4%",fontSize:"1.4rem"}}>{val.name}</p>
+                                        <p style={{marginLeft:"4%",fontSize:"1.4rem"}}>{tmpbusName}</p>
                                     </div>
                                     <div className={classes.businfoContainer}>
                                         <p style={{fontWeight:"bold"}}>Bus timing:</p>
-                                        <p style={{marginLeft:"4%",fontSize:"1.4rem"}}>{val.time}</p>
+                                        <p style={{marginLeft:"4%",fontSize:"1.4rem"}}>{tmpbusStartTime}</p>
                                     </div>
                                 </div>
                                 <Button onClick={deletebuttonClick} className={classes.deletebutton}><Icon icon="icomoon-free:bin2" /></Button>
@@ -181,40 +302,34 @@ const ViewBusPage = () =>{
 
                 
             </div>
-
-                {message}    
-
+                {message}
                 {   
                     bustracklist.map((val)=>
                     {
-                        index++;
-                        if(tmpbusName === val.value && tmpbusStartTime === val.time && click)
+                        if(tmpbusName && tmpbusStartTime && click)
                         {   
                             cardfound++;
-
                             return(
                                 <CardComponent
                                     CardNo={cardfound}
-                                    name={val.name}
-                                    time={val.time}
-                                    Estimated_time={val.Estimated_time}
-                                    Latitude={val.Latitude}
-                                    Longitude={val.Longitude}
-                                    Map_Place_ID={val.Map_Place_ID}
-                                    Map_Place_Name={val.Map_Place_Name}
-                                    Place_Name={val.Place_Name}
+                                    name={val.busName}
+                                    time={val.busStartTime}
+                                    Estimated_time={val.estTime}
+                                    Latitude={val.latitude}
+                                    Longitude={val.longitude}
+                                    Map_Place_ID={val.mapPlaceId}
+                                    Map_Place_Name={val.mapPlaceName}
+                                    Place_Name={val.place}
                                     display={"none"}
-                                />
+                                />   
                             );
                         }
-                    if(click && !notfound && !cardfound && index === bustracklist.length) 
-                    {
-                        notfound=true;
-                        return <p className={classes.message}>BUS NOT FOUND</p>;
-                    }
                         
                     })
+
+                    
                 }
+                {handleNotfoundmessage(cardfound)}   
                 
             
             
@@ -247,7 +362,7 @@ const ViewBusPage = () =>{
                                         ENTER BUS NAME
                                     </MenuItem>
 
-                                    {busNamelist.map(createBusNamelist)}
+                                    {buslist.map(createBusNamelist)}
 
                                 </Select>      
                             </FormControl>  
@@ -265,7 +380,7 @@ const ViewBusPage = () =>{
                                        ENTER BUS START TIME
                                     </MenuItem>
                                     
-                                    {busStartTimelist.map(createBusStartTimelist)}
+                                    {bustimelist.map(createBusStartTimelist)}
 
                                 </Select>      
                             </FormControl>  

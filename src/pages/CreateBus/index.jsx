@@ -3,6 +3,7 @@ import { Paper,FormControl,OutlinedInput,Button } from '@mui/material';
 import Appbar from '../../components/Appbar';
 import useStyles from '../../styles/CreateBus';
 import CardComponent from '../../components/Card';
+import { getDatabase, ref,set,update, onValue} from "firebase/database";
 import { Icon } from '@iconify/react';
 
 const CreateBusPage = () =>{
@@ -18,8 +19,15 @@ const CreateBusPage = () =>{
     const [mapExactPlaceName, setMapExactPlaceName] = useState("");
     const [placeName , setPlaceName] = useState("");
     const [routeNumber , setRouteNumber] = useState("");
+    
 
     const [routeInfo,setRouteInfo] = useState([]);
+
+    useEffect(()=>{
+        const db = getDatabase();
+        const semesterref = ref(db,'bus/');
+        
+    },[]);
 
     useEffect(() => {
         const json = sessionStorage.getItem("my-routeInfo");
@@ -99,12 +107,48 @@ const CreateBusPage = () =>{
         setRouteNumber("");
     }
 
+     let index=0;
+     let Key=0;
+
     const deleteRouteInfo = (index) =>
     {
         const new_list = [...routeInfo];
         new_list.splice(index,1);
         setRouteInfo(new_list);
 
+    }
+
+
+    const handleSaveRoute=event=>{
+        const db = getDatabase();
+        //console.log(routeInfo)
+        
+        routeInfo.map((val,key)=>
+        (
+            onValue(ref(db,`bus/${val.busName}/${val.busStartTime}/`), (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                Key = childSnapshot.size;
+                //console.log(sem);
+            });
+            })
+         ));    
+
+        routeInfo.map((val,key)=>
+        (
+            update(ref(db,`bus/${val.busName}/${val.busStartTime}/routes/${Key++}`),
+            {
+                estTime:val.estTime,
+                latitude:val.latitude,
+                longitude:val.longitude,
+                mapPlaceId:val.mapPlaceId,
+                mapExactPlaceName:val.mapExactPlaceName,
+                place:val.placeName,
+            },{ merge: true }
+            )
+        )
+        );
+
+        setRouteInfo([]);
     }
 
     return(
@@ -185,7 +229,7 @@ const CreateBusPage = () =>{
                 ))
             }
 
-            <Button variant="contained" className={classes.savebutton}>SAVE ROUTE</Button>
+            <Button variant="contained" onClick={handleSaveRoute} className={classes.savebutton}>SAVE ROUTE</Button>
 
         </Paper>
     </>

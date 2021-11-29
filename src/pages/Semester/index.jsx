@@ -3,6 +3,7 @@ import { Grid, Card, Paper, Button, FormControl, OutlinedInput, CardActions} fro
 import Appbar from '../../components/Appbar';
 import useStyles from '../../styles/Semester';
 import { Icon } from '@iconify/react';
+import { getDatabase, ref, onValue,update} from "firebase/database";
 import { Link } from "react-router-dom";
 
 const SemesterPage = () =>{
@@ -12,6 +13,23 @@ const SemesterPage = () =>{
 
     const [semester,setSemester] = useState("");
     const [semesterlist,setSemesterlist] = useState([]);
+
+    useEffect(()=>{
+        const db = getDatabase();
+        const semesterref = ref(db,'universityInfo/semesters');
+        const semesterList = [];
+
+        onValue(semesterref, (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+            const sem = childSnapshot.val();
+            semesterList.push({semester:sem});
+        });
+        setSemesterlist(semesterList);
+        },
+        {
+            onlyOnce: true,
+        });
+    },[]);
 
     useEffect(() => {
         const json = sessionStorage.getItem("my-semesterlist");
@@ -33,11 +51,32 @@ const SemesterPage = () =>{
 
     const handleclick = event =>{
         event.preventDefault();
-        if(semester)
+        const tmp= semesterlist.map((val)=>val.semester);
+        console.log(tmp);
+
+        if(semester && !tmp.includes(semester))
         {
             setSemesterlist([...semesterlist,{semester:semester}]);
         }
+
         setSemester("");
+    }
+
+    const handlesavechange =() =>{
+        const db = getDatabase();
+        const tmp= semesterlist.map((val)=>val.semester);
+
+        update(ref(db, 'universityInfo/'), 
+        {
+            semesters:tmp,
+        },
+        { merge: true }
+        )
+            
+        //update(ref(db), updates);
+      
+        
+
     }
 
     const deleteSemester = (index) =>
@@ -83,7 +122,7 @@ const SemesterPage = () =>{
                                 
                             
                             
-                            <Button variant="contained" className={classes.savebutton}>SAVE CHANGES</Button>
+                            <Button variant="contained" onClick={handlesavechange} className={classes.savebutton}>SAVE CHANGES</Button>
                         </Paper>
                     </Grid>
                 </Grid>

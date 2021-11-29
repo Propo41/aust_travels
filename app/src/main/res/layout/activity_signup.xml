@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout_editor_absoluteX="1dp"
-    android:scrollbars="none"
     android:fillViewport="true"
+    android:scrollbars="none"
+    tools:layout_editor_absoluteX="1dp"
     tools:layout_editor_absoluteY="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,11 +33,11 @@
             android:background="@color/green_dark"
             android:paddingTop="30dp"
             android:paddingBottom="30dp"
-            android:textSize="@dimen/text_size_subtitle"
             android:text="@string/sign_up"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="@color/white"
+            android:textSize="@dimen/text_size_subtitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -60,8 +60,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/text_input_padding"
                 android:inputType="textPersonName"
+                android:padding="@dimen/text_input_padding"
                 android:textAppearance="@style/TextAppearance.App.Subtitle1"
                 android:textColor="@color/black" />
 
@@ -87,11 +87,10 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="phone"
                 android:padding="@dimen/text_input_padding"
                 android:textAppearance="@style/TextAppearance.App.Subtitle1"
-                android:textColor="@color/black"
-                android:inputType="phone"
-                />
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -100,11 +99,11 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_spacing"
             android:hint="@string/enter_your_institutional_email"
             android:paddingLeft="@dimen/text_input_padding"
-            android:paddingRight="@dimen/text_input_padding"
-            android:layout_marginTop="@dimen/item_spacing"
             android:paddingTop="5dp"
+            android:paddingRight="@dimen/text_input_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signup_txt"
@@ -143,8 +142,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:padding="@dimen/text_input_padding"
-                android:textAppearance="@style/TextAppearance.App.Subtitle1"
-                android:textColor="@color/black" />
+                android:textAppearance="@style/TextAppearance.App.Subtitle1" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -208,11 +206,11 @@
             style="@style/Widget.App.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_input_padding"
             android:layout_marginTop="@dimen/item_spacing"
+            android:layout_marginRight="@dimen/text_input_padding"
             android:backgroundTint="@color/yellow_light"
             android:padding="@dimen/button_padding"
-            android:layout_marginLeft="@dimen/text_input_padding"
-            android:layout_marginRight="@dimen/text_input_padding"
             android:text="@string/sign_up"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

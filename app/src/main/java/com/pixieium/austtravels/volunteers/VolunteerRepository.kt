@@ -27,8 +27,10 @@ class VolunteerRepository {
                         val totalContributionFormatted =
                             convertContributionTime(xy.totalContribution / 1000)
                         val userInfo = getUserInfo(snap.key.toString())
-                        val volunteer = Volunteer(userInfo, totalContributionFormatted)
-                        volunteers.add(volunteer)
+                        if (userInfo != null) {
+                            val volunteer = Volunteer(userInfo, totalContributionFormatted)
+                            volunteers.add(volunteer)
+                        }
                     }
                 }
             }

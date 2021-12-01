@@ -162,6 +162,11 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         setBusStopMarkers()
     }
 
+    fun onPingClick(view: View) {
+        // todo: add FCM logic here
+        // mSelectedBusName is the information you will need
+    }
+
     private fun buildMapUrl(origin: String, destination: String): String {
         return "https://www.google.com/maps/dir/?api=1&" +
                 "origin=$origin&" +

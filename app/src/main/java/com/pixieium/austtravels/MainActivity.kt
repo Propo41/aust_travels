@@ -20,16 +20,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        /*
+
         // the following are dummy queries
-         mDatabase.setUniversityInfo()
-         mDatabase.pushBusRouteInfo("Jamuna", "6:30AM")
-         mDatabase.pushAllBusInfo()
-         */
+       //  mDatabase.setUniversityInfo()
+      //   mDatabase.pushBusRouteInfo("Jamuna", "6:30AM")
+         //mDatabase.pushAllBusInfo()
+
     }
 
     override fun onStart() {
         super.onStart()
+        //mDatabase.pushBusRouteInfo1("Jamuna", "8:30AM")
+       // mDatabase.pushBusRouteInfo2("Jamuna", "6:30AM")
 
         val user: FirebaseUser? = mAuth.currentUser
         if (user != null) {

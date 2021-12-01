@@ -67,8 +67,11 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun signInUserByEmail() {
-        val email = mBinding.email.editText!!.text.toString()
-        val password = mBinding.password.editText!!.text.toString()
+        var email = mBinding.email.editText!!.text.toString()
+        var password = mBinding.password.editText!!.text.toString()
+        // todo: remove them
+        email = "180104002@aust.edu"
+        password = "microlab123"
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             if (TextUtils.isEmpty(email)) {
                 mBinding.email.error = "Email cannot be empty"

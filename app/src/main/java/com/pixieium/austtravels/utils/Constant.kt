@@ -23,4 +23,6 @@ object Constant {
     val MSG_STOP_TIMER = 1
     val MSG_UPDATE_TIMER = 2
     val NOTIFICATION_ID = 12044
+
+    val PACKAGE_NAME = "com.pixieium.austtravels"
 }

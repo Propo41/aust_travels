@@ -46,26 +46,32 @@ class NotificationUtils(private val mContext: Context) {
             val destination: String? = notificationl.actionDestination
             val icon: Int = R.mipmap.ic_launcher
             val resultPendingIntent: PendingIntent
-            if ((URL == action)) {
-                val notificationIntent: Intent =
-                    Intent(Intent.ACTION_VIEW, Uri.parse(destination))
-                resultPendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0)
-            } else if ((ACTIVITY == action)) {
-                resultIntent = Intent(mContext, activityMap.get(destination))
-                resultPendingIntent = PendingIntent.getActivity(
-                    mContext,
-                    0,
-                    resultIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-                )
-            } else {
-                resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                resultPendingIntent = PendingIntent.getActivity(
-                    mContext,
-                    0,
-                    resultIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-                )
+            when {
+                URL == action -> {
+                    val notificationIntent: Intent =
+                        Intent(Intent.ACTION_VIEW, Uri.parse(destination))
+                    resultPendingIntent =
+                        PendingIntent.getActivity(mContext, 0, notificationIntent, 0)
+                }
+                ACTIVITY == action -> {
+                    resultIntent = Intent(mContext, activityMap.get(destination))
+                    resultPendingIntent = PendingIntent.getActivity(
+                        mContext,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT
+                    )
+                }
+                else -> {
+                    resultIntent.flags =
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    resultPendingIntent = PendingIntent.getActivity(
+                        mContext,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT
+                    )
+                }
             }
             val mBuilder: NotificationCompat.Builder =
                 NotificationCompat.Builder(
@@ -77,12 +83,14 @@ class NotificationUtils(private val mContext: Context) {
             val inboxStyle: NotificationCompat.InboxStyle =
                 NotificationCompat.InboxStyle()
             inboxStyle.addLine(message)
+
             notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
                 .setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_bus)
                 .setContentTitle(title)
                 .setContentIntent(resultPendingIntent)
                 .setStyle(inboxStyle)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+                .setLargeIcon(BitmapFactory.decodeResource(mContext.resources, icon))
                 .setContentText(message)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(message))
                 .setWhen(time)

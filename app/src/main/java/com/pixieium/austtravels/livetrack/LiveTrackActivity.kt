@@ -3,6 +3,7 @@ package com.pixieium.austtravels.livetrack
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -43,8 +44,11 @@ import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
 import com.pixieium.austtravels.home.ProminentDisclosureDialog
 import com.pixieium.austtravels.models.Route
+import com.pixieium.austtravels.utils.Constant.PACKAGE_NAME
 import kotlinx.coroutines.launch
 import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 
 // watch this for setting location permission at run time: https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime
@@ -85,17 +89,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         binding.sec.text = getString(R.string.selected_bus, mSelectedBusName)
         // bus start time
         binding.start.text = getString(R.string.starting_time, mSelectedBusTime)
-        // Send push notifcation to all volunteers of this bus
-        binding.ping.setOnClickListener {
-            lifecycleScope.launch {
-                AustTravel.notificationApi().notifyVolunteers(mSelectedBusName, "title", "message")
-                Toast.makeText(
-                    this@LiveTrackActivity,
-                    "Send notification to all volunteers",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -167,9 +161,70 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         setBusStopMarkers()
     }
 
+    private fun getLastPingTime(busName: String): Long {
+        val prefs: SharedPreferences = this.getSharedPreferences(
+            "com.pixieium.austtravels", MODE_PRIVATE
+        )
+        return prefs.getLong("PING_$busName", 0)
+    }
+
+
+    private fun saveLastPingTime(time: Long, busName: String) {
+        val prefs = getSharedPreferences(
+            PACKAGE_NAME, MODE_PRIVATE
+        )
+        val editor = prefs.edit()
+        editor.putLong("PING_$busName", time)
+        editor.apply()
+    }
+
     fun onPingClick(view: View) {
-        // todo: add FCM logic here
-        // mSelectedBusName is the information you will need
+        val delayMinutes: Long = 5
+        val diff = System.currentTimeMillis() - getLastPingTime(mSelectedBusName)
+        if (diff >= TimeUnit.MINUTES.toMillis(delayMinutes)) {
+            // if 5 minutes have passed since the last ping,
+            // send push notifications to all volunteers of this bus
+            Toast.makeText(
+                this@LiveTrackActivity,
+                "Hold on! Letting the volunteers know.",
+                Toast.LENGTH_LONG
+            ).show()
+            saveLastPingTime(System.currentTimeMillis(), mSelectedBusName)
+
+            lifecycleScope.launch {
+                try {
+                    AustTravel.notificationApi().notifyVolunteers(
+                        mSelectedBusName,
+                        "Somebody needs help",
+                        "A fellow traveler wants to know where your bus, $mSelectedBusName is located. You might wanna help them!"
+                    )
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@LiveTrackActivity,
+                        e.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+
+        } else {
+
+            val timeSpent =
+                TimeUnit.MINUTES.toMillis(
+                    delayMinutes
+                ) - diff
+
+            val remaining =
+                TimeUnit.MILLISECONDS.toSeconds(delayMinutes) - TimeUnit.MILLISECONDS.toSeconds(
+                    timeSpent
+                )
+
+            Toast.makeText(
+                this@LiveTrackActivity,
+                "Hey! Don't be hasty. Wait ${abs(remaining)} more seconds before sending your next ping",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun buildMapUrl(origin: String, destination: String): String {
@@ -466,5 +521,11 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         buildAlertMessageNoGps()
     }
 
-
+    fun onRepositionBusClick(view: View) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mBusLocation))
+        mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15F), 2000, null)
+        isFirstTime = false
+    }
 }

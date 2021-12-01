@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!-- Required for foreground services on P+. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
 
     <application
         android:allowBackup="true"
@@ -18,11 +21,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AustTravels">
-        <!-- Add the service created in services package !-->
-        <service
-            android:name=".LocationMonitoringService"
-            android:exported="false"
-            android:foregroundServiceType="location" />
 
         <activity
             android:name=".LocationTestActivity"
@@ -33,6 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Add the service created in services package ! -->
         <activity
             android:name=".auth.ForgotPasswordActivity"
             android:exported="true" />
@@ -70,6 +69,12 @@
         <activity
             android:name=".home.HomeActivity"
             android:exported="false" />
+
+        <service
+            android:name=".home.services.ForegroundOnlyLocationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>

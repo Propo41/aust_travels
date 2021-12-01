@@ -25,7 +25,7 @@ class AustTravelFirebaseMessagingService : FirebaseMessagingService() {
         Log.d(TAG, "From: " + remoteMessage.from)
 
         // Check if message contains a data payload.
-        if (remoteMessage.data.size > 0) {
+        if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: " + remoteMessage.data)
             val data = remoteMessage.data
             handleData(data)

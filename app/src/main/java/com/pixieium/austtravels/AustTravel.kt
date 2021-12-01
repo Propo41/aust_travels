@@ -53,8 +53,7 @@ class AustTravel : Application() {
                 .build()
 
             return Retrofit.Builder()
-                // add / at the end i.e. https://address.url/
-                .baseUrl("https://serene-badlands-70349.herokuapp.com/")
+                .baseUrl(Constant.BASE_URL)
                 .client(client)
                 .build()
         }

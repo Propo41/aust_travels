@@ -126,12 +126,16 @@ class HomeActivity : AppCompatActivity(),
                 // subscribe the user to bus notification
                 val busName = mDatabase.busNameOfVolunteer(mUid);
                 busName?.let {
+                    // Show for the first time
                     FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
-                        Toast.makeText(
-                            this@HomeActivity,
-                            "You will receive notifications about $busName",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        if (!isShowToastAboutPing()) {
+                            Toast.makeText(
+                                this@HomeActivity,
+                                "You will receive notifications about ${busName}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            saveShowPingState(true);
+                        }
                     }
                 }
             }
@@ -145,6 +149,28 @@ class HomeActivity : AppCompatActivity(),
         }
 
 
+    private fun isShowToastAboutPing(): Boolean {
+        val prefs: SharedPreferences = this.getSharedPreferences(
+            "com.pixieium.austtravels", MODE_PRIVATE
+        )
+        return prefs.getBoolean("isAlreadySeen", false)
+    }
+
+
+    private fun saveShowPingState(state: Boolean) {
+        val prefs = getSharedPreferences(
+            "com.pixieium.austtravels", MODE_PRIVATE
+        )
+        val editor = prefs.edit()
+        editor.putBoolean("isAlreadySeen", state)
+        editor.apply()
+    }
+
+    private fun readSharedPref(): Boolean {
+        val prefs: SharedPreferences = this.getSharedPreferences(
+            "com.pixieium.austtravels", MODE_PRIVATE
+        )
+        return prefs.getBoolean("isLocationSharing", false)
     }
 
     override fun onStart() {

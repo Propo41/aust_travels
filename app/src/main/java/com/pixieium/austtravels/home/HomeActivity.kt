@@ -41,6 +41,8 @@ import com.pixieium.austtravels.volunteers.VolunteersActivity
 import kotlinx.coroutines.launch
 import android.app.PendingIntent
 import android.content.SharedPreferences
+import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 import com.pixieium.austtravels.settings.SettingsActivity
 
 
@@ -86,10 +88,36 @@ class HomeActivity : AppCompatActivity(),
         }
         lifecycleScope.launch {
             mIsVolunteer = mDatabase.isVolunteer(mUid)
+
+            Log.d("mUid  -> ", mUid)
+            Log.d("isVolunteer", mDatabase.isVolunteer(mUid).toString())
+
             if (!mIsVolunteer) {
                 binding.shareLocation.visibility = View.GONE
+
+                // If we remove someone from volunteer list, then we will unsubscribe the user from bus notification
+                val busName = mDatabase.busNameOfVolunteer(mUid);
+                busName?.let {
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic(it).addOnSuccessListener {
+                        Log.d("unsubscribeFromTopic -", busName)
+                    }
+                }
+
             } else {
+
                 binding.shareLocation.visibility = View.VISIBLE
+
+                // subscribe the user to bus notification
+                val busName = mDatabase.busNameOfVolunteer(mUid);
+                busName?.let {
+                    FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
+                        Toast.makeText(
+                            this@HomeActivity,
+                            "You will receive notifications about ${busName}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
             }
         }
 

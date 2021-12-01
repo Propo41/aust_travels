@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.pixieium.austtravels.AustTravel
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
@@ -85,6 +86,11 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         // bus start time
         binding.start.text = getString(R.string.starting_time, mSelectedBusTime)
 
+        binding.ping.setOnClickListener {
+            lifecycleScope.launch {
+                AustTravel.notificationApi().notifyVolunteers(mSelectedBusName, "title", "message")
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

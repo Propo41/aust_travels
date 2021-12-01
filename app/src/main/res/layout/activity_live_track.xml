@@ -66,15 +66,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/pingBtn"
+                android:id="@+id/ping"
                 style="@style/TextBottomSheetDialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:foreground="?attr/selectableItemBackground"
-                android:onClick="onPingClick"
-                android:text="@string/ping"
-                android:textAllCaps="true"
+                android:foreground="?attr/selectableItemBackground"                android:text="@string/ping"
                 android:textColor="@color/yellow"
                 android:textSize="@dimen/text_size_subtitle"
                 android:textStyle="bold"
@@ -133,9 +131,9 @@
                 android:paddingStart="20dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="25dp"
+                android:visibility="gone"
                 android:paddingBottom="15dp"
                 android:text="@string/departure_time"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/last_updated" />

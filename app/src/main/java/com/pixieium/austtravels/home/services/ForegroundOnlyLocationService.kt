@@ -63,10 +63,10 @@ class ForegroundOnlyLocationService : Service() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         locationRequest = LocationRequest.create().apply {
             // set the timing and stuff
-            interval = TimeUnit.SECONDS.toMillis(3)
-            fastestInterval = TimeUnit.SECONDS.toMillis(5)
-            maxWaitTime = TimeUnit.SECONDS.toMillis(2)
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = TimeUnit.SECONDS.toMillis(60)
+            fastestInterval = TimeUnit.SECONDS.toMillis(60)
+            maxWaitTime = TimeUnit.SECONDS.toMillis(60)
+            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         }
 
         locationCallback = object : LocationCallback() {

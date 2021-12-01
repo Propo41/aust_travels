@@ -65,6 +65,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/ping"
+                style="@style/TextBottomSheetDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="@string/ping"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_subtitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

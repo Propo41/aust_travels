@@ -5,10 +5,10 @@ object Constant {
     val GENERAL_NOTIFICATION = "general"
 
     // Bus notifications
-    val JAMUNA_NOTIFICATION = "jamuna"
-    val KAPOTAKKHO_NOTIFICATION = "kapotakkho"
-    val KORNOFULI_NOTIFICATION = "kornofuli"
-    val MEGHNA_NOTIFICATION = "meghna"
-    val PADMA_NOTIFICATION = "padma"
-    val SHURMA_NOTIFICATION = "shurma"
+    val JAMUNA_NOTIFICATION = "Jamuna"
+    val KAPOTAKKHO_NOTIFICATION = "Kapotakkho"
+    val KORNOFULI_NOTIFICATION = "Kornofuli"
+    val MEGHNA_NOTIFICATION = "Meghna"
+    val PADMA_NOTIFICATION = "Padma"
+    val SHURMA_NOTIFICATION = "Shurma"
 }

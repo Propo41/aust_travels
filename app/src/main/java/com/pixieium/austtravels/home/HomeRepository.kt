@@ -50,6 +50,19 @@ class HomeRepository {
         return false
     }
 
+    suspend fun busNameOfVolunteer(uid: String): String? {
+        try {
+            val database = Firebase.database
+            val snapshot = database.getReference("volunteers/$uid/busName").get().await()
+            if (snapshot.exists() && snapshot != null) {
+                return snapshot.getValue<String>()
+            }
+        } catch (e: Exception) {
+            return null
+        }
+        return null
+    }
+
 
     fun updateLocation(
         uid: String,

@@ -11,8 +11,8 @@ android {
         applicationId "com.pixieium.austtravels"
         minSdk 23
         targetSdk 31
-        versionCode 7
-        versionName "1.1-beta"
+        versionCode 8
+        versionName "1.2-beta"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

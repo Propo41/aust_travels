@@ -2,7 +2,7 @@
     <string name="app_name">AustTravels</string>
     <string name="or">OR</string>
     <string name="enter_your_email">Enter your email</string>
-    <string name="enter_your_name">Enter your name</string>
+    <string name="enter_your_name">Enter your nickname</string>
     <string name="enter_your_password">Enter your password</string>
     <string name="sign_in">SIGN IN</string>
     <string name="sign_up_with_email">SIGN UP WITH EMAIL</string>
@@ -37,6 +37,8 @@
     <string name="currently_sharing_location"><b>You are currently sharing you location for %s:%s</b></string>
     <string name="stop_sharing_location">STOP SHARING LOCATION</string>
     <string name="become_a_volunteer">BECOME A VOLUNTEER</string>
+    <string name="volunteer_prompt_select_bus">Choose the <b>primary</b> bus that you travel in</string>
+    <string name="volunteer_prompt_phone">Enter your contact number. <b>We won’t share your contact with anyone.</b> We’ll use this information only when it’s urgent</string>
     <string name="volunteer_prompt">By becoming a volunteer, you will be responsible for sharing your location <b>ONLY</b> when you are on the bus. Your location data will be continuously shared with other relevant users while your location sharing is active.<br /><br /> <b>Do you wish to continue?</b></string>
     <string name="prominent_disclosure">This app collects location data to enable relevant users to track your location <b>while you’re riding on the bus</b> even when the app is closed or not in use.<br /> <br /><b>Do you wish to continue?</b> </string>
     <string name="btn_continue">continue</string>
@@ -73,4 +75,6 @@
     <string name="forgot_password_title">Forgot password</string>
     <string name="return_back">RETURN BACK</string>
     <string name="forgot_pass_caption">We’ll send you a password reset link if the email you provide exists in our database</string>
+    <string name="enter_your_phone">Enter your phone</string>
+    <string name="ping">PING</string>
 </resources>

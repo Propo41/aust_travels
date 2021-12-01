@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".directions.DirectionsActivity">
+    tools:context=".livetrack.LiveTrackActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -65,6 +65,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/pingBtn"
+                style="@style/TextBottomSheetDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:foreground="?attr/selectableItemBackground"
+                android:onClick="onPingClick"
+                android:text="@string/ping"
+                android:textAllCaps="true"
+                android:textColor="@color/yellow"
+                android:textSize="@dimen/text_size_subtitle"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -102,8 +118,8 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="25dp"
                 android:paddingBottom="15dp"
-                android:visibility="visible"
                 android:text="@string/last_updated"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/start" />
@@ -117,9 +133,9 @@
                 android:paddingStart="20dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="25dp"
-                android:visibility="gone"
                 android:paddingBottom="15dp"
                 android:text="@string/departure_time"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/last_updated" />

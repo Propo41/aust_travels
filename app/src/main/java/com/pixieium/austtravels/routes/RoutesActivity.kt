@@ -150,6 +150,7 @@ class RoutesActivity : AppCompatActivity() {
         mAdapter = RoutesAdapter(routeList)
         mRecyclerView.layoutManager = mLayoutManager
         mRecyclerView.adapter = mAdapter
+
     }
 
     fun onBusSelectClick(view: View) {

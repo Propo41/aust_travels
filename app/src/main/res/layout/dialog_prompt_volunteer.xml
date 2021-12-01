@@ -13,10 +13,10 @@
         android:layout_height="wrap_content"
         android:background="@color/yellow_light"
         android:padding="20dp"
-        android:textSize="@dimen/text_size_subtitle"
         android:text="@string/become_a_volunteer"
         android:textAlignment="center"
         android:textColor="@color/black"
+        android:textSize="@dimen/text_size_subtitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -48,6 +48,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/prompt" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/imageView5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/select_btn"
+        app:srcCompat="@drawable/ic_circle" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imageView1"
+        app:layout_constraintTop_toTopOf="@+id/imageView1"
+        app:srcCompat="@drawable/ic_circle"
+        app:tint="@color/ash" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

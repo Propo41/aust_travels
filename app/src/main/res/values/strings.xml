@@ -14,6 +14,7 @@
     <string name="last_updated"><b>Last Updated</b>: %s</string>
     <string name="departure_time"><b>Departure Time</b>: %s</string>
     <string name="selected_bus"><b>Selected Bus</b>: %s</string>
+    <string name="ping"><b>PING</b></string>
     <string name="select_time">Select start time</string>
     <string name="select_name">Select bus name</string>
     <string name="select">SELECT</string>

@@ -99,6 +99,8 @@ class HomeActivity : AppCompatActivity(),
         } else {
             binding.cardView.visibility = View.GONE
         }
+
+
     }
 
     override fun onDestroy() {
@@ -112,7 +114,6 @@ class HomeActivity : AppCompatActivity(),
         )
         return prefs.getBoolean("isLocationSharing", false)
     }
-
 
     private fun saveToSharedPref(res: Boolean) {
         val prefs = getSharedPreferences(
@@ -146,7 +147,6 @@ class HomeActivity : AppCompatActivity(),
         menuInflater.inflate(R.menu.top_app_bar, menu)
         return true
     }
-
 
     private fun clearNotification() {
         val notificationManager =
@@ -193,6 +193,9 @@ class HomeActivity : AppCompatActivity(),
         notificationManager.createNotificationChannel(channel)
     }
 
+    /**
+     * stop location sharing code starts here
+     */
     private fun stopLocationSharing() {
         Toast.makeText(
             this@HomeActivity, "Location sharing turned off",
@@ -201,15 +204,9 @@ class HomeActivity : AppCompatActivity(),
         mLocationManager.removeUpdates(myLocationListener)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.settings) {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
+    /**
+     * start location sharing code starts here
+     */
     private fun startLocationSharing() {
         mLocationManager = applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
         // check if location permission is enabled or not
@@ -263,6 +260,14 @@ class HomeActivity : AppCompatActivity(),
         ).show()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.settings) {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     private inner class MyLocationListener : LocationListener {
         override fun onLocationChanged(location: Location) {
@@ -331,7 +336,6 @@ class HomeActivity : AppCompatActivity(),
         mStopwatchHandler.sendEmptyMessage(MSG_STOP_TIMER)
     }
 
-
     private fun buildAlertMessageNoGps() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
@@ -365,6 +369,7 @@ class HomeActivity : AppCompatActivity(),
             this,
             arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
             ),
             LiveTrackActivity.MY_PERMISSIONS_REQUEST_LOCATION
         )
@@ -379,12 +384,17 @@ class HomeActivity : AppCompatActivity(),
         when (requestCode) {
             LiveTrackActivity.MY_PERMISSIONS_REQUEST_LOCATION -> {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
                     // permission was granted, yay! Do the
                     // location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(
                             this,
                             Manifest.permission.ACCESS_FINE_LOCATION
+                        ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
                         ) == PackageManager.PERMISSION_GRANTED
                     ) {
                         startLocationSharing()
@@ -405,6 +415,9 @@ class HomeActivity : AppCompatActivity(),
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(
                             this,
                             Manifest.permission.ACCESS_FINE_LOCATION
+                        ) && !ActivityCompat.shouldShowRequestPermissionRationale(
+                            this,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
                         )
                     ) {
                         startActivity(
@@ -453,13 +466,11 @@ class HomeActivity : AppCompatActivity(),
         }
     }
 
-
     fun onViewVolunteersClick(view: View) {
         // Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
         val intent = Intent(this@HomeActivity, VolunteersActivity::class.java)
         startActivity(intent)
     }
-
 
     override fun onDisclosureAcceptClick() {
         Toast.makeText(

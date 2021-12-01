@@ -18,6 +18,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AustTravels">
+        <!-- Add the service created in services package !-->
+        <service
+            android:name=".LocationMonitoringService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
+        <activity
+            android:name=".LocationTestActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".auth.ForgotPasswordActivity"
             android:exported="true" />
@@ -35,11 +50,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".routes.RoutesActivity"
@@ -56,7 +67,6 @@
             android:name=".auth.SignInActivity"
             android:exported="true"
             android:label="@string/title_activity_live_track" />
-
         <activity
             android:name=".home.HomeActivity"
             android:exported="false" />

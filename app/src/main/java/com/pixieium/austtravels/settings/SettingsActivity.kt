@@ -14,7 +14,8 @@ import com.pixieium.austtravels.databinding.ActivitySettingsBinding
 import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
-    ReAuthenticateDialog.FragmentListener, DeleteConfirmationDialog.FragmentListener {
+    ReAuthenticateDialog.FragmentListener, DeleteConfirmationDialog.FragmentListener,
+    PromptVolunteerInfoDialog.FragmentListener {
     private val mDatabase: SettingsRepository = SettingsRepository()
     private lateinit var mUid: String
     private lateinit var mBinding: ActivitySettingsBinding
@@ -73,22 +74,8 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
     }
 
     override fun onVolunteerApprovalClick() {
-        lifecycleScope.launch {
-            val payload = mDatabase.createVolunteer(mUid)
-            if (payload.isStatus) {
-                Toast.makeText(
-                    this@SettingsActivity,
-                    "We've received your request and will shortly review it.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                Toast.makeText(
-                    this@SettingsActivity,
-                    payload.message,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+        PromptVolunteerInfoDialog.newInstance()
+            .show(supportFragmentManager, PromptVolunteerInfoDialog.TAG)
     }
 
     override fun onEnterPassword(password: String) {
@@ -104,6 +91,25 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
                 Toast.makeText(
                     this@SettingsActivity,
                     "Couldn't delete your account at the moment. Please try again later",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    override fun onVolunteerConfirmClick(busName: String, contact: String) {
+        lifecycleScope.launch {
+            val payload = mDatabase.createVolunteer(mUid, busName, contact)
+            if (payload.isStatus) {
+                Toast.makeText(
+                    this@SettingsActivity,
+                    "We've received your request and will shortly review it.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    this@SettingsActivity,
+                    payload.message,
                     Toast.LENGTH_SHORT
                 ).show()
             }

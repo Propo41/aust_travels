@@ -8,13 +8,7 @@ import com.pixieium.austtravels.home.HomeRepository
 
 
 class StopwatchHandler(private val timerTextView: TextView) : Handler() {
-    private val MSG_START_TIMER = 0
-    private val MSG_STOP_TIMER = 1
-    private val MSG_UPDATE_TIMER = 2
-
     private var timer: Stopwatch = Stopwatch()
-    private val REFRESH_RATE = 100
-
     private val mDatabase: HomeRepository = HomeRepository()
     private var totalTimeElapsed: Long = 0
 
@@ -46,6 +40,13 @@ class StopwatchHandler(private val timerTextView: TextView) : Handler() {
                 // invalid message
             }
         }
+    }
+
+    companion object {
+        private const val MSG_START_TIMER = 0
+        private const val MSG_STOP_TIMER = 1
+        private const val MSG_UPDATE_TIMER = 2
+        private const val REFRESH_RATE = 100
     }
 
 }

@@ -1,4 +1,4 @@
-package com.pixieium.austtravels.home.util
+package com.pixieium.austtravels.utils
 
 import android.content.Context
 import android.location.Location
@@ -45,4 +45,5 @@ internal object SharedPreferenceUtil {
         ).edit {
             putBoolean(KEY_FOREGROUND_ENABLED, requestingLocationUpdates)
         }
+
 }

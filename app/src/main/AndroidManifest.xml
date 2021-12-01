@@ -24,16 +24,6 @@
         android:theme="@style/Theme.AustTravels">
 
         <activity
-            android:name=".LocationTestActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <!-- Add the service created in services package ! -->
-        <activity
             android:name=".auth.ForgotPasswordActivity"
             android:exported="true" />
         <activity
@@ -50,7 +40,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".routes.RoutesActivity"
@@ -70,6 +64,7 @@
         <activity
             android:name=".home.HomeActivity"
             android:exported="false" />
+
         <service
             android:name=".home.services.ForegroundOnlyLocationService"
             android:enabled="true"

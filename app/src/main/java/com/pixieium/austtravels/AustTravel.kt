@@ -4,13 +4,11 @@ import android.app.Application
 import android.widget.Toast
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.gson.GsonBuilder
 import com.pixieium.austtravels.notification.NotificationApi
 import com.pixieium.austtravels.utils.Constant
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 // This is the entry point of the app

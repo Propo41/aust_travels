@@ -110,10 +110,9 @@ class HomeActivity : AppCompatActivity(),
                 // subscribe the user to bus notification
                 val busName = mDatabase.busNameOfVolunteer(mUid);
                 busName?.let {
-
                     // Show for the first time
-                    if (!isShowToastAboutPing()) {
-                        FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
+                    FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
+                        if (!isShowToastAboutPing()) {
                             Toast.makeText(
                                 this@HomeActivity,
                                 "You will receive notifications about ${busName}",

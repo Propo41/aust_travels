@@ -19,6 +19,7 @@ import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.launch
 import java.util.*
 import android.app.Activity
+import android.content.Context
 import android.view.inputmethod.InputMethodManager
 
 
@@ -42,8 +43,33 @@ class SignUpActivity : AppCompatActivity() {
             initSpinnerDepartment(departments)
         }
 
-        mBinding.signup.setOnClickListener { createNewUser() }
+        mBinding.signup.setOnClickListener {
+            try {
+                hideKeyboard()
+            } catch (e: Exception) {
+                //e.printStackTrace()
+            }
+            createNewUser()
+        }
 
+    }
+
+    private fun startLoading() {
+        mBinding.progressBar.visibility = View.VISIBLE
+        mBinding.signup.isEnabled = false
+    }
+
+    private fun stopLoading() {
+        mBinding.progressBar.visibility = View.GONE
+        mBinding.signup.isEnabled = true
+    }
+
+
+    private fun hideKeyboard() {
+        // hide the keyboard
+        val imm: InputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(mBinding.root.windowToken, 0)
     }
 
     private fun createNewUser() {
@@ -53,15 +79,17 @@ class SignUpActivity : AppCompatActivity() {
         val semester = mBinding.semester.editText?.text.toString()
         val department = mBinding.department.editText?.text.toString()
         val universityId = mBinding.universityId.editText?.text.toString()
-
         val userImage = "https://avatars.dicebear.com/api/bottts/${userName}.svg"
         val userInfo =
             UserInfo(email, password, userName, semester, department, universityId, userImage)
 
-        if (!userInfo.validateInput(mBinding)) {
+        val errorMessage = userInfo.validateInput()
+
+        if (errorMessage != null) {
             Toast.makeText(this, "Please enter your information correctly", Toast.LENGTH_SHORT)
                 .show()
         } else {
+            startLoading()
             mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(
                     this
@@ -82,44 +110,43 @@ class SignUpActivity : AppCompatActivity() {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
+                                stopLoading()
                             }
                         }
                     }
                 }
-                    .addOnFailureListener(this){
-                        Toast.makeText(
-                                applicationContext, it.localizedMessage,
-                                Toast.LENGTH_SHORT
-                        ).show()
-
-                    }
+                .addOnFailureListener(this) {
+                    stopLoading()
+                    Toast.makeText(
+                        applicationContext, it.localizedMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
         }
 
 
     }
 
-    private fun sentVerificationEmail(){
-        val currentUser:FirebaseUser? = mAuth.currentUser
-        currentUser?.sendEmailVerification()?.addOnCompleteListener(this){
-            task->
-            if (task.isSuccessful)
-            {
-
+    private fun sentVerificationEmail() {
+        val currentUser: FirebaseUser? = mAuth.currentUser
+        currentUser?.sendEmailVerification()?.addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
                 Toast.makeText(
-                        this@SignUpActivity,
-                        "Email verification link sent to your email",
-                        Toast.LENGTH_SHORT
+                    this@SignUpActivity,
+                    "Email verification link sent to your email",
+                    Toast.LENGTH_SHORT
                 ).show()
 
                 Firebase.auth.signOut()
                 val intent =
-                        Intent(this@SignUpActivity, SignInActivity::class.java)
+                    Intent(this@SignUpActivity, SignInActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
             }
 
         }
     }
+
     private fun initSpinnerSemester(items: ArrayList<String>) {
         val arrayAdapter: ArrayAdapter<String> =
             ArrayAdapter(this, R.layout.item_spinner, items)

@@ -1,33 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/signin_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signin_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/green_dark"
-    android:paddingStart="@dimen/window_margin"
-    android:paddingEnd="@dimen/window_margin"
     tools:context=".auth.SignInActivity">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:trackColor="@color/orange" />
 
     <TextView
         android:id="@+id/textView"
         style="@style/TextAppearance.App.Subtitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp"
         android:text="@string/or"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signin" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email"
         style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/window_margin"
         android:layout_marginTop="@dimen/item_spacing_large"
+        android:layout_marginEnd="@dimen/window_margin"
         android:hint="@string/enter_your_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +53,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
+            android:inputType="textNoSuggestions|textEmailAddress"
             android:padding="@dimen/text_input_padding" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -49,14 +64,16 @@
         style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/window_margin"
         android:layout_marginTop="@dimen/item_spacing"
+        android:layout_marginEnd="@dimen/window_margin"
         android:hint="@string/enter_your_password"
         app:endIconMode="password_toggle"
+        app:endIconTint="@color/green_vibrant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email"
         app:startIconDrawable="@drawable/ic_password"
-        app:endIconTint="@color/green_vibrant"
         app:startIconTint="@color/green_vibrant">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -72,7 +89,9 @@
         style="@style/Widget.App.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/window_margin"
         android:layout_marginTop="@dimen/item_spacing"
+        android:layout_marginEnd="@dimen/window_margin"
         android:padding="@dimen/button_padding"
         android:text="@string/sign_in"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,6 +103,8 @@
         style="@style/Widget.App.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/window_margin"
+        android:layout_marginEnd="@dimen/window_margin"
         android:backgroundTint="@color/yellow"
         android:padding="@dimen/button_padding"
         android:text="@string/sign_up_with_email"
@@ -109,6 +130,7 @@
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="1.5dp"
+        android:layout_marginStart="@dimen/window_margin"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintEnd_toStartOf="@+id/textView"
@@ -119,9 +141,21 @@
         android:id="@+id/view2"
         android:layout_width="0dp"
         android:layout_height="1.5dp"
+        android:layout_marginEnd="@dimen/window_margin"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView7"
+        style="@style/TextAppearance.App.Subtitle1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onForgotPasswordClick"
+        android:text="@string/forgot_password"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/signin"
+        app:layout_constraintTop_toBottomOf="@+id/signin" />
 </androidx.constraintlayout.widget.ConstraintLayout>

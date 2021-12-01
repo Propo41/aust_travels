@@ -6,6 +6,80 @@
     android:layout_height="match_parent"
     tools:context=".volunteers.VolunteersActivity">
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/topPosition"
+        style="@style/App.CardView.Volunteers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/green_dark"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/img_crown" />
+
+            <ImageView
+                android:id="@+id/first_position"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintEnd_toEndOf="@+id/imageView6"
+                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintStart_toStartOf="@+id/imageView6"
+                app:layout_constraintTop_toBottomOf="@+id/imageView6"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <Button
+                android:id="@+id/first_time"
+                style="@style/Widget.App.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-30dp"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/light_ash"
+                android:clickable="false"
+                android:drawableEnd="@drawable/ic_fire"
+                android:drawableTint="@color/orange"
+                android:focusable="false"
+                android:text="@string/_12hr"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/first_position"
+                app:layout_constraintEnd_toEndOf="@+id/first_position"
+                app:layout_constraintStart_toStartOf="@+id/first_position">
+
+            </Button>
+
+            <TextView
+                android:id="@+id/textView4"
+                style="@style/TextAppearance.App.Subtitle1"
+                android:layout_width="0dp"
+                android:textAlignment="center"
+                android:padding="2dp"
+                android:paddingStart="80dp"
+                android:paddingEnd="80dp"
+                android:layout_height="wrap_content"
+                android:text="@string/top_position_name"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/first_time" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -28,17 +102,32 @@
             app:title="VOLUNTEERS" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/vrecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingLeft="@dimen/window_margin"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:paddingRight="@dimen/window_margin"
+    <TextView
+        android:id="@+id/not_found_placeholder"
+        style="@style/TextAppearance.AppCompat.Headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/no_volunteers_found"
+        android:textAllCaps="true"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout" />
+        app:layout_constraintTop_toTopOf="@+id/topPosition" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vrecyclerView"
+        android:layout_width="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/item_spacing"
+        android:layout_height="0dp"
+        android:paddingLeft="@dimen/item_spacing"
+        android:paddingRight="@dimen/item_spacing"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topPosition" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

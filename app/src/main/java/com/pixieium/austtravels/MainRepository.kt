@@ -43,7 +43,98 @@ class MainRepository {
         database.getReference("universityInfo/departments").setValue(departments)
     }
 
-    fun pushBusRouteInfo(busName: String, busTime: String) {
+    fun pushBusRouteInfo1(busName: String, busTime: String) {
+        val list: ArrayList<Route> = ArrayList()
+
+        list.add(
+            Route(
+                "Mohammadpur",
+                "8:30AM",
+                "Mohammadpur Bus Stand",
+                "23.757056",
+                "90.361334"
+            )
+        )
+        list.add(
+            Route(
+                "Shankar",
+                "8:37AM",
+                "Chhayanaut Shangskriti-Bhavan",
+                "23.750767",
+                "90.368380"
+            )
+        )
+        list.add(
+            Route(
+                "Dhanmondi 15",
+                "8:43AM",
+                "15 No Bus Stand",
+                "23.744144",
+                "90.372813"
+            )
+        )
+        list.add(
+            Route(
+                "Jigatola", "8:50AM", "Zigatola Bus Stand",
+                "23.739193", "90.375611"
+            )
+        )
+
+        list.add(
+            Route(
+                "City College",
+                "8:56AM",
+                "City College Bus Stop",
+                "23.739430", "90.383068"
+            )
+        )
+        list.add(
+            Route(
+                "Kalabagan",
+                "9:05AM",
+                "Kalabagan Bus Stoppage",
+                "23.747743", "90.380171"
+            )
+        )
+        list.add(
+            Route(
+                "Rasel Square",
+                "9:10AM",
+                "Dhanmondi 32 Bus Stop",
+                "23.751599", "90.377880"
+            )
+        )
+
+        list.add(
+            Route(
+                "Panthapath Signal",
+                "9:20AM",
+                "Panthapath Signal",
+                "23.751230", "90.386885"
+            )
+        )
+
+        list.add(
+            Route(
+                "Karwan Bazar",
+                "9:25AM",
+                "Kawran Bazar Bot Tala Bus Stop",
+                "23.750708", "90.395648"
+            )
+        )
+        list.add(
+            Route(
+                "AUST",
+                "10:00AM",
+                "Ahsanullah University of Science and Technology",
+                "23.763879", "90.406258"
+            )
+        )
+
+        updateBusRoute(busName, busTime, list)
+    }
+
+    fun pushBusRouteInfo2(busName: String, busTime: String) {
         val list: ArrayList<Route> = ArrayList()
 
         list.add(
@@ -51,7 +142,6 @@ class MainRepository {
                 "Mohammadpur",
                 "6:45AM",
                 "Mohammadpur Bus Stand",
-                "ChIJl893rOq_VTcR33N-LYm16FY",
                 "23.757056",
                 "90.361334"
             )
@@ -61,79 +151,89 @@ class MainRepository {
                 "Shankar",
                 "6:50AM",
                 "Chhayanaut Shangskriti-Bhavan",
-                "ChIJnSqg11G_VTcR-h5xzrJhIKU",
                 "23.750767",
                 "90.368380"
             )
         )
         list.add(
             Route(
-                "Dhanmondi 15",
+                "Dhanmondi 15 Unimart",
                 "6:55AM",
                 "15 No Bus Stand",
-                "ChIJf1nIdku_VTcRPzHP7aTpLzA",
                 "23.744144",
                 "90.372813"
             )
         )
         list.add(
             Route(
-                "Jigatola", "7:00AM", "Zigatola Bus Stand", "ChIJNU2SmMq4VTcR96mKYWZRdYA",
+                "Jigatola", "7:00AM", "Zigatola Bus Stand",
                 "23.739193", "90.375611"
             )
         )
+
+        list.add(
+            Route(
+                "Nilkhet", "7:08AM", "Nilkhet Mor",
+                "23.732880", "90.384998"
+            )
+        )
+
+        list.add(
+            Route(
+                "New Market", "7:10AM", "New market Balaka Foot Over Bridge",
+                "23.733011", "90.384774"
+            )
+        )
+
         list.add(
             Route(
                 "City College",
-                "7:05AM",
+                "7:15AM",
                 "City College Bus Stop",
-                "ChIJLUUO3re4VTcRh7hTzBQ5x-4",
-                "23.739430", "90.383068"
-            )
-        )
-        list.add(
-            Route(
-                "Dhanmondi 6",
-                "7:10AM",
-                "Road No. 6",
-                "EiBSZCBOby4gNiwgRGhha2EgMTIwNSwgQmFuZ2xhZGVzaCIuKiwKFAoSCevE0-q2uFU3EWAQXREWw81NEhQKEgmBawKHsLhVNxHCBFndu2Oljw",
-                "23.743421", "90.382232"
+                "23.739466", "90.383225"
             )
         )
         list.add(
             Route(
                 "Kalabagan",
-                "7:15AM",
+                "7:18AM",
                 "Kalabagan Bus Stoppage",
-                "ChIJy6QbK3e5VTcR5LJ0opz09Ik",
                 "23.747743", "90.380171"
             )
         )
         list.add(
             Route(
                 "Rasel Square",
-                "7:15AM",
-                "Kalabagan Bus Stoppage",
-                "ChIJy6QbK3e5VTcR5LJ0opz09Ik",
-                "23.751643", "90.378685"
+                "7:22AM",
+                "Dhanmondi 32 Bus Stop",
+                "23.751599", "90.377880"
             )
         )
+
         list.add(
             Route(
-                "Panthapath",
-                "7:20AM",
-                "Basnhundhara City North Bus Stop",
-                "ChIJ58PGVLu4VTcRsUV-M6pcObs",
-                "23.751065", "90.387459"
+                "Square Hospital",
+                "7:25AM",
+                "Square Hospital Ltd",
+                "23.752738", "90.381539"
             )
         )
+
+        list.add(
+            Route(
+                "Panthapath Signal",
+                "7:30AM",
+                "Panthapath Signal",
+                "23.751092", "90.387271"
+            )
+        )
+
         list.add(
             Route(
                 "Karwan Bazar",
-                "7:25AM",
-                "Hatirjheel Rail Gate",
-                "ChIJu4yI75m4VTcRobgICzaj7cQ",
-                "23.750184", "90.393907"
+                "7:32AM",
+                "Kawran Bazar Bot Tala Bus Stop",
+                "23.750708", "90.395648"
             )
         )
         list.add(
@@ -141,7 +241,6 @@ class MainRepository {
                 "AUST",
                 "7:45AM",
                 "Ahsanullah University of Science and Technology",
-                "ChIJRfi17H3HVTcRkneGOy_d6sI",
                 "23.763879", "90.406258"
             )
         )

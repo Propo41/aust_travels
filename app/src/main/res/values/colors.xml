@@ -14,7 +14,8 @@
     <color name="yellow_light">#FFE387</color>
     <color name="orange">#E9896B</color>
     <color name="ash">#C4C4C4</color>
-    <color name="light_ash">#E3E3E3</color>
+    <color name="light_ash">#F0F0F0</color>
+    <color name="light_ash_dark">#E6E6E6</color>
 
 
 </resources>

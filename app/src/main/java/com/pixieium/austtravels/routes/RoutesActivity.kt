@@ -14,10 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
-import com.pixieium.austtravels.auth.SignInActivity
+import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.databinding.ActivityRoutesBinding
 import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
@@ -79,13 +77,9 @@ class RoutesActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.logout) {
-            Firebase.auth.signOut()
-            Toast.makeText(this, "Signing out!", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, SignInActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        if (item.itemId == R.id.settings) {
+            val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
-
             return true
         } else if (item.itemId == android.R.id.home) {
             finish()
@@ -93,6 +87,17 @@ class RoutesActivity : AppCompatActivity() {
         }
         return false
     }
+
+    private fun startLoading() {
+        mBinding.progressBar.visibility = View.VISIBLE
+        mBinding.select.isEnabled = false
+    }
+
+    private fun stopLoading() {
+        mBinding.progressBar.visibility = View.GONE
+        mBinding.select.isEnabled = true
+    }
+
 
     private fun initSpinnerName(list: ArrayList<BusInfo>) {
         val items: ArrayList<String> = ArrayList()
@@ -145,18 +150,27 @@ class RoutesActivity : AppCompatActivity() {
         mAdapter = RoutesAdapter(routeList)
         mRecyclerView.layoutManager = mLayoutManager
         mRecyclerView.adapter = mAdapter
+
     }
 
     fun onBusSelectClick(view: View) {
         if (!mBinding.time.editText?.text.isNullOrEmpty() && !mBinding.name.editText?.text.isNullOrEmpty()) {
+            startLoading()
             lifecycleScope.launch {
                 val list: ArrayList<Route> = mDatabase.fetchRouteList(
                     mBinding.name.editText?.text.toString(),
                     mBinding.time.editText?.text.toString()
                 )
-                initRecyclerView(list)
+                if (list.size == 0) {
+                    Toast.makeText(this@RoutesActivity, "Route not added yet!", Toast.LENGTH_SHORT)
+                        .show()
+                    mBinding.placeholder.visibility = View.VISIBLE
+                } else {
+                    mBinding.placeholder.visibility = View.GONE
+                    initRecyclerView(list)
+                }
+                stopLoading()
             }
-
         } else {
             Toast.makeText(
                 this,
@@ -164,6 +178,5 @@ class RoutesActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-
     }
 }

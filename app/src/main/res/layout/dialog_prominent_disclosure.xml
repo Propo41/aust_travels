@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/green_dark"
+    android:background="@color/white"
     android:paddingBottom="@dimen/text_input_padding">
 
     <TextView
@@ -12,74 +11,62 @@
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/yellow_light"
         android:padding="20dp"
-        android:textSize="18sp"
         android:text="@string/use_your_location"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_subtitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/text_layout"
+    <TextView
+        android:id="@+id/prompt"
+        style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/yellow_light"
+        android:padding="20dp"
+        android:text="@string/prominent_disclosure"
+        android:textAlignment="center"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
-
-        <TextView
-            android:id="@+id/prompt"
-            style="@style/TextAppearance.AppCompat.Body1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:text="@string/prominent_disclosure"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/disclosure_continue_btn"
         style="@style/Widget.App.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
-        android:padding="@dimen/button_padding"
-        android:text="@string/btn_continue"
         android:layout_marginStart="@dimen/window_margin"
         android:layout_marginEnd="@dimen/item_spacing"
+        android:backgroundTint="@color/green_dark"
+        android:padding="@dimen/button_padding"
+        android:text="@string/btn_continue"
         android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/disclosure_dismiss_btn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/disclosure_dismiss_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/prompt" />
 
     <Button
         android:id="@+id/disclosure_dismiss_btn"
         style="@style/Widget.App.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/text_input_padding"
+        android:layout_marginEnd="@dimen/window_margin"
         android:backgroundTint="@color/orange"
         android:padding="@dimen/button_padding"
-        android:layout_marginEnd="@dimen/window_margin"
-        android:text="DISMISS"
+        android:text="@string/dismiss"
         android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/disclosure_continue_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/disclosure_continue_btn"
-        app:layout_constraintTop_toBottomOf="@+id/text_layout" />
+        app:layout_constraintTop_toTopOf="@+id/disclosure_continue_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

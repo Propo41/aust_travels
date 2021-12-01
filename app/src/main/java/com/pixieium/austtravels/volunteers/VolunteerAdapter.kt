@@ -12,20 +12,23 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.models.UserInfo
+import com.pixieium.austtravels.models.Volunteer
 
-class VolunteerAdapter(routeList: ArrayList<UserInfo>) :
+class VolunteerAdapter(routeList: ArrayList<Volunteer>) :
     RecyclerView.Adapter<VolunteerAdapter.ViewHolder>() {
-    private val mRouteList: ArrayList<UserInfo> = routeList
+    private val mVolunteerList: ArrayList<Volunteer> = routeList
     private lateinit var mContext: Context
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var name: TextView = itemView.findViewById(R.id.name)
         var id: TextView = itemView.findViewById(R.id.university_id)
         var imageUrl: ImageView = itemView.findViewById(R.id.profile_image)
+        var timeShared: TextView = itemView.findViewById(R.id.time_shared)
+        var position: TextView = itemView.findViewById(R.id.position)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         val view: View =
             LayoutInflater.from(parent.context).inflate(R.layout.item_volunteer, parent, false)
         mContext = view.context
@@ -34,10 +37,12 @@ class VolunteerAdapter(routeList: ArrayList<UserInfo>) :
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentItem: UserInfo = mRouteList[position]
+        val currentItem: Volunteer = mVolunteerList[position]
         holder.name.text = currentItem.name
         holder.id.text = currentItem.universityId
         holder.imageUrl.loadSvg(currentItem.userImage)
+        holder.position.text = mContext.getString(R.string._14, (position + 2).toString())
+        holder.timeShared.text = currentItem.totalContributionFormatted
     }
 
     /**
@@ -61,6 +66,6 @@ class VolunteerAdapter(routeList: ArrayList<UserInfo>) :
 
     override fun getItemCount(): Int {
 
-        return mRouteList.size
+        return mVolunteerList.size
     }
 }

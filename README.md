@@ -1,6 +1,6 @@
 ![banner](https://user-images.githubusercontent.com/46298019/143385075-b8f12140-7261-4f3d-8d27-41e66d3c1e20.png)
 
-<a href="https://github.com/Propo41/aust_travels/releases/tag/v0.5-beta"><img src="https://img.shields.io/badge/release-v0.5--beta-blue" alt="release"/></a>
+<a href="https://github.com/Propo41/aust_travels/releases/tag/v1.0-beta"><img src="https://img.shields.io/badge/release-v1.0--beta-blue" alt="release"/></a>
 <a href="https://github.com/Propo41/aust_travels/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-orange" alt="license"/></a>
 <a href="https://github.com/Propo41/aust_travels/network/members"><img src="https://img.shields.io/github/forks/Propo41/aust_travels" alt="forks"/></a>
 <a href="https://github.com/Propo41/aust_travels/stargazers"><img src="https://img.shields.io/github/stars/Propo41/aust_travels" alt="stars"/></a>
@@ -27,7 +27,7 @@ Installation
 3. Run `MainActivity.kt`
 
 <hr>
-<a href="insert-link-here">
+<a href="https://play.google.com/store/apps/details?id=com.pixieium.austtravels">
     <img alt="Get it on Google Play" height="80" src="docs/graphics/google-badge.png" />
 </a>
 
@@ -35,6 +35,7 @@ Resources
 ---------
 
 1. User interface design: [figma](https://www.figma.com/file/kBarxgD5M27m2v9LG5J9W6/Bus?node-id=257%3A344)
+2. Admin Panel: [hosted on firebase](https://aust-travels.firebaseapp.com)
 
 
 Contributing Guidelines

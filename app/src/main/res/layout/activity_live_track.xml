@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".directions.DirectionsActivity">
+    tools:context=".livetrack.LiveTrackActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="20dp"
-            android:paddingTop="15dp"
+            android:paddingTop="10dp"
             android:paddingEnd="25dp"
             android:paddingBottom="10dp">
 
@@ -61,8 +61,23 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:text="@string/selected_bus"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_subtitle"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/ping"
+                style="@style/TextBottomSheetDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="@string/ping"
+                android:onClick="onPingClick"
+                android:textColor="@color/yellow"
+                android:textSize="@dimen/text_size_subtitle"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -102,8 +117,8 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="25dp"
                 android:paddingBottom="15dp"
-                android:visibility="visible"
                 android:text="@string/last_updated"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/start" />
@@ -117,9 +132,9 @@
                 android:paddingStart="20dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="25dp"
-                android:visibility="gone"
                 android:paddingBottom="15dp"
                 android:text="@string/departure_time"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/last_updated" />
@@ -127,5 +142,20 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_margin="15dp"
+        android:onClick="onRepositionBusClick"
+        app:tint="@color/orange"
+        android:contentDescription="@string/re_position_bus"
+        android:layout_marginBottom="@dimen/item_spacing"
+        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_bus"
+        android:focusable="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,8 @@
 package com.pixieium.austtravels.home
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -14,12 +11,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import coil.decode.SvgDecoder
@@ -27,31 +20,71 @@ import coil.request.ImageRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
-import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityHomeBinding
 import com.pixieium.austtravels.livetrack.LiveTrackActivity
+import com.pixieium.austtravels.home.stopwatch.StopwatchHandler
 import com.pixieium.austtravels.models.UserInfo
 import com.pixieium.austtravels.routes.RoutesActivity
 import com.pixieium.austtravels.volunteers.VolunteersActivity
 import kotlinx.coroutines.launch
+import android.content.*
+import android.os.IBinder
+import android.util.Log
+import android.widget.Button
+import android.widget.TextView
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
+import com.pixieium.austtravels.BuildConfig
+import com.pixieium.austtravels.home.services.ForegroundOnlyLocationService
+import com.pixieium.austtravels.settings.SettingsActivity
+import com.pixieium.austtravels.utils.Constant.MSG_START_TIMER
+import com.pixieium.austtravels.utils.Constant.MSG_STOP_TIMER
+import com.pixieium.austtravels.utils.Constant.REQUEST_DIRECTIONS
+import com.pixieium.austtravels.utils.Constant.REQUEST_LIVE_TRACK
+import com.pixieium.austtravels.utils.Constant.REQUEST_SHARE_LOCATION
+import com.pixieium.austtravels.utils.SharedPreferenceUtil
 
 
-/* stop watch: https://stackoverflow.com/questions/3733867/stop-watch-logic*/
-
-class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
+class HomeActivity : AppCompatActivity(),
     ProminentDisclosureDialog.FragmentListener,
-    SelectBusDialog.FragmentListener {
+    SelectBusDialog.FragmentListener,
+    SharedPreferences.OnSharedPreferenceChangeListener {
+
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var mLocationManager: LocationManager
-    private lateinit var myLocationListener: MyLocationListener
     private val mDatabase: HomeRepository = HomeRepository()
-    private val REQUEST_LIVE_TRACK = 0
-    private val REQUEST_DIRECTIONS = 1
-    private val REQUEST_SHARE_LOCATION = 2
 
     private lateinit var mSelectedBusName: String
     private lateinit var mSelectedBusTime: String
+
     private lateinit var mUid: String
+    private var mIsVolunteer: Boolean = false
+
+    private lateinit var mStopwatchHandler: StopwatchHandler
+
+    // location sharing variables
+    private var foregroundOnlyLocationServiceBound = false
+
+    // Provides location updates for while-in-use feature.
+    private var foregroundOnlyLocationService: ForegroundOnlyLocationService? = null
+
+    // Listens for location broadcasts from ForegroundOnlyLocationService.
+    private lateinit var foregroundOnlyBroadcastReceiver: HomeActivity.ForegroundOnlyBroadcastReceiver
+    private lateinit var sharedPreferences: SharedPreferences
+
+    // Monitors connection to the while-in-use service.
+    private val foregroundOnlyServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            val binder = service as ForegroundOnlyLocationService.LocalBinder
+            foregroundOnlyLocationService = binder.service
+            foregroundOnlyLocationServiceBound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            foregroundOnlyLocationService = null
+            foregroundOnlyLocationServiceBound = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,12 +93,320 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         mUid = Firebase.auth.currentUser?.uid.toString()
         setSupportActionBar(binding.topAppBar)
 
+        initLocationSharing()
+
+        mStopwatchHandler = StopwatchHandler(binding.sharingYourLocation)
+
         val userInfo: UserInfo? = mDatabase.getUserInfo()
         if (userInfo != null) {
             binding.loggedInAs.text =
                 getString(R.string.logged_in_as_s, userInfo.email)
             binding.profileImage.loadSvg(userInfo.userImage)
         }
+
+        lifecycleScope.launch {
+            checkVolunteerStatus()
+        }
+
+        if (isLocationSharing) {
+            binding.shareLocation.text = getString(R.string.stop_sharing_location)
+            binding.cardView.visibility = View.VISIBLE
+        } else {
+            binding.cardView.visibility = View.GONE
+        }
+    }
+
+    private suspend fun checkVolunteerStatus() {
+        mIsVolunteer = mDatabase.isVolunteer(mUid)
+
+        if (!mIsVolunteer) {
+            binding.shareLocation.visibility = View.GONE
+
+            // If we remove someone from volunteer list, then we will unsubscribe the user from bus notification
+            val busName = mDatabase.busNameOfVolunteer(mUid);
+            busName?.let {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(it).addOnSuccessListener {
+                    Log.d("unsubscribeFromTopic -", busName)
+                }
+            }
+
+        } else {
+            binding.shareLocation.visibility = View.VISIBLE
+            // subscribe the user to bus notification
+            val busName = mDatabase.busNameOfVolunteer(mUid);
+            busName?.let {
+                // Show for the first time
+                FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
+                    if (!isShowToastAboutPing()) {
+                        Snackbar.make(
+                            binding.root,
+                            "You will receive ping notifications from $busName whenever someone pings you.",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                        saveShowPingState(true)
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun isShowToastAboutPing(): Boolean {
+        val prefs: SharedPreferences = this.getSharedPreferences(
+            "com.pixieium.austtravels", MODE_PRIVATE
+        )
+        return prefs.getBoolean("isAlreadySeen", false)
+    }
+
+
+    private fun saveShowPingState(state: Boolean) {
+        val prefs = getSharedPreferences(
+            "com.pixieium.austtravels", MODE_PRIVATE
+        )
+        val editor = prefs.edit()
+        editor.putBoolean("isAlreadySeen", state)
+        editor.apply()
+    }
+
+    private fun readSharedPref(): Boolean {
+        val prefs: SharedPreferences = this.getSharedPreferences(
+            "com.pixieium.austtravels", MODE_PRIVATE
+        )
+        return prefs.getBoolean("isLocationSharing", false)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        updateUiForLocationSharing(
+            sharedPreferences.getBoolean(SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false)
+        )
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+
+        val serviceIntent = Intent(this, ForegroundOnlyLocationService::class.java)
+        bindService(serviceIntent, foregroundOnlyServiceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            foregroundOnlyBroadcastReceiver,
+            IntentFilter(
+                ForegroundOnlyLocationService.ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST
+            )
+        )
+    }
+
+    override fun onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+            foregroundOnlyBroadcastReceiver
+        )
+        super.onPause()
+    }
+
+    override fun onStop() {
+        if (foregroundOnlyLocationServiceBound) {
+            unbindService(foregroundOnlyServiceConnection)
+            foregroundOnlyLocationServiceBound = false
+        }
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+
+        super.onStop()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        // Updates button states if new while in use location is added to SharedPreferences.
+        if (key == SharedPreferenceUtil.KEY_FOREGROUND_ENABLED) {
+            updateUiForLocationSharing(
+                sharedPreferences.getBoolean(
+                    SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false
+                )
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Log.d(TAG, "onRequestPermissionResult")
+
+        when (requestCode) {
+            REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE -> when {
+                grantResults.isEmpty() ->
+                    // If user interaction was interrupted, the permission request
+                    // is cancelled and you receive empty arrays.
+                    Log.d(TAG, "User interaction was cancelled.")
+                grantResults[0] == PackageManager.PERMISSION_GRANTED ->
+                    // Permission was granted.
+                    // open bus select dialog
+                    SelectBusDialog.newInstance(REQUEST_SHARE_LOCATION)
+                        .show(supportFragmentManager, SelectBusDialog.TAG)
+                else -> {
+                    // Permission denied.
+                    updateUiForLocationSharing(false)
+
+                    Snackbar.make(
+                        binding.root,
+                        R.string.permission_denied_explanation,
+                        Snackbar.LENGTH_LONG
+                    )
+                        .setAction(R.string.settings) {
+                            // Build intent that displays the App settings screen.
+                            val intent = Intent()
+                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            val uri = Uri.fromParts(
+                                "package",
+                                BuildConfig.APPLICATION_ID,
+                                null
+                            )
+                            intent.data = uri
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                        }
+                        .show()
+                }
+            }
+        }
+    }
+
+    private fun updateUiForLocationSharing(trackingLocation: Boolean) {
+        if (trackingLocation) {
+            binding.shareLocation.text = getString(R.string.stop_sharing_location)
+            binding.cardView.visibility = View.VISIBLE
+            binding.busName.text = getString(R.string.bus_jamuna, mSelectedBusName)
+            binding.busTime.text = getString(R.string.time_6_45_am, mSelectedBusTime)
+        } else {
+            binding.shareLocation.text = getString(R.string.share_location)
+            binding.cardView.visibility = View.GONE
+        }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_app_bar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.settings) {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBusSelectClick(
+        selectedBusName: String,
+        selectedBusTime: String,
+        requestCode: Int
+    ) {
+        when (requestCode) {
+            REQUEST_SHARE_LOCATION -> {
+                mSelectedBusName = selectedBusName
+                mSelectedBusTime = selectedBusTime
+                Log.d(TAG, mSelectedBusName)
+                Log.d(TAG, mSelectedBusTime)
+
+                startLocationSharing()
+            }
+            REQUEST_LIVE_TRACK -> {
+                val intent = Intent(this@HomeActivity, LiveTrackActivity::class.java)
+                intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
+                intent.putExtra("SELECTED_BUS_TIME", selectedBusTime)
+                startActivity(intent)
+            }
+        }
+
+    }
+
+    private fun startLocationSharing() {
+        updateUiForLocationSharing(true)
+        foregroundOnlyLocationService?.subscribeToLocationUpdates()
+            ?: Log.d(TAG, "Service Not Bound")
+        startStopwatch()
+        Toast.makeText(
+            this@HomeActivity,
+            "Location sharing started. Yay! Keep it going",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun stopLocationSharing() {
+        updateUiForLocationSharing(false)
+        stopStopwatch()
+        foregroundOnlyLocationService?.unsubscribeToLocationUpdates()
+        Toast.makeText(
+            this@HomeActivity,
+            "Location sharing turned off. Thank you for your contribution!",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    fun onLiveTrackBusClick(view: View) {
+        SelectBusDialog.newInstance(REQUEST_LIVE_TRACK)
+            .show(supportFragmentManager, SelectBusDialog.TAG)
+    }
+
+    fun onViewDirectionsClick(view: View) {
+        SelectBusDialog.newInstance(REQUEST_DIRECTIONS)
+            .show(supportFragmentManager, SelectBusDialog.TAG)
+    }
+
+    fun onViewRoutesClick(view: View) {
+        val intent = Intent(this@HomeActivity, RoutesActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun onShareLocationClick(view: View) {
+        val isLocationSharing = sharedPreferences.getBoolean(
+            SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false
+        )
+
+        if (isLocationSharing) {
+            // if foreground location is already being shared, then stop it
+            stopLocationSharing()
+        } else {
+            if (foregroundPermissionApproved()) {
+                // open dialog to select bus
+                SelectBusDialog.newInstance(REQUEST_SHARE_LOCATION)
+                    .show(supportFragmentManager, SelectBusDialog.TAG)
+            } else {
+                // show prominent disclosure
+                ProminentDisclosureDialog.newInstance()
+                    .show(supportFragmentManager, ProminentDisclosureDialog.TAG)
+            }
+        }
+
+    }
+
+
+    fun onViewVolunteersClick(view: View) {
+        // Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this@HomeActivity, VolunteersActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun onDisclosureAcceptClick() {
+        Toast.makeText(
+            this@HomeActivity, "Requires location permission",
+            Toast.LENGTH_SHORT
+        ).show()
+
+        // after user accepts agreement, request foreground permissions if not given already
+        if (!foregroundPermissionApproved()) {
+            requestForegroundPermissions()
+        }
+    }
+
+    private fun startStopwatch() {
+        mStopwatchHandler.sendEmptyMessage(MSG_START_TIMER)
+    }
+
+    private fun stopStopwatch() {
+        mStopwatchHandler.sendEmptyMessage(MSG_STOP_TIMER)
     }
 
     /**
@@ -87,317 +428,70 @@ class HomeActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener
         imageLoader.enqueue(request)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.top_app_bar, menu)
-        return true
+    private fun initLocationSharing() {
+        foregroundOnlyBroadcastReceiver = ForegroundOnlyBroadcastReceiver()
+        sharedPreferences =
+            getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
     }
 
-    /*todo: incomplete*/
-    private fun createNotification() {
-        val builder = NotificationCompat.Builder(this, CHANNEL_ID.toString())
-            .setSmallIcon(R.drawable.ic_bus)
-            .setContentTitle("Location sharing on")
-            .setContentText("you are sharing your location")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        val notificationManager = NotificationManagerCompat.from(this)
-        notificationManager.notify(69, builder.build())
-    }
-
-    private fun stopLocationSharing() {
-        Toast.makeText(
-            this@HomeActivity, "Location sharing turned off",
-            Toast.LENGTH_SHORT
-        ).show()
-        mLocationManager.removeUpdates(myLocationListener)
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.logout) {
-            Toast.makeText(this, "Signing out!", Toast.LENGTH_SHORT).show()
-            Firebase.auth.signOut()
-            val intent = Intent(this, SignInActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun startLocationSharing() {
-        mLocationManager = applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
-        // check if location permission is enabled or not
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-
-            // show prominent disclosure dialog
-            // after the user accepts the agreement,
-            // build an alert dialog requesting for permission
-            ProminentDisclosureDialog.newInstance()
-                .show(supportFragmentManager, ProminentDisclosureDialog.TAG)
-            return
-        }
-
-        // start sharing location
-        binding.shareLocation.text = getString(R.string.stop_sharing_location)
-        binding.cardView.visibility = View.VISIBLE
-        isLocationSharing = true
-
-        binding.busName.text = getString(R.string.bus_jamuna, mSelectedBusName)
-        binding.busTime.text = getString(R.string.time_6_45_am, mSelectedBusTime)
-
-        // check if GPS is enabled or not
-        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps()
-        }
-
-        val location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        if (location != null) {
-            mDatabase.updateLocation(mUid, mSelectedBusName, mSelectedBusTime, location)
-        }
-
-        myLocationListener = MyLocationListener()
-        mLocationManager.requestLocationUpdates(
-            LocationManager.GPS_PROVIDER, 5, 1f,
-            myLocationListener
+    private fun foregroundPermissionApproved(): Boolean {
+        return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
         )
-        Toast.makeText(
-            this@HomeActivity, "Started sharing location",
-            Toast.LENGTH_SHORT
-        ).show()
     }
 
-    private inner class MyLocationListener : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            mDatabase.updateLocation(mUid, mSelectedBusName, mSelectedBusTime, location)
-            /*  Toast.makeText(
-                  this@HomeActivity, "Location changed!",
-                  Toast.LENGTH_SHORT
-              ).show()*/
-        }
+    private fun requestForegroundPermissions() {
+        val provideRationale = foregroundPermissionApproved()
 
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-            Toast.makeText(
-                this@HomeActivity, "$provider's status changed to $status!",
-                Toast.LENGTH_SHORT
-            ).show()
+        // If the user denied a previous request, but didn't check "Don't ask again", provide
+        // additional rationale.
+        if (provideRationale) {
+            Snackbar.make(
+                binding.root,
+                R.string.permission_rationale,
+                Snackbar.LENGTH_LONG
+            )
+                .setAction(R.string.ok) {
+                    // Request permission
+                    ActivityCompat.requestPermissions(
+                        this@HomeActivity,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+                    )
+                }
+                .show()
+        } else {
+            Log.d(TAG, "Request foreground only permission")
+            ActivityCompat.requestPermissions(
+                this@HomeActivity,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+            )
         }
+    }
 
-        override fun onProviderEnabled(provider: String) {
-            Toast.makeText(
-                this@HomeActivity, "Provider $provider enabled!",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+    /**
+     * Receiver for location broadcasts from [ForegroundOnlyLocationService].
+     */
+    private inner class ForegroundOnlyBroadcastReceiver : BroadcastReceiver() {
 
-        override fun onProviderDisabled(provider: String) {
-            Toast.makeText(
-                this@HomeActivity, "Provider $provider disabled!",
-                Toast.LENGTH_SHORT
-            ).show()
+        override fun onReceive(context: Context, intent: Intent) {
+            val location = intent.getParcelableExtra<Location>(
+                ForegroundOnlyLocationService.EXTRA_LOCATION
+            )
+
+            if (location != null) {
+                mDatabase.updateLocation(mUid, mSelectedBusName, mSelectedBusTime, location)
+            }
         }
     }
 
     companion object {
-        private const val CHANNEL_ID = 745
         private var isLocationSharing = false
-    }
-
-    /*volunteer select dialog*/
-    override fun onVolunteerApprovalClick() {
-        lifecycleScope.launch {
-            if (mDatabase.createVolunteer(mUid)) {
-                Toast.makeText(
-                    this@HomeActivity,
-                    "You are now a volunteer! Start sharing your location!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                Toast.makeText(
-                    this@HomeActivity,
-                    "Couldn't make you a volunteer at this moment. Try again later!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
-    override fun onBusSelectClick(
-        selectedBusName: String,
-        selectedBusTime: String,
-        requestCode: Int
-    ) {
-        when (requestCode) {
-            REQUEST_SHARE_LOCATION -> {
-                mSelectedBusName = selectedBusName
-                mSelectedBusTime = selectedBusTime
-                startLocationSharing()
-                // createNotification();
-            }
-            /*   REQUEST_DIRECTIONS -> {
-                   val intent = Intent(this@HomeActivity, DirectionsActivity::class.java)
-                   intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
-                   intent.putExtra("SELECTED_BUS_TIME", selectedBusTime)
-                   startActivity(intent)
-               }*/
-            REQUEST_LIVE_TRACK -> {
-                val intent = Intent(this@HomeActivity, LiveTrackActivity::class.java)
-                intent.putExtra("SELECTED_BUS_NAME", selectedBusName)
-                intent.putExtra("SELECTED_BUS_TIME", selectedBusTime)
-                startActivity(intent)
-            }
-        }
-
-    }
-
-
-    private fun buildAlertMessageNoGps() {
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
-            .setCancelable(false)
-            .setPositiveButton(
-                "Yes"
-            ) { _, _ -> startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
-            .setNegativeButton(
-                "No"
-            ) { dialog, _ -> dialog.cancel() }
-        val alert = builder.create()
-        alert.show()
-    }
-
-    private fun buildAlertMessageNoPermission() {
-        AlertDialog.Builder(this)
-            .setTitle("Location Permission Needed")
-            .setMessage("This app needs the Location permission, please accept to use location functionality")
-            .setPositiveButton(
-                "OK"
-            ) { _, _ ->
-                //Prompt the user to request permission
-                requestLocationPermission()
-            }
-            .create()
-            .show()
-    }
-
-    private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            ),
-            LiveTrackActivity.MY_PERMISSIONS_REQUEST_LOCATION
-        )
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            LiveTrackActivity.MY_PERMISSIONS_REQUEST_LOCATION -> {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        ) == PackageManager.PERMISSION_GRANTED
-                    ) {
-                        startLocationSharing()
-                        // createNotification();
-                    }
-
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(
-                        this,
-                        "Permission denied! Please enable location permission to access this feature",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                    // Check if we are in a state where the user has denied the permission and
-                    // selected Don't ask again
-                    if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                            this,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        )
-                    ) {
-                        startActivity(
-                            Intent(
-                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.fromParts("package", this.packageName, null),
-                            ),
-                        )
-                    }
-                }
-                return
-            }
-
-        }
-    }
-
-    fun onLiveTrackBusClick(view: View) {
-        SelectBusDialog.newInstance(REQUEST_LIVE_TRACK)
-            .show(supportFragmentManager, SelectBusDialog.TAG)
-    }
-
-    fun onViewDirectionsClick(view: View) {
-        SelectBusDialog.newInstance(REQUEST_DIRECTIONS)
-            .show(supportFragmentManager, SelectBusDialog.TAG)
-    }
-
-    fun onViewRoutesClick(view: View) {
-        val intent = Intent(this@HomeActivity, RoutesActivity::class.java)
-        startActivity(intent)
-    }
-
-    fun onShareLocationClick(view: View) {
-        if (!isLocationSharing) {
-            lifecycleScope.launch {
-                val isVolunteer = mDatabase.isVolunteer(mUid)
-                // if user is a volunteer
-                if (isVolunteer) {
-                    // open dialog to select bus
-                    SelectBusDialog.newInstance(REQUEST_SHARE_LOCATION)
-                        .show(supportFragmentManager, SelectBusDialog.TAG)
-                } else {
-                    // open dialog to prompt user to become a volunteer
-                    PromptVolunteerDialog.newInstance()
-                        .show(supportFragmentManager, PromptVolunteerDialog.TAG)
-                }
-            }
-
-        } else {
-            // stop sharing location
-            binding.shareLocation.text = getString(R.string.share_location)
-            stopLocationSharing()
-            binding.cardView.visibility = View.GONE
-            isLocationSharing = false
-        }
-    }
-
-    fun onViewVolunteersClick(view: View) {
-        // Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
-        val intent = Intent(this@HomeActivity, VolunteersActivity::class.java)
-        startActivity(intent)
-    }
-
-    override fun onDisclosureAcceptClick() {
-        Toast.makeText(
-            this@HomeActivity, "Requires location permission",
-            Toast.LENGTH_SHORT
-        ).show()
-        buildAlertMessageNoPermission()
+        private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
+        private const val TAG = "HomeActivity"
     }
 }
+
+

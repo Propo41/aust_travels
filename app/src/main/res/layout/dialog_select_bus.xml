@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/green_dark"
+    android:background="@color/white"
     android:paddingBottom="@dimen/text_input_padding">
 
     <TextView
@@ -11,95 +12,79 @@
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/yellow_light"
         android:padding="20dp"
         android:text="@string/select_bus"
         android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_subtitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/text_layout"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/select_time"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/yellow_light"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        android:layout_marginTop="@dimen/item_spacing"
+        android:enabled="false"
+        android:hint="@string/select_time"
+        android:paddingLeft="@dimen/window_margin"
+        android:paddingRight="@dimen/window_margin"
+        app:layout_constraintTop_toBottomOf="@+id/select_name"
+        app:startIconDrawable="@drawable/ic_time"
+        app:startIconTint="@color/black">
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/select_time"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/select_time"
-            android:paddingLeft="@dimen/window_margin"
-            android:paddingTop="@dimen/item_spacing_small"
-            android:paddingRight="@dimen/window_margin"
-            android:enabled="false"
-            android:paddingBottom="@dimen/window_margin"
-            app:layout_constraintTop_toBottomOf="@+id/select_name"
-            app:startIconDrawable="@drawable/ic_time"
-            app:startIconTint="@color/black">
+            android:inputType="none"
+            android:padding="@dimen/text_input_padding"
+            android:textAppearance="@style/TextAppearance.App.Subtitle1.Light"
+            android:textColor="@color/black" />
 
-            <AutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:padding="@dimen/text_input_padding"
-                android:textAppearance="@style/TextAppearance.App.Subtitle1.Light"
-                android:textColor="@color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/select_name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/item_spacing"
+        android:hint="@string/select_name"
+        android:paddingLeft="@dimen/window_margin"
+        android:paddingRight="@dimen/window_margin"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:startIconDrawable="@drawable/ic_bus"
+        app:startIconTint="@color/black">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/select_name"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/select_name"
-            android:paddingLeft="@dimen/window_margin"
-            android:paddingTop="@dimen/window_margin"
-            android:paddingRight="@dimen/window_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:startIconDrawable="@drawable/ic_bus"
-            app:startIconTint="@color/black">
+            android:inputType="none"
+            android:padding="@dimen/text_input_padding"
+            android:textAppearance="@style/TextAppearance.App.Subtitle1.Light"
+            android:textColor="@color/black" />
 
-            <AutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:padding="@dimen/text_input_padding"
-                android:textAppearance="@style/TextAppearance.App.Subtitle1.Light"
-                android:textColor="@color/black" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <Button
         android:id="@+id/select_btn"
         style="@style/Widget.App.Button"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/window_margin"
-        android:layout_marginTop="@dimen/text_input_padding"
-        android:layout_marginRight="@dimen/window_margin"
-        android:backgroundTint="@color/black"
+        android:layout_marginStart="@dimen/window_margin"
+        android:layout_marginTop="@dimen/item_spacing"
+        android:layout_marginEnd="@dimen/window_margin"
+        android:backgroundTint="@color/green_dark"
         android:padding="@dimen/button_padding"
         android:text="@string/select"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/select_time" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

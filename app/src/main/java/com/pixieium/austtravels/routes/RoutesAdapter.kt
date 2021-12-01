@@ -16,28 +16,28 @@ class RoutesAdapter(routeList: ArrayList<Route>) :
     private val mRouteList: ArrayList<Route> = routeList
     private lateinit var mContext: Context
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var mLocation: TextView = itemView.findViewById(R.id.location)
-        var mEstTime: TextView = itemView.findViewById(R.id.estTime)
-        var mLine: View = itemView.findViewById(R.id.divider)
-        var mImageView: ImageView = itemView.findViewById(R.id.imageView)
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val mLocation: TextView = itemView.findViewById(R.id.location)
+        val mEstTime: TextView = itemView.findViewById(R.id.estTime)
+        val mLine: View = itemView.findViewById(R.id.divider)
+        val mImageView: ImageView = itemView.findViewById(R.id.imageView)
 
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
-        val view: View =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_route, parent, false)
+
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(viewGroup.context)
+            .inflate(R.layout.item_route, viewGroup, false)
         mContext = view.context
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem: Route = mRouteList[position]
+
         holder.mLocation.text = currentItem.place
         holder.mEstTime.text = currentItem.estTime
+
 
         /*change color of first and last icon*/
         if (position == mRouteList.size - 1) {
@@ -50,10 +50,20 @@ class RoutesAdapter(routeList: ArrayList<Route>) :
                 )
             )
         } else if (position == 0) {
+            holder.mLine.visibility = View.VISIBLE
             holder.mImageView.setColorFilter(
                 ResourcesCompat.getColor(
                     mContext.resources,
                     R.color.green_dark,
+                    null
+                )
+            )
+        }else{
+            holder.mLine.visibility = View.VISIBLE
+            holder.mImageView.setColorFilter(
+                ResourcesCompat.getColor(
+                    mContext.resources,
+                    R.color.black,
                     null
                 )
             )

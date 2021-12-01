@@ -4,11 +4,13 @@ import android.app.Application
 import android.widget.Toast
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.GsonBuilder
 import com.pixieium.austtravels.notification.NotificationApi
 import com.pixieium.austtravels.utils.Constant
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 // This is the entry point of the app
@@ -53,8 +55,7 @@ class AustTravel : Application() {
                 .build()
 
             return Retrofit.Builder()
-                // add / at the end i.e. https://address.url/
-                .baseUrl("https://serene-badlands-70349.herokuapp.com/")
+                .baseUrl(Constant.BASE_URL)
                 .client(client)
                 .build()
         }

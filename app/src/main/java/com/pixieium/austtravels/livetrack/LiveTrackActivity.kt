@@ -85,10 +85,15 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         binding.sec.text = getString(R.string.selected_bus, mSelectedBusName)
         // bus start time
         binding.start.text = getString(R.string.starting_time, mSelectedBusTime)
-
+        // Send push notifcation to all volunteers of this bus
         binding.ping.setOnClickListener {
             lifecycleScope.launch {
                 AustTravel.notificationApi().notifyVolunteers(mSelectedBusName, "title", "message")
+                Toast.makeText(
+                    this@LiveTrackActivity,
+                    "Send notification to all volunteers",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }

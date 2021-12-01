@@ -20,28 +20,15 @@ class AustTravel : Application() {
         // We can use this to send notice like notification
         FirebaseMessaging.getInstance().subscribeToTopic(Constant.GENERAL_NOTIFICATION)
             .addOnSuccessListener {
-                Toast.makeText(
-                    getApplicationContext(),
-                    "Success - ${Constant.GENERAL_NOTIFICATION}",
-                    Toast.LENGTH_LONG
-                ).show();
             }
-
-        // For testing
-//        FirebaseMessaging.getInstance().subscribeToTopic("test_at")
-//            .addOnSuccessListener {
-//                Toast.makeText(getApplicationContext(), "Success - test_at", Toast.LENGTH_LONG)
-//                    .show();
-//            }
     }
 
     companion object {
-
         fun notificationApi(): NotificationApi {
             return api().create(NotificationApi::class.java)
         }
 
-        fun api(): Retrofit {
+        private fun api(): Retrofit {
             val interceptor = HttpLoggingInterceptor()
             interceptor.level = HttpLoggingInterceptor.Level.BODY
 

@@ -105,40 +105,7 @@ class HomeActivity : AppCompatActivity(),
         }
 
         lifecycleScope.launch {
-            mIsVolunteer = mDatabase.isVolunteer(mUid)
-
-            Log.d("mUid  -> ", mUid)
-            Log.d("isVolunteer", mDatabase.isVolunteer(mUid).toString())
-
-            if (!mIsVolunteer) {
-                binding.shareLocation.visibility = View.GONE
-
-                // If we remove someone from volunteer list, then we will unsubscribe the user from bus notification
-                val busName = mDatabase.busNameOfVolunteer(mUid);
-                busName?.let {
-                    FirebaseMessaging.getInstance().unsubscribeFromTopic(it).addOnSuccessListener {
-                        Log.d("unsubscribeFromTopic -", busName)
-                    }
-                }
-
-            } else {
-                binding.shareLocation.visibility = View.VISIBLE
-                // subscribe the user to bus notification
-                val busName = mDatabase.busNameOfVolunteer(mUid);
-                busName?.let {
-                    // Show for the first time
-                    FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
-                        if (!isShowToastAboutPing()) {
-                            Toast.makeText(
-                                this@HomeActivity,
-                                "You will receive notifications about ${busName}",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            saveShowPingState(true);
-                        }
-                    }
-                }
-            }
+            checkVolunteerStatus()
         }
 
         if (isLocationSharing) {
@@ -147,7 +114,42 @@ class HomeActivity : AppCompatActivity(),
         } else {
             binding.cardView.visibility = View.GONE
         }
+    }
 
+    private suspend fun checkVolunteerStatus() {
+        mIsVolunteer = mDatabase.isVolunteer(mUid)
+
+        if (!mIsVolunteer) {
+            binding.shareLocation.visibility = View.GONE
+
+            // If we remove someone from volunteer list, then we will unsubscribe the user from bus notification
+            val busName = mDatabase.busNameOfVolunteer(mUid);
+            busName?.let {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(it).addOnSuccessListener {
+                    Log.d("unsubscribeFromTopic -", busName)
+                }
+            }
+
+        } else {
+            binding.shareLocation.visibility = View.VISIBLE
+            // subscribe the user to bus notification
+            val busName = mDatabase.busNameOfVolunteer(mUid);
+            busName?.let {
+                // Show for the first time
+                FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
+                    if (!isShowToastAboutPing()) {
+                        Snackbar.make(
+                            binding.root,
+                            "You will receive ping notifications from $busName whenever someone pings you.",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                        saveShowPingState(true)
+                    }
+                }
+            }
+        }
+
+    }
 
     private fun isShowToastAboutPing(): Boolean {
         val prefs: SharedPreferences = this.getSharedPreferences(
@@ -175,7 +177,6 @@ class HomeActivity : AppCompatActivity(),
 
     override fun onStart() {
         super.onStart()
-
         updateUiForLocationSharing(
             sharedPreferences.getBoolean(SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false)
         )
@@ -276,12 +277,6 @@ class HomeActivity : AppCompatActivity(),
             binding.cardView.visibility = View.VISIBLE
             binding.busName.text = getString(R.string.bus_jamuna, mSelectedBusName)
             binding.busTime.text = getString(R.string.time_6_45_am, mSelectedBusTime)
-
-            Toast.makeText(
-                this@HomeActivity, "Started sharing location",
-                Toast.LENGTH_SHORT
-            ).show()
-
         } else {
             binding.shareLocation.text = getString(R.string.share_location)
             binding.cardView.visibility = View.GONE

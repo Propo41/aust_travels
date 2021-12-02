@@ -9,10 +9,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <!-- Required for foreground services on P+. -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- Required for foreground services on P+. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
 
     <application
         android:name=".AustTravel"
@@ -22,7 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AustTravels">
-
         <activity
             android:name=".auth.ForgotPasswordActivity"
             android:exported="true" />
@@ -70,16 +67,14 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location" />
-
         <service
-            android:name=".notification.AustTravelFirebaseMessagingService"
+            android:name="com.pixieium.austtravels.utils.notification.AustTravelFirebaseMessagingService"
             android:exported="false"
             android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>

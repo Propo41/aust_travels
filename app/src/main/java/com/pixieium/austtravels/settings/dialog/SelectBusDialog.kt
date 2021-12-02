@@ -1,9 +1,7 @@
-package com.pixieium.austtravels.home
+package com.pixieium.austtravels.settings.dialog
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.databinding.DialogSelectBusBinding
 import com.pixieium.austtravels.models.BusInfo
-import com.pixieium.austtravels.models.BusTiming
+import com.pixieium.austtravels.settings.SettingsRepository
 import kotlinx.coroutines.launch
 
 class SelectBusDialog : DialogFragment() {
@@ -24,21 +22,19 @@ class SelectBusDialog : DialogFragment() {
     private lateinit var mContext: Context
     private lateinit var mBinding: DialogSelectBusBinding
     private var listener: FragmentListener? = null
-    private val mDatabase: HomeRepository = HomeRepository()
+    private val mDatabase: SettingsRepository = SettingsRepository()
 
     companion object {
         const val TAG = "SelectBusDialogFragment"
-        private var REQUESTER: Int = 0
 
-        fun newInstance(requester: Int): SelectBusDialog {
-            REQUESTER = requester
+        fun newInstance(): SelectBusDialog {
             return SelectBusDialog()
         }
     }
 
 
     interface FragmentListener {
-        fun onBusSelectClick(selectedBusName: String, selectedBusTime: String, requestCode: Int)
+        fun onBusSelectClick(selectedBusName: String)
     }
 
 
@@ -53,7 +49,7 @@ class SelectBusDialog : DialogFragment() {
         mBinding = DialogSelectBusBinding.inflate(layoutInflater)
         mContext = mBinding.root.context
 
-        mBinding.selectTime.isEnabled = false
+        mBinding.selectTime.visibility = View.GONE
         mBinding.selectName.isEnabled = false
         mBinding.selectBtn.isEnabled = false
 
@@ -83,15 +79,11 @@ class SelectBusDialog : DialogFragment() {
 
         mBinding.selectBtn.setOnClickListener {
             val selectedBusName = mBinding.selectName.editText?.text.toString()
-            val selectedBusTime = mBinding.selectTime.editText?.text.toString()
-
-            //Toast.makeText(context, "$selectedBusName is selected!", Toast.LENGTH_SHORT).show()
-            listener?.onBusSelectClick(selectedBusName, selectedBusTime, REQUESTER)
+            listener?.onBusSelectClick(selectedBusName)
             dismiss()
         }
         return mBinding.root
     }
-
 
     private fun initSpinnerName(list: ArrayList<BusInfo>) {
         val items: ArrayList<String> = ArrayList()
@@ -102,48 +94,9 @@ class SelectBusDialog : DialogFragment() {
         val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner, items)
         (mBinding.selectName.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
-        mBinding.selectName.editText?.setOnClickListener {
-            mBinding.selectTime.editText?.text?.clear()
-            mBinding.selectTime.isEnabled = false
-        }
-
-        mBinding.selectName.editText?.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Toast.makeText(requireContext(), s.toString(), Toast.LENGTH_SHORT).show()
-                initSpinnerTime(s.toString(), list)
-                mBinding.selectBtn.isEnabled = true
-
-            }
-        })
+        mBinding.selectBtn.isEnabled = true
 
     }
-
-    private fun initSpinnerTime(selectedName: String, list: ArrayList<BusInfo>) {
-        val timingList: ArrayList<String> = ArrayList()
-        mBinding.selectTime.isEnabled = true
-        for (busInfo: BusInfo in list) {
-            if (busInfo.name == selectedName) {
-                for (timing: BusTiming in busInfo.timing) {
-                    timingList.add(timing.startTime)
-                }
-                break
-            }
-        }
-        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner, timingList)
-        (mBinding.selectTime.editText as? AutoCompleteTextView)?.setAdapter(adapter)
-    }
-
 
     override fun onStart() {
         super.onStart()

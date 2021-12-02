@@ -1,4 +1,4 @@
-package com.pixieium.austtravels.notification
+package com.pixieium.austtravels.utils.notification
 
 import android.annotation.SuppressLint
 import android.app.Notification

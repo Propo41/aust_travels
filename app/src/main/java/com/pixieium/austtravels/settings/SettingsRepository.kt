@@ -8,10 +8,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.pixieium.austtravels.models.BusInfo
-import com.pixieium.austtravels.models.BusTiming
-import com.pixieium.austtravels.models.Payload
-import com.pixieium.austtravels.models.UserSettings
+import com.pixieium.austtravels.models.*
 import kotlinx.coroutines.tasks.await
 
 class SettingsRepository {

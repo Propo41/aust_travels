@@ -33,12 +33,14 @@ import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
+import com.pixieium.austtravels.AustTravel
 import com.pixieium.austtravels.BuildConfig
 import com.pixieium.austtravels.home.dialog.ProminentDisclosureDialog
 import com.pixieium.austtravels.home.dialog.SelectBusDialog
 import com.pixieium.austtravels.home.services.ForegroundOnlyLocationService
 import com.pixieium.austtravels.models.Volunteer
 import com.pixieium.austtravels.settings.SettingsActivity
+import com.pixieium.austtravels.utils.Constant
 import com.pixieium.austtravels.utils.Constant.MSG_START_TIMER
 import com.pixieium.austtravels.utils.Constant.MSG_STOP_TIMER
 import com.pixieium.austtravels.utils.Constant.REQUEST_DIRECTIONS
@@ -323,6 +325,7 @@ class HomeActivity : AppCompatActivity(),
     }
 
     private fun startLocationSharing() {
+
         updateUiForLocationSharing(true)
         foregroundOnlyLocationService?.subscribeToLocationUpdates()
             ?: Log.d(TAG, "Service Not Bound")
@@ -332,6 +335,29 @@ class HomeActivity : AppCompatActivity(),
             "Location sharing started. Yay! Keep it going",
             Toast.LENGTH_SHORT
         ).show()
+
+        // Notification will not send to user, who currently sharing location. Resubscribe again when stopped sharing location
+        FirebaseMessaging.getInstance()
+            .unsubscribeFromTopic("${mSelectedBusName}${Constant.USER_NOTIFY}")
+            .addOnSuccessListener {
+                // Notify other users of this bus about sharing
+                lifecycleScope.launch {
+                    try {
+                        // TODO: Update title & message
+                        AustTravel.notificationApi().notifyUsers(
+                            "${mSelectedBusName}${Constant.USER_NOTIFY}",
+                            "title",
+                            "message"
+                        )
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            this@HomeActivity,
+                            e.localizedMessage,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
     }
 
     private fun stopLocationSharing() {
@@ -343,6 +369,10 @@ class HomeActivity : AppCompatActivity(),
             "Location sharing turned off. Thank you for your contribution!",
             Toast.LENGTH_SHORT
         ).show()
+
+        // Resubscribe again when stopped sharing location sharing
+        FirebaseMessaging.getInstance()
+            .subscribeToTopic("${mSelectedBusName}${Constant.USER_NOTIFY}")
     }
 
     fun onLiveTrackBusClick(view: View) {
@@ -368,6 +398,7 @@ class HomeActivity : AppCompatActivity(),
         if (isLocationSharing) {
             // if foreground location is already being shared, then stop it
             stopLocationSharing()
+
         } else {
             if (foregroundPermissionApproved()) {
                 // open dialog to select bus

@@ -1,6 +1,5 @@
-package com.pixieium.austtravels.notification
+package com.pixieium.austtravels.utils.notification
 
-import com.squareup.okhttp.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Query
 

@@ -42,7 +42,7 @@ import com.pixieium.austtravels.AustTravel
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
-import com.pixieium.austtravels.home.ProminentDisclosureDialog
+import com.pixieium.austtravels.home.dialog.ProminentDisclosureDialog
 import com.pixieium.austtravels.models.Route
 import com.pixieium.austtravels.utils.Constant.PACKAGE_NAME
 import kotlinx.coroutines.launch
@@ -196,7 +196,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
                     AustTravel.notificationApi().notifyVolunteers(
                         mSelectedBusName,
                         "Somebody needs help",
-                        "A fellow traveler wants to know where your bus, $mSelectedBusName is located. You might wanna help them!"
+                        "A fellow traveler wants to know where your bus, $mSelectedBusName of $mSelectedBusTime is located. You might wanna help them out!"
                     )
                 } catch (e: Exception) {
                     Toast.makeText(

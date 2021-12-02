@@ -11,9 +11,11 @@ import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
 import com.pixieium.austtravels.models.Payload
+import com.pixieium.austtravels.models.UserSettings
 import kotlinx.coroutines.tasks.await
 
 class SettingsRepository {
+
     suspend fun createVolunteer(uid: String, busName: String, contact: String): Payload {
         return try {
             val database = Firebase.database
@@ -23,7 +25,7 @@ class SettingsRepository {
             if (!snap.exists()) {
                 val childUpdates = hashMapOf<String, Any?>(
                     "/volunteers/${uid}/status" to false,
-                    "/volunteers/${uid}/busName" to busName,
+                    "/users/${uid}/settings/primaryBus" to busName,
                     "/volunteers/${uid}/contact" to contact,
                 )
                 database.reference.updateChildren(childUpdates).await()
@@ -101,6 +103,51 @@ class SettingsRepository {
             }
         }
         return list
+    }
+
+    suspend fun getUserSettings(mUid: String): UserSettings? {
+        return try {
+            val database = Firebase.database
+            val snapshot = database.getReference("users/$mUid/settings").get().await();
+            if (snapshot.exists()) {
+                snapshot.getValue<UserSettings>()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    fun updatePrimaryBus(mUid: String, busName: String) {
+        try {
+            val database = Firebase.database
+            database.getReference("users/$mUid/settings/primaryBus").setValue(busName)
+        } catch (e: Exception) {
+            e.printStackTrace()
+
+        }
+
+    }
+
+    fun updatePingNotificationSettings(mUid: String, checked: Boolean) {
+        try {
+            val database = Firebase.database
+            database.getReference("users/$mUid/settings/isPingNotification").setValue(checked)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun updateLocationNotificationSettings(mUid: String, checked: Boolean) {
+        try {
+            val database = Firebase.database
+            database.getReference("users/$mUid/settings/isLocationNotification").setValue(checked)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
 

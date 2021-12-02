@@ -5,6 +5,7 @@ import com.google.firebase.database.Exclude;
 public class Volunteer extends UserInfo {
     private Long totalContribution;
     private boolean status;
+    private String contact;
     @Exclude
     private String totalContributionFormatted;
 
@@ -26,10 +27,20 @@ public class Volunteer extends UserInfo {
 
     }
 
-    public Volunteer(UserInfo userInfo, Long totalContribution) {
+    public Volunteer(UserInfo userInfo, Long totalContribution, String contact) {
         super(userInfo.getEmail(), userInfo.getName(), userInfo.getSemester(),
                 userInfo.getDepartment(), userInfo.getUniversityId(), userInfo.getUserImage());
         this.totalContribution = totalContribution;
+        this.contact = contact;
+    }
+
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 
     public String getTotalContributionFormatted() {

@@ -1,4 +1,4 @@
-package com.pixieium.austtravels.settings
+package com.pixieium.austtravels.settings.dialog
 
 import android.content.Context
 import android.os.Bundle
@@ -8,24 +8,24 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import com.pixieium.austtravels.R
-import com.pixieium.austtravels.databinding.DialogReAuthenticateBinding
+import com.pixieium.austtravels.databinding.DialogWarningBinding
 
-class ReAuthenticateDialog : DialogFragment() {
+class DeleteConfirmationDialog : DialogFragment() {
 
     private lateinit var mContext: Context
-    private lateinit var mBinding: DialogReAuthenticateBinding
+    private lateinit var mBinding: DialogWarningBinding
     private var listener: FragmentListener? = null
 
     companion object {
-        const val TAG = "ReAuthenticateDialog"
+        const val TAG = "DeleteConfirmationDialog"
 
-        fun newInstance(): ReAuthenticateDialog {
-            return ReAuthenticateDialog()
+        fun newInstance(): DeleteConfirmationDialog {
+            return DeleteConfirmationDialog()
         }
     }
 
     interface FragmentListener {
-        fun onEnterPassword(password: String)
+        fun onDeleteConfirmClick()
     }
 
     /**
@@ -36,12 +36,11 @@ class ReAuthenticateDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = DialogReAuthenticateBinding.inflate(layoutInflater)
+        mBinding = DialogWarningBinding.inflate(layoutInflater)
         mContext = mBinding.root.context
 
-        mBinding.enterBtn.setOnClickListener {
-            val password = mBinding.password.editText?.text.toString()
-            listener?.onEnterPassword(password)
+        mBinding.confirmBtn.setOnClickListener {
+            listener?.onDeleteConfirmClick()
             dismiss()
         }
         return mBinding.root

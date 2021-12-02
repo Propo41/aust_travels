@@ -37,7 +37,7 @@
     <string name="time_6_45_am"><b>Time</b>: %s</string>
     <string name="currently_sharing_location"><b>You are currently sharing you location for %s:%s</b></string>
     <string name="stop_sharing_location">STOP SHARING LOCATION</string>
-    <string name="become_a_volunteer">BECOME A VOLUNTEER</string>
+    <string name="become_a_volunteer">Become a volunteer</string>
     <string name="volunteer_prompt_select_bus">Choose the <b>primary</b> bus that you travel in</string>
     <string name="volunteer_prompt_phone">Enter your contact number. <b>We won’t share your contact with anyone.</b> We’ll use this information only when it’s urgent</string>
     <string name="volunteer_prompt">By becoming a volunteer, you will be responsible for sharing your location <b>ONLY</b> when you are on the bus. Your location data will be continuously shared with other relevant users while your location sharing is active.<br /><br /> <b>Do you wish to continue?</b></string>
@@ -91,4 +91,28 @@
     <string name="no_location_text">No current location</string>
     <string name="sharing_location_prompt">You are currently sharing your location in the background</string>
     <string name="re_position_bus">Re-position bus</string>
+    <string name="title_activity_settings2">SettingsActivity2</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="contributors">Contributors</string>
+    <string name="primary_bus">Primary Bus</string>
+    <string name="primary_bus_value">Currently set to: %s</string>
+    <string name="location_notifications">Location Notifications</string>
+    <string name="if_you_don_t_want_to_receive_any_notifications_when_someone_is_sharing_their_location_turn_this_off">If you don’t want to receive any notifications when someone is sharing their location, turn this off</string>
+    <string name="if_you_don_t_want_to_receive_any_ping_notifications_turn_this_off">If you don’t want to receive any ping notifications, turn this off</string>
+    <string name="ping_notifications">Ping Notifications</string>
+    <string name="change">change</string>
 </resources>

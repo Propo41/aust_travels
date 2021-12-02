@@ -30,13 +30,14 @@ import kotlinx.coroutines.launch
 import android.content.*
 import android.os.IBinder
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
 import com.pixieium.austtravels.BuildConfig
+import com.pixieium.austtravels.home.dialog.ProminentDisclosureDialog
+import com.pixieium.austtravels.home.dialog.SelectBusDialog
 import com.pixieium.austtravels.home.services.ForegroundOnlyLocationService
+import com.pixieium.austtravels.models.Volunteer
 import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.utils.Constant.MSG_START_TIMER
 import com.pixieium.austtravels.utils.Constant.MSG_STOP_TIMER
@@ -58,7 +59,8 @@ class HomeActivity : AppCompatActivity(),
     private lateinit var mSelectedBusTime: String
 
     private lateinit var mUid: String
-    private var mIsVolunteer: Boolean = false
+
+    private var mVolunteer: Volunteer? = Volunteer()
 
     private lateinit var mStopwatchHandler: StopwatchHandler
 
@@ -105,7 +107,11 @@ class HomeActivity : AppCompatActivity(),
         }
 
         lifecycleScope.launch {
-            checkVolunteerStatus()
+            mVolunteer = mDatabase.getVolunteerInfo(mUid)
+            val primaryBus = mDatabase.getUserPrimaryBus(mUid)
+            if (mVolunteer != null) {
+                updateVolunteerSubscription(primaryBus)
+            }
         }
 
         if (isLocationSharing) {
@@ -116,31 +122,25 @@ class HomeActivity : AppCompatActivity(),
         }
     }
 
-    private suspend fun checkVolunteerStatus() {
-        mIsVolunteer = mDatabase.isVolunteer(mUid)
-
-        if (!mIsVolunteer) {
+    private fun updateVolunteerSubscription(primaryBus: String?) {
+        if (!mVolunteer!!.isStatus) {
             binding.shareLocation.visibility = View.GONE
-
-            // If we remove someone from volunteer list, then we will unsubscribe the user from bus notification
-            val busName = mDatabase.busNameOfVolunteer(mUid);
-            busName?.let {
+            // if the volunteer is disabled
+            primaryBus?.let {
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(it).addOnSuccessListener {
-                    Log.d("unsubscribeFromTopic -", busName)
+                    Log.d("unsubscribeFromTopic -", primaryBus)
                 }
             }
-
         } else {
             binding.shareLocation.visibility = View.VISIBLE
             // subscribe the user to bus notification
-            val busName = mDatabase.busNameOfVolunteer(mUid);
-            busName?.let {
+            primaryBus?.let {
                 // Show for the first time
                 FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
                     if (!isShowToastAboutPing()) {
                         Snackbar.make(
                             binding.root,
-                            "You will receive ping notifications from $busName whenever someone pings you.",
+                            "You will receive ping notifications from $primaryBus whenever someone pings you.",
                             Snackbar.LENGTH_LONG
                         ).show()
                         saveShowPingState(true)
@@ -148,7 +148,6 @@ class HomeActivity : AppCompatActivity(),
                 }
             }
         }
-
     }
 
     private fun isShowToastAboutPing(): Boolean {
@@ -292,6 +291,7 @@ class HomeActivity : AppCompatActivity(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.settings) {
             val intent = Intent(this, SettingsActivity::class.java)
+            intent.putExtra("IS_VOLUNTEER", mVolunteer?.isStatus)
             startActivity(intent)
             return true
         }

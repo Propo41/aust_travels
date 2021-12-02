@@ -1,4 +1,4 @@
-package com.pixieium.austtravels.notification
+package com.pixieium.austtravels.utils.notification
 
 import android.content.Intent
 import android.util.Log

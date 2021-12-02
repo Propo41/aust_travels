@@ -9,6 +9,7 @@ import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
 import com.pixieium.austtravels.models.UserInfo
+import com.pixieium.austtravels.models.Volunteer
 import kotlinx.coroutines.tasks.await
 
 class HomeRepository {
@@ -36,33 +37,33 @@ class HomeRepository {
         return list
     }
 
-
-    suspend fun isVolunteer(uid: String): Boolean {
+    suspend fun getVolunteerInfo(uid: String): Volunteer? {
         try {
             val database = Firebase.database
-            val snapshot = database.getReference("volunteers/$uid/status").get().await()
+            val snapshot = database.getReference("volunteers/$uid").get().await()
             if (snapshot.exists() && snapshot != null) {
-                return snapshot.getValue<Boolean>() == true
+                return snapshot.getValue<Volunteer>()
             }
         } catch (e: Exception) {
-            return false
-        }
-        return false
-    }
-
-    suspend fun busNameOfVolunteer(uid: String): String? {
-        try {
-            val database = Firebase.database
-            val snapshot = database.getReference("volunteers/$uid/busName").get().await()
-            if (snapshot.exists() && snapshot != null) {
-                return snapshot.getValue<String>()
-            }
-        } catch (e: Exception) {
+            e.printStackTrace()
             return null
         }
         return null
     }
 
+    suspend fun getUserPrimaryBus(uid: String): String? {
+        try {
+            val database = Firebase.database
+            val snapshot = database.getReference("users/$uid/primaryBus").get().await()
+            if (snapshot.exists() && snapshot != null) {
+                return snapshot.getValue<String>()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+        return null
+    }
 
     fun updateLocation(
         uid: String,
@@ -93,9 +94,20 @@ class HomeRepository {
     }
 
     fun updateContribution(totalTimeElapsed: Long) {
-        val uid = Firebase.auth.currentUser?.uid
+        // get the previous contribution first and then append
         val database = Firebase.database
-        database.getReference("volunteers/$uid/totalContribution").setValue(totalTimeElapsed)
+        val uid = Firebase.auth.currentUser?.uid
+        database.getReference("volunteers/$uid/totalContribution").get().addOnSuccessListener {
+            if (it.exists() && it != null) {
+                val prevTime: Long = it.value as Long
+                database.getReference("volunteers/$uid/totalContribution")
+                    .setValue(totalTimeElapsed + prevTime)
+            }else{
+                database.getReference("volunteers/$uid/totalContribution")
+                    .setValue(totalTimeElapsed)
+            }
+        }
+
     }
 
 }

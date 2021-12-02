@@ -1,4 +1,4 @@
-package com.pixieium.austtravels.settings
+package com.pixieium.austtravels.home.dialog
 
 import android.content.Context
 import android.os.Bundle
@@ -8,25 +8,24 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import com.pixieium.austtravels.R
-import com.pixieium.austtravels.databinding.DialogReAuthenticateBinding
-import com.pixieium.austtravels.databinding.DialogWarningBinding
+import com.pixieium.austtravels.databinding.DialogProminentDisclosureBinding
 
-class DeleteConfirmationDialog : DialogFragment() {
+
+class ProminentDisclosureDialog : DialogFragment() {
 
     private lateinit var mContext: Context
-    private lateinit var mBinding: DialogWarningBinding
+    private lateinit var mBinding: DialogProminentDisclosureBinding
     private var listener: FragmentListener? = null
 
     companion object {
-        const val TAG = "DeleteConfirmationDialog"
-
-        fun newInstance(): DeleteConfirmationDialog {
-            return DeleteConfirmationDialog()
+        const val TAG = "ProminentDisclosureDialogFragment"
+        fun newInstance(): ProminentDisclosureDialog {
+            return ProminentDisclosureDialog()
         }
     }
 
     interface FragmentListener {
-        fun onDeleteConfirmClick()
+        fun onDisclosureAcceptClick()
     }
 
     /**
@@ -37,22 +36,17 @@ class DeleteConfirmationDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = DialogWarningBinding.inflate(layoutInflater)
+        mBinding = DialogProminentDisclosureBinding.inflate(layoutInflater)
         mContext = mBinding.root.context
+        mBinding.disclosureContinueBtn.setOnClickListener {
+            listener?.onDisclosureAcceptClick()
+            dismiss()
+        }
 
-        mBinding.confirmBtn.setOnClickListener {
-            listener?.onDeleteConfirmClick()
+        mBinding.disclosureDismissBtn.setOnClickListener {
             dismiss()
         }
         return mBinding.root
-    }
-
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
-        )
     }
 
     override fun onAttach(context: Context) {
@@ -67,6 +61,14 @@ class DeleteConfirmationDialog : DialogFragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
     }
 
     override fun getTheme() = R.style.RoundedCornersDialog

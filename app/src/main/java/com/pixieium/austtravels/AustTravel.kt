@@ -1,10 +1,9 @@
 package com.pixieium.austtravels
 
 import android.app.Application
-import android.widget.Toast
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
-import com.pixieium.austtravels.notification.NotificationApi
+import com.pixieium.austtravels.utils.notification.NotificationApi
 import com.pixieium.austtravels.utils.Constant
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -1,10 +1,8 @@
-package com.pixieium.austtravels.settings
+package com.pixieium.austtravels.settings.dialog
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +13,9 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.pixieium.austtravels.R
-import com.pixieium.austtravels.databinding.DialogPromptVolunteerBinding
 import com.pixieium.austtravels.databinding.DialogPromptVolunteerInfoBinding
-import com.pixieium.austtravels.home.HomeRepository
 import com.pixieium.austtravels.models.BusInfo
+import com.pixieium.austtravels.settings.SettingsRepository
 import kotlinx.coroutines.launch
 
 

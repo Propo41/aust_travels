@@ -1,5 +1,5 @@
-# Firebase FCM Admin for iOS Android
+# Firebase FCM Admin for Android
 - Send topic message to both iOS and Android with different payload for each using single request
 
-# Project Status
-  Planning to add more examples in future !
+
+

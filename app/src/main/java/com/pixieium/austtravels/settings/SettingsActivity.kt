@@ -17,6 +17,7 @@ import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivitySettingsBinding
 import com.pixieium.austtravels.models.UserSettings
+import com.pixieium.austtravels.privacyAndPolicy.PrivacyPolicyActivity
 import com.pixieium.austtravels.settings.dialog.*
 import com.pixieium.austtravels.utils.Constant
 import kotlinx.coroutines.launch
@@ -197,6 +198,9 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
     }
 
     fun onPrivacyClick(view: View) {
+        val intent = Intent(this, PrivacyPolicyActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
         Toast.makeText(this, "Under construction!", Toast.LENGTH_SHORT).show()
     }
 

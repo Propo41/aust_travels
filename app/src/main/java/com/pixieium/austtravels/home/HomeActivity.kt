@@ -59,6 +59,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.pixieium.austtravels.utils.Constant.PACKAGE_NAME
 
 
 class HomeActivity : AppCompatActivity(),
@@ -200,14 +201,14 @@ class HomeActivity : AppCompatActivity(),
 
     private fun isShowToastAboutPing(): Boolean {
         val prefs: SharedPreferences = this.getSharedPreferences(
-            "com.pixieium.austtravels", MODE_PRIVATE
+            PACKAGE_NAME, MODE_PRIVATE
         )
         return prefs.getBoolean("isAlreadySeen", false)
     }
 
     private fun saveShowPingState(state: Boolean) {
         val prefs = getSharedPreferences(
-            "com.pixieium.austtravels", MODE_PRIVATE
+            PACKAGE_NAME, MODE_PRIVATE
         )
         val editor = prefs.edit()
         editor.putBoolean("isAlreadySeen", state)

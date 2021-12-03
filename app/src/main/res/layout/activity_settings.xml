@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context=".settings.SettingsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -90,6 +91,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/window_margin"
+                android:visibility="gone"
                 android:paddingTop="@dimen/item_spacing_med"
                 android:paddingEnd="@dimen/window_margin"
                 android:paddingBottom="@dimen/item_spacing_med"
@@ -129,7 +131,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:thumbTint="@color/orange"
-                    app:trackTint="@color/light_ash" />
+                    app:trackTint="@color/orange_light" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
@@ -181,12 +183,12 @@
                     android:id="@+id/locationNotificationSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="true"
+                    android:checked="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:thumbTint="@color/green_dark"
-                    app:trackTint="@color/light_ash_dark" />
+                    app:trackTint="@color/green_light" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -264,6 +266,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
+                android:onClick="onPrivacyClick"
                 android:foreground="?attr/selectableItemBackground"
                 android:paddingStart="@dimen/window_margin"
                 android:paddingTop="@dimen/item_spacing_med"

@@ -3,9 +3,10 @@ package com.pixieium.austtravels.utils
 object Constant {
 
     const val GENERAL_NOTIFICATION = "general"
+    const val USER_NOTIFY = "_USER"
 
     // add / at the end i.e. https://address.url/
-    const val BASE_URL = "https://aust-travel-test.herokuapp.com/"
+    const val BASE_URL = "https://aust-travels.herokuapp.com/"
 
     // home activity
     const val REQUEST_LIVE_TRACK = 0

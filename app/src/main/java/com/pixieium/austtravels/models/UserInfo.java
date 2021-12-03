@@ -38,9 +38,10 @@ public class UserInfo {
         this.password = password;
     }
 
-    public UserInfo(String email, String userImage) {
+    public UserInfo(String email, String userImage, String name) {
         this.email = email;
         this.userImage = userImage;
+        this.name = name;
 
     }
 

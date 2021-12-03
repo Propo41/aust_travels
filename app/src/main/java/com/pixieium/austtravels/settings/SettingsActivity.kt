@@ -11,12 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.Constants
 import com.google.firebase.messaging.FirebaseMessaging
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivitySettingsBinding
 import com.pixieium.austtravels.models.UserSettings
 import com.pixieium.austtravels.settings.dialog.*
+import com.pixieium.austtravels.utils.Constant
 import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
@@ -44,13 +46,12 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
         lifecycleScope.launch {
             mUserSettings = mDatabase.getUserSettings(mUid)
             if (mUserSettings == null) {
-                mUserSettings = UserSettings()
-                Toast.makeText(
-                    this@SettingsActivity,
-                    "Something went wrong. Couldn't fetch your settings from the server!",
-                    Toast.LENGTH_SHORT
-                ).show()
+                mUserSettings = UserSettings(true, false, "None")
             }
+
+            Log.d(TAG, mUserSettings?.pingNotification.toString())
+            Log.d(TAG, mUserSettings?.locationNotification.toString())
+            Log.d(TAG, mUserSettings?.primaryBus.toString())
 
             updateUi(isVolunteer)
         }
@@ -60,15 +61,22 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
 
     private fun updateUi(isVolunteer: Boolean?) {
         try {
+            mBinding.locationNotificationSwitch.isChecked =
+                mUserSettings?.locationNotification == true
+
+            mBinding.primaryBusVal.text =
+                getString(R.string.primary_bus_value, mUserSettings?.primaryBus)
+
             if (isVolunteer != null && !isVolunteer) {
-                mBinding.pingNotificationSwitch.visibility = View.GONE
+                // if user is not a volunteer
+                mBinding.pingNotificationContainer.visibility = View.GONE
+                mBinding.becomeVolunteerBtn.visibility = View.VISIBLE
             } else {
+                // if user is a volunteer
+                // todo: add a button to stop being a volunteer
                 mBinding.becomeVolunteerBtn.visibility = View.GONE
                 mBinding.pingNotificationSwitch.isChecked = mUserSettings?.pingNotification == true
-                mBinding.locationNotificationSwitch.isChecked =
-                    mUserSettings?.locationNotification == true
-                mBinding.primaryBusVal.text =
-                    getString(R.string.primary_bus_value, mUserSettings?.primaryBus)
+                mBinding.pingNotificationContainer.visibility = View.VISIBLE
             }
 
         } catch (e: Exception) {
@@ -135,14 +143,36 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
                 val xx = mBinding.locationNotificationSwitch.isChecked
                 mDatabase.updateLocationNotificationSettings(mUid, xx)
                 if (xx) {
-                    // todo: subscribe user
-
+                    subscribeUserLocationUpdates()
                 } else {
-                    // todo: un-subscribe user
+                    unSubscribeUserLocationUpdates()
                 }
             }
-
         }
+    }
+
+    private fun unSubscribeUserLocationUpdates() {
+        FirebaseMessaging.getInstance()
+            .unsubscribeFromTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
+            .addOnSuccessListener {
+                Snackbar.make(
+                    mBinding.root,
+                    "You will now stop receiving any sorts of location updates",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+    }
+
+    private fun subscribeUserLocationUpdates() {
+        FirebaseMessaging.getInstance()
+            .subscribeToTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
+            .addOnSuccessListener {
+                Snackbar.make(
+                    mBinding.root,
+                    "You will now receive notifications about ${mUserSettings!!.primaryBus} whenever someone shares their location.",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -165,7 +195,9 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             .show(supportFragmentManager, ReAuthenticateDialog.TAG)
     }
 
-    fun onPrivacyClick(view: View) {}
+    fun onPrivacyClick(view: View) {
+        Toast.makeText(this, "Under construction!", Toast.LENGTH_SHORT).show()
+    }
 
     fun onBecomeVolunteerClick(view: View) {
         PromptVolunteerDialog.newInstance()
@@ -232,13 +264,16 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             .show(supportFragmentManager, SelectBusDialog.TAG)
     }
 
-    fun onContributorsClick(view: View) {}
+    fun onContributorsClick(view: View) {
+        Toast.makeText(this, "Under construction!", Toast.LENGTH_SHORT).show()
+    }
 
     override fun onBusSelectClick(selectedBusName: String) {
         mDatabase.updatePrimaryBus(mUid, selectedBusName)
         mUserSettings?.primaryBus = selectedBusName
         mBinding.primaryBusVal.text = getString(R.string.primary_bus_value, selectedBusName)
         updatePingSubscription(selectedBusName)
+        subscribeUserLocationUpdates()
     }
 
 

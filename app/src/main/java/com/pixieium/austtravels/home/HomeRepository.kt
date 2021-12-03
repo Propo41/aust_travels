@@ -82,13 +82,28 @@ class HomeRepository {
 
     }
 
-    fun getUserInfo(): UserInfo? {
+    suspend fun getUserInfo(): UserInfo? {
+
+        val database = Firebase.database
+        val uid = Firebase.auth.currentUser?.uid
+        val snap = database.getReference("users/$uid/name").get().await()
+
+        var name: String? = ""
+        if (snap.exists()) {
+            name = snap.value as String?
+            if (name == null) {
+                name = "Somebody"
+            }
+        } else {
+            name = "Somebody"
+        }
+
         val user = Firebase.auth.currentUser
         user?.let {
             // Name, email address, and profile photo Url
             val email = user.email
             val photoUrl = user.photoUrl
-            return UserInfo(email, photoUrl.toString())
+            return UserInfo(email, photoUrl.toString(), name)
         }
         return null
     }
@@ -102,7 +117,7 @@ class HomeRepository {
                 val prevTime: Long = it.value as Long
                 database.getReference("volunteers/$uid/totalContribution")
                     .setValue(totalTimeElapsed + prevTime)
-            }else{
+            } else {
                 database.getReference("volunteers/$uid/totalContribution")
                     .setValue(totalTimeElapsed)
             }

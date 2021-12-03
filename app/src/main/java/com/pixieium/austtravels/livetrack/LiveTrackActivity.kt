@@ -15,6 +15,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -33,17 +34,20 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.pixieium.austtravels.AustTravel
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
 import com.pixieium.austtravels.home.dialog.ProminentDisclosureDialog
 import com.pixieium.austtravels.models.Route
+import com.pixieium.austtravels.utils.Constant
 import com.pixieium.austtravels.utils.Constant.PACKAGE_NAME
 import kotlinx.coroutines.launch
 import java.util.*
@@ -89,7 +93,6 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         binding.sec.text = getString(R.string.selected_bus, mSelectedBusName)
         // bus start time
         binding.start.text = getString(R.string.starting_time, mSelectedBusTime)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

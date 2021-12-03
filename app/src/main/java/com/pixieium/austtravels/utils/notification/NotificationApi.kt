@@ -11,5 +11,12 @@ interface NotificationApi {
         @Query("bus") busName: String,
         @Query("title") title: String,
         @Query("message") message: String
-    ): Unit
+    )
+
+    @GET("send-users")
+    suspend fun notifyUsers(
+        @Query("bus") busName: String,
+        @Query("title") title: String,
+        @Query("message") message: String
+    )
 }

@@ -46,13 +46,17 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
         lifecycleScope.launch {
             mUserSettings = mDatabase.getUserSettings(mUid)
             if (mUserSettings == null) {
-                mUserSettings = UserSettings()
+                mUserSettings = UserSettings(true, false, "None")
                 Toast.makeText(
                     this@SettingsActivity,
                     "Something went wrong. Couldn't fetch your settings from the server!",
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
+            Log.d(TAG, mUserSettings?.pingNotification.toString())
+            Log.d(TAG, mUserSettings?.locationNotification.toString())
+            Log.d(TAG, mUserSettings?.primaryBus.toString())
 
             updateUi(isVolunteer)
         }
@@ -62,15 +66,20 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
 
     private fun updateUi(isVolunteer: Boolean?) {
         try {
+            mBinding.locationNotificationSwitch.isChecked =
+                mUserSettings?.locationNotification == true
+
+            mBinding.primaryBusVal.text =
+                getString(R.string.primary_bus_value, mUserSettings?.primaryBus)
+
             if (isVolunteer != null && !isVolunteer) {
-                mBinding.pingNotificationSwitch.visibility = View.GONE
+                // if user is not a volunteer
+                mBinding.pingNotificationContainer.visibility = View.GONE
             } else {
+                // if user is a volunteer
+                // todo: add a button to stop being a volunteer
                 mBinding.becomeVolunteerBtn.visibility = View.GONE
                 mBinding.pingNotificationSwitch.isChecked = mUserSettings?.pingNotification == true
-                mBinding.locationNotificationSwitch.isChecked =
-                    mUserSettings?.locationNotification == true
-                mBinding.primaryBusVal.text =
-                    getString(R.string.primary_bus_value, mUserSettings?.primaryBus)
             }
 
         } catch (e: Exception) {
@@ -183,7 +192,9 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             .show(supportFragmentManager, ReAuthenticateDialog.TAG)
     }
 
-    fun onPrivacyClick(view: View) {}
+    fun onPrivacyClick(view: View) {
+        Toast.makeText(this, "Under construction!", Toast.LENGTH_SHORT).show()
+    }
 
     fun onBecomeVolunteerClick(view: View) {
         PromptVolunteerDialog.newInstance()
@@ -250,7 +261,9 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             .show(supportFragmentManager, SelectBusDialog.TAG)
     }
 
-    fun onContributorsClick(view: View) {}
+    fun onContributorsClick(view: View) {
+        Toast.makeText(this, "Under construction!", Toast.LENGTH_SHORT).show()
+    }
 
     override fun onBusSelectClick(selectedBusName: String) {
         mDatabase.updatePrimaryBus(mUid, selectedBusName)

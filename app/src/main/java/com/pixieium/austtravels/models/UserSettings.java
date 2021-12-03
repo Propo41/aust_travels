@@ -2,32 +2,32 @@ package com.pixieium.austtravels.models;
 
 
 public class UserSettings {
-    private Boolean isPingNotification = true;
-    private Boolean isLocationNotification = false;
-    private String primaryBus = "None";
+    private boolean isPingNotification;
+    private boolean isLocationNotification;
+    private String primaryBus;
 
     public UserSettings() {
     }
 
-    public UserSettings(Boolean isPingNotification, Boolean isLocationNotification, String primaryBus) {
+    public UserSettings(boolean isPingNotification, boolean isLocationNotification, String primaryBus) {
         this.isPingNotification = isPingNotification;
         this.isLocationNotification = isLocationNotification;
         this.primaryBus = primaryBus;
     }
 
-    public Boolean getPingNotification() {
+    public boolean getPingNotification() {
         return isPingNotification;
     }
 
-    public void setPingNotification(Boolean pingNotification) {
+    public void setPingNotification(boolean pingNotification) {
         isPingNotification = pingNotification;
     }
 
-    public Boolean getLocationNotification() {
+    public boolean getLocationNotification() {
         return isLocationNotification;
     }
 
-    public void setLocationNotification(Boolean locationNotification) {
+    public void setLocationNotification(boolean locationNotification) {
         isLocationNotification = locationNotification;
     }
 

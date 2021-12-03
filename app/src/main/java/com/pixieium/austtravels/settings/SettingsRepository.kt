@@ -103,18 +103,32 @@ class SettingsRepository {
     }
 
     suspend fun getUserSettings(mUid: String): UserSettings? {
-        return try {
+        try {
             val database = Firebase.database
-            val snapshot = database.getReference("users/$mUid/settings").get().await();
-            if (snapshot.exists()) {
-                snapshot.getValue<UserSettings>()
+            val snapshot = database.getReference("users/$mUid/settings").get().await()
+            return if (snapshot.exists()) {
+                var pingNotification = snapshot.child("isPingNotification").value as Boolean?
+                var locationNotification =
+                    snapshot.child("isLocationNotification").value as Boolean?
+                var bus = snapshot.child("primaryBus").value as String?
+                if (pingNotification == null) {
+                    pingNotification = true
+                }
+                if (locationNotification == null) {
+                    locationNotification = false
+                }
+                if (bus == null) {
+                    bus = "None"
+                }
+                UserSettings(pingNotification, locationNotification, bus)
             } else {
                 null
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            null
         }
+        return null
+
     }
 
     fun updatePrimaryBus(mUid: String, busName: String) {

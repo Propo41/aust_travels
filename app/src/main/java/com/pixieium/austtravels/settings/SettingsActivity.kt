@@ -199,9 +199,7 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
 
     fun onPrivacyClick(view: View) {
         val intent = Intent(this, PrivacyPolicyActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
-        Toast.makeText(this, "Under construction!", Toast.LENGTH_SHORT).show()
     }
 
     fun onBecomeVolunteerClick(view: View) {

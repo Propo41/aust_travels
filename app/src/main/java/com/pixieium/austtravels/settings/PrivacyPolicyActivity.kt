@@ -1,4 +1,4 @@
-package com.pixieium.austtravels.privacyAndPolicy
+package com.pixieium.austtravels.settings
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

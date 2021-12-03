@@ -55,6 +55,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.util.Log
+import androidx.appcompat.app.AlertDialog
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -500,6 +501,7 @@ class HomeActivity : AppCompatActivity(),
                         .show(supportFragmentManager, SelectBusDialog.TAG)
                 } else {
                     Toast.makeText(this, "You need to enable your GPS!", Toast.LENGTH_SHORT).show()
+                    buildAlertMessageNoGps()
                 }
 
             } else {
@@ -509,6 +511,25 @@ class HomeActivity : AppCompatActivity(),
             }
         }
 
+    }
+
+    private fun buildAlertMessageNoGps() {
+        AlertDialog.Builder(this)
+            .setTitle("Location Permission Needed")
+            .setMessage("This app needs the Location permission, please accept to use location functionality")
+            .setPositiveButton(
+                "OK"
+            ) { _, _ ->
+                // open settings to manually turn on gps
+                startActivity(
+                    Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts("package", this.packageName, null),
+                    ),
+                )
+            }
+            .create()
+            .show()
     }
 
     fun onViewVolunteersClick(view: View) {

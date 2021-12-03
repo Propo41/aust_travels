@@ -28,7 +28,7 @@
     <string name="live_track_bus">LIVE TRACK BUS</string>
     <string name="view_directions">VIEW DIRECTIONS</string>
     <string name="view_routes">VIEW ROUTES</string>
-    <string name="contribute">CONTRIBUTE</string>
+    <string name="contribute">CONTRIBUTION</string>
     <string name="share_location">SHARE LOCATION</string>
     <string name="view_volunteers">VIEW VOLUNTEERS</string>
     <string name="select_bus">SELECT BUS</string>
@@ -115,4 +115,5 @@
     <string name="if_you_don_t_want_to_receive_any_ping_notifications_turn_this_off">If you don’t want to receive any ping notifications, turn this off</string>
     <string name="ping_notifications">Ping Notifications</string>
     <string name="change">change</string>
+    <string name="placeholder_mohammadpur">Mohammadpur</string>
 </resources>

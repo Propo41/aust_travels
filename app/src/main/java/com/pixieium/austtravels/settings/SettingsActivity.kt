@@ -3,7 +3,6 @@ package com.pixieium.austtravels.settings
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -11,13 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.Constants
 import com.google.firebase.messaging.FirebaseMessaging
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivitySettingsBinding
 import com.pixieium.austtravels.models.UserSettings
-import com.pixieium.austtravels.privacyAndPolicy.PrivacyPolicyActivity
 import com.pixieium.austtravels.settings.dialog.*
 import com.pixieium.austtravels.utils.Constant
 import kotlinx.coroutines.launch

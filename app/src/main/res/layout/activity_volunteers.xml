@@ -62,7 +62,7 @@
             </Button>
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/topNameTv"
                 style="@style/TextAppearance.App.Subtitle1"
                 android:layout_width="0dp"
                 android:textAlignment="center"
@@ -71,10 +71,28 @@
                 android:paddingEnd="80dp"
                 android:layout_height="wrap_content"
                 android:text="@string/top_position_name"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/first_time" />
+
+            <TextView
+                android:id="@+id/topRollTv"
+                style="@style/TextAppearance.App.Subtitle1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:paddingStart="80dp"
+                android:paddingEnd="80dp"
+                android:text="@string/top_position_name"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:fontFamily="@font/saira_light"
+                app:layout_constraintTop_toBottomOf="@id/topNameTv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="185dp" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

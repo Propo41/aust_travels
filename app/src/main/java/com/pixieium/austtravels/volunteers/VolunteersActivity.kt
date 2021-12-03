@@ -41,7 +41,9 @@ class VolunteersActivity : AppCompatActivity() {
                 mBinding.topPosition.visibility = View.VISIBLE
                 mBinding.firstPosition.loadSvg(volunteers[0].userImage)
                 mBinding.firstTime.text = volunteers[0].totalContributionFormatted
-                mBinding.textView4.text = volunteers[0].name
+                mBinding.topNameTv.text = volunteers[0].name
+                mBinding.topRollTv.text = volunteers[0].universityId
+
                 volunteers.removeAt(0)
                 initRecyclerView(volunteers)
             } else {

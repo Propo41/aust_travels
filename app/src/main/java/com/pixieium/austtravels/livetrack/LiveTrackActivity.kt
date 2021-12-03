@@ -114,6 +114,8 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         val locListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    binding.floatingActionButton.visibility = View.VISIBLE
+
                     val lat = dataSnapshot.child("lat").value.toString().toDouble()
                     val long = dataSnapshot.child("long").value.toString().toDouble()
                     mBusLocation = LatLng(lat, long)
@@ -122,6 +124,8 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
                     binding.lastUpdated.text =
                         getString(R.string.last_updated, getRelativeTime(lastUpdated.toLong()))
                 } else {
+                    binding.floatingActionButton.visibility = View.GONE
+
                     binding.lastUpdated.text =
                         getString(R.string.last_updated, "Never")
                     // center the map around AUST if no location available
@@ -522,10 +526,16 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
     }
 
     fun onRepositionBusClick(view: View) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mBusLocation))
-        mMap.animateCamera(CameraUpdateFactory.zoomIn());
-        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15F), 2000, null)
-        isFirstTime = false
+        try {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(mBusLocation))
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+            // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(15F), 2000, null)
+            isFirstTime = false
+        } catch (e: IllegalStateException) {
+            Timber.e(e)
+        }
+
+
     }
 }

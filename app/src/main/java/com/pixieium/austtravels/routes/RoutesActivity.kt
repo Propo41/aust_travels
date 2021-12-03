@@ -126,7 +126,6 @@ class RoutesActivity : AppCompatActivity() {
                 mBinding.time.editText?.text?.clear()
                 initSpinnerTime(s.toString(), list)
                 mBinding.select.isEnabled = true
-                Toast.makeText(this@RoutesActivity, "clicked", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -145,6 +144,7 @@ class RoutesActivity : AppCompatActivity() {
         }
         val adapter = ArrayAdapter(baseContext, R.layout.item_spinner, timingList)
         (mBinding.time.editText as? AutoCompleteTextView)?.setAdapter(adapter)
+
     }
 
     private fun initRecyclerView(routeList: ArrayList<Route>) {

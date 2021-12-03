@@ -75,6 +75,30 @@ class HomeRepository {
         return null
     }
 
+    suspend fun setUpLocationNotification(mUid: String): Pair<Boolean?, String?> {
+        try {
+            var isLocationNotificationEnabled: Boolean? = null
+            var primaryBusName: String? = null
+            val database = Firebase.database
+            val snapshot1 =
+                database.getReference("users/$mUid/settings/isLocationNotification").get().await()
+            if (snapshot1.exists() && snapshot1 != null) {
+                isLocationNotificationEnabled = snapshot1.getValue<Boolean>()
+            }
+
+            val snapshot2 = database.getReference("users/$mUid/settings/primaryBus").get().await()
+            if (snapshot2.exists() && snapshot2 != null) {
+                primaryBusName = snapshot2.getValue<String>()
+            }
+
+            return Pair(isLocationNotificationEnabled, primaryBusName)
+
+        } catch (e: Exception) {
+            Timber.e(e, e.localizedMessage)
+            return Pair(false, "")
+        }
+    }
+
     fun updateLocation(
         uid: String,
         mSelectedBusName: String,

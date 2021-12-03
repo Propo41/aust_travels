@@ -47,11 +47,6 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             mUserSettings = mDatabase.getUserSettings(mUid)
             if (mUserSettings == null) {
                 mUserSettings = UserSettings(true, false, "None")
-                Toast.makeText(
-                    this@SettingsActivity,
-                    "Something went wrong. Couldn't fetch your settings from the server!",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
 
             Log.d(TAG, mUserSettings?.pingNotification.toString())
@@ -75,11 +70,13 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             if (isVolunteer != null && !isVolunteer) {
                 // if user is not a volunteer
                 mBinding.pingNotificationContainer.visibility = View.GONE
+                mBinding.becomeVolunteerBtn.visibility = View.VISIBLE
             } else {
                 // if user is a volunteer
                 // todo: add a button to stop being a volunteer
                 mBinding.becomeVolunteerBtn.visibility = View.GONE
                 mBinding.pingNotificationSwitch.isChecked = mUserSettings?.pingNotification == true
+                mBinding.pingNotificationContainer.visibility = View.VISIBLE
             }
 
         } catch (e: Exception) {
@@ -146,30 +143,36 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
                 val xx = mBinding.locationNotificationSwitch.isChecked
                 mDatabase.updateLocationNotificationSettings(mUid, xx)
                 if (xx) {
-                    FirebaseMessaging.getInstance()
-                        .subscribeToTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
-                        .addOnSuccessListener {
-                            Snackbar.make(
-                                mBinding.root,
-                                "You will now receive notifications about ${mUserSettings!!.primaryBus} whenever someone shares their location.",
-                                Snackbar.LENGTH_LONG
-                            ).show()
-                        }
-
+                    subscribeUserLocationUpdates()
                 } else {
-                    FirebaseMessaging.getInstance()
-                        .unsubscribeFromTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
-                        .addOnSuccessListener {
-                            Snackbar.make(
-                                mBinding.root,
-                                "Turn off successfully !",
-                                Snackbar.LENGTH_LONG
-                            ).show()
-                        }
-
+                    unSubscribeUserLocationUpdates()
                 }
             }
         }
+    }
+
+    private fun unSubscribeUserLocationUpdates() {
+        FirebaseMessaging.getInstance()
+            .unsubscribeFromTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
+            .addOnSuccessListener {
+                Snackbar.make(
+                    mBinding.root,
+                    "You will now stop receiving any sorts of location updates",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+    }
+
+    private fun subscribeUserLocationUpdates() {
+        FirebaseMessaging.getInstance()
+            .subscribeToTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
+            .addOnSuccessListener {
+                Snackbar.make(
+                    mBinding.root,
+                    "You will now receive notifications about ${mUserSettings!!.primaryBus} whenever someone shares their location.",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -270,6 +273,7 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
         mUserSettings?.primaryBus = selectedBusName
         mBinding.primaryBusVal.text = getString(R.string.primary_bus_value, selectedBusName)
         updatePingSubscription(selectedBusName)
+        subscribeUserLocationUpdates()
     }
 
 

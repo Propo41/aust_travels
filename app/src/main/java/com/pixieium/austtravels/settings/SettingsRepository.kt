@@ -111,6 +111,7 @@ class SettingsRepository {
                 var locationNotification =
                     snapshot.child("isLocationNotification").value as Boolean?
                 var bus = snapshot.child("primaryBus").value as String?
+
                 if (pingNotification == null) {
                     pingNotification = true
                 }

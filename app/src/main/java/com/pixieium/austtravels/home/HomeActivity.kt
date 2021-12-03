@@ -28,6 +28,7 @@ import com.pixieium.austtravels.routes.RoutesActivity
 import com.pixieium.austtravels.volunteers.VolunteersActivity
 import kotlinx.coroutines.launch
 import android.content.*
+import android.location.LocationManager
 import android.os.IBinder
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -47,6 +48,10 @@ import com.pixieium.austtravels.utils.Constant.REQUEST_DIRECTIONS
 import com.pixieium.austtravels.utils.Constant.REQUEST_LIVE_TRACK
 import com.pixieium.austtravels.utils.Constant.REQUEST_SHARE_LOCATION
 import com.pixieium.austtravels.utils.SharedPreferenceUtil
+import android.content.DialogInterface
+
+import android.content.Intent
+import androidx.appcompat.app.AlertDialog
 
 
 class HomeActivity : AppCompatActivity(),
@@ -61,6 +66,7 @@ class HomeActivity : AppCompatActivity(),
     private lateinit var mSelectedBusTime: String
 
     private lateinit var mUid: String
+    private var mUserInfo: UserInfo? = UserInfo()
 
     private var mVolunteer: Volunteer? = Volunteer()
 
@@ -101,14 +107,14 @@ class HomeActivity : AppCompatActivity(),
 
         mStopwatchHandler = StopwatchHandler(binding.sharingYourLocation)
 
-        val userInfo: UserInfo? = mDatabase.getUserInfo()
-        if (userInfo != null) {
-            binding.loggedInAs.text =
-                getString(R.string.logged_in_as_s, userInfo.email)
-            binding.profileImage.loadSvg(userInfo.userImage)
-        }
-
         lifecycleScope.launch {
+            mUserInfo = mDatabase.getUserInfo()
+            if (mUserInfo != null) {
+                binding.loggedInAs.text =
+                    getString(R.string.logged_in_as_s, mUserInfo?.email)
+                mUserInfo?.userImage?.let { binding.profileImage.loadSvg(it) }
+            }
+
             mVolunteer = mDatabase.getVolunteerInfo(mUid)
             val primaryBus = mDatabase.getUserPrimaryBus(mUid)
             if (mVolunteer != null) {
@@ -324,18 +330,11 @@ class HomeActivity : AppCompatActivity(),
 
     }
 
-    private fun startLocationSharing() {
-
-        updateUiForLocationSharing(true)
-        foregroundOnlyLocationService?.subscribeToLocationUpdates()
-            ?: Log.d(TAG, "Service Not Bound")
-        startStopwatch()
-        Toast.makeText(
-            this@HomeActivity,
-            "Location sharing started. Yay! Keep it going",
-            Toast.LENGTH_SHORT
-        ).show()
-
+    /**
+     * unsubscribes the user who is currently sharing their location to receive any location updates
+     * and send notification to the user users who are subscribed to the selected bus
+     */
+    private fun sendNotificationToSubscribedUsers() {
         // Notification will not send to user, who currently sharing location. Resubscribe again when stopped sharing location
         FirebaseMessaging.getInstance()
             .unsubscribeFromTopic("${mSelectedBusName}${Constant.USER_NOTIFY}")
@@ -343,11 +342,10 @@ class HomeActivity : AppCompatActivity(),
                 // Notify other users of this bus about sharing
                 lifecycleScope.launch {
                     try {
-                        // TODO: Update title & message
                         AustTravel.notificationApi().notifyUsers(
                             "${mSelectedBusName}${Constant.USER_NOTIFY}",
-                            "title",
-                            "message"
+                            "$mSelectedBusName : $mSelectedBusTime is now live",
+                            "${mUserInfo?.name} is sharing their location. Track them now to know where the bus is headed!"
                         )
                     } catch (e: Exception) {
                         Toast.makeText(
@@ -358,6 +356,23 @@ class HomeActivity : AppCompatActivity(),
                     }
                 }
             }
+    }
+
+    private fun startLocationSharing() {
+        try {
+            updateUiForLocationSharing(true)
+            foregroundOnlyLocationService?.subscribeToLocationUpdates()
+                ?: Log.d(TAG, "Service Not Bound")
+            startStopwatch()
+            sendNotificationToSubscribedUsers()
+            Toast.makeText(
+                this@HomeActivity,
+                "Location sharing started. Yay! Keep it going",
+                Toast.LENGTH_SHORT
+            ).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun stopLocationSharing() {
@@ -401,9 +416,14 @@ class HomeActivity : AppCompatActivity(),
 
         } else {
             if (foregroundPermissionApproved()) {
-                // open dialog to select bus
-                SelectBusDialog.newInstance(REQUEST_SHARE_LOCATION)
-                    .show(supportFragmentManager, SelectBusDialog.TAG)
+                if (isGpsOn()) {
+                    // open dialog to select bus
+                    SelectBusDialog.newInstance(REQUEST_SHARE_LOCATION)
+                        .show(supportFragmentManager, SelectBusDialog.TAG)
+                } else {
+                    Toast.makeText(this, "You need to enable your GPS!", Toast.LENGTH_SHORT).show()
+                }
+
             } else {
                 // show prominent disclosure
                 ProminentDisclosureDialog.newInstance()
@@ -412,6 +432,7 @@ class HomeActivity : AppCompatActivity(),
         }
 
     }
+
 
 
     fun onViewVolunteersClick(view: View) {
@@ -470,6 +491,14 @@ class HomeActivity : AppCompatActivity(),
             this,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
+    }
+
+    private fun isGpsOn(): Boolean {
+        val manager: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            return false
+        }
+        return true
     }
 
     private fun requestForegroundPermissions() {

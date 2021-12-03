@@ -136,7 +136,7 @@ class HomeActivity : AppCompatActivity(),
             // if the volunteer is disabled
             primaryBus?.let {
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(it).addOnSuccessListener {
-                    Timber.d("unsubscribeFromTopic -", primaryBus)
+                    Timber.d("unsubscribeFromTopic -$primaryBus")
                 }
             }
         } else {
@@ -237,14 +237,14 @@ class HomeActivity : AppCompatActivity(),
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Timber.d("TAG -", "onRequestPermissionResult")
+        Timber.d("onRequestPermissionResult")
 
         when (requestCode) {
             REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE -> when {
                 grantResults.isEmpty() ->
                     // If user interaction was interrupted, the permission request
                     // is cancelled and you receive empty arrays.
-                    Timber.d(TAG, "User interaction was cancelled.")
+                    Timber.d("User interaction was cancelled.")
 
                 grantResults[0] == PackageManager.PERMISSION_GRANTED ->
                     // Permission was granted.
@@ -317,8 +317,8 @@ class HomeActivity : AppCompatActivity(),
                 mSelectedBusName = selectedBusName
                 mSelectedBusTime = selectedBusTime
 
-                Timber.d(TAG, mSelectedBusName)
-                Timber.d(TAG, mSelectedBusTime)
+                Timber.d(mSelectedBusName)
+                Timber.d(mSelectedBusTime)
 
                 startLocationSharing()
             }
@@ -364,7 +364,7 @@ class HomeActivity : AppCompatActivity(),
         try {
             updateUiForLocationSharing(true)
             foregroundOnlyLocationService?.subscribeToLocationUpdates()
-                ?: Timber.d(TAG, "Service Not Bound")
+                ?: Timber.d("Service Not Bound")
 
             startStopwatch()
             sendNotificationToSubscribedUsers()
@@ -524,7 +524,7 @@ class HomeActivity : AppCompatActivity(),
                 }
                 .show()
         } else {
-            Timber.d(TAG, "Request foreground only permission")
+            Timber.d("Request foreground only permission")
             ActivityCompat.requestPermissions(
                 this@HomeActivity,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),

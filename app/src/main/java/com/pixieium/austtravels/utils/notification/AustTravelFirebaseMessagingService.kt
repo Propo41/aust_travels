@@ -16,20 +16,20 @@ import timber.log.Timber
 class AustTravelFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(refreshedToken: String) {
         super.onNewToken(refreshedToken)
-        Timber.d(TAG, "Refreshed token: $refreshedToken")
+        Timber.d("Refreshed token: $refreshedToken")
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Timber.d(TAG, "From: " + remoteMessage.from)
+        Timber.d("From: " + remoteMessage.from)
 
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
-            Timber.d(TAG, "Message data payload: " + remoteMessage.data)
+            Timber.d("Message data payload: " + remoteMessage.data)
             val data = remoteMessage.data
             handleData(data)
         } else if (remoteMessage.notification != null) {
             Timber.d(
-                TAG, "Message Notification Body: " + remoteMessage.notification!!
+                "Message Notification Body: " + remoteMessage.notification!!
                     .body
             )
 
@@ -61,7 +61,7 @@ class AustTravelFirebaseMessagingService : FirebaseMessagingService() {
         notificationModel.action = action
         notificationModel.actionDestination = actionDestination
 
-        Timber.d("notificationModel", notificationModel.toString())
+        Timber.d(notificationModel.toString())
 
         val resultIntent = Intent(applicationContext, MainActivity::class.java)
         val notificationUtils = NotificationUtils(applicationContext)

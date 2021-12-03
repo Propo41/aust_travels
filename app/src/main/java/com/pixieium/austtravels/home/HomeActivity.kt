@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 import android.content.*
 import android.location.LocationManager
 import android.os.IBinder
-import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
@@ -51,7 +50,15 @@ import com.pixieium.austtravels.utils.SharedPreferenceUtil
 
 import android.content.Intent
 import timber.log.Timber
-import java.sql.Time
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.util.Log
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 
 
 class HomeActivity : AppCompatActivity(),
@@ -82,6 +89,8 @@ class HomeActivity : AppCompatActivity(),
     private lateinit var foregroundOnlyBroadcastReceiver: HomeActivity.ForegroundOnlyBroadcastReceiver
     private lateinit var sharedPreferences: SharedPreferences
 
+    private var mIsGpsOn: Boolean = false
+
     // Monitors connection to the while-in-use service.
     private val foregroundOnlyServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
@@ -102,6 +111,8 @@ class HomeActivity : AppCompatActivity(),
         setContentView(binding.root)
         mUid = Firebase.auth.currentUser?.uid.toString()
         setSupportActionBar(binding.topAppBar)
+
+        // checkNetworkStatus()
 
         initLocationSharing()
 
@@ -128,6 +139,35 @@ class HomeActivity : AppCompatActivity(),
         } else {
             binding.cardView.visibility = View.GONE
         }
+
+        mIsGpsOn = isGpsOn()
+
+    }
+
+    private fun checkNetworkStatus() {
+        val connectedRef = Firebase.database.getReference(".info/connected")
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val connected = snapshot.getValue(Boolean::class.java) ?: false
+                if (connected) {
+                    Timber.d("Internet connected")
+
+                } else {
+                    Timber.d("Gorib net chalan?")
+                    Toast.makeText(
+                        this@HomeActivity,
+                        "You might have a slow connection there. But no worries!",
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Timber.d(error.toException())
+            }
+        })
+
     }
 
     private fun updateVolunteerSubscription(primaryBus: String?) {
@@ -165,7 +205,6 @@ class HomeActivity : AppCompatActivity(),
         return prefs.getBoolean("isAlreadySeen", false)
     }
 
-
     private fun saveShowPingState(state: Boolean) {
         val prefs = getSharedPreferences(
             "com.pixieium.austtravels", MODE_PRIVATE
@@ -173,13 +212,6 @@ class HomeActivity : AppCompatActivity(),
         val editor = prefs.edit()
         editor.putBoolean("isAlreadySeen", state)
         editor.apply()
-    }
-
-    private fun readSharedPref(): Boolean {
-        val prefs: SharedPreferences = this.getSharedPreferences(
-            "com.pixieium.austtravels", MODE_PRIVATE
-        )
-        return prefs.getBoolean("isLocationSharing", false)
     }
 
     override fun onStart() {
@@ -191,7 +223,14 @@ class HomeActivity : AppCompatActivity(),
 
         val serviceIntent = Intent(this, ForegroundOnlyLocationService::class.java)
         bindService(serviceIntent, foregroundOnlyServiceConnection, Context.BIND_AUTO_CREATE)
+
+        // add gps status change listener
+        val filter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        filter.addAction(Intent.ACTION_PROVIDER_CHANGED)
+        this.registerReceiver(locationSwitchStateReceiver, filter)
     }
+
+    var temp = 0
 
     override fun onResume() {
         super.onResume()
@@ -201,13 +240,38 @@ class HomeActivity : AppCompatActivity(),
                 ForegroundOnlyLocationService.ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST
             )
         )
+        // add gps status change listener
+        val filter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        filter.addAction(Intent.ACTION_PROVIDER_CHANGED)
+        this.registerReceiver(locationSwitchStateReceiver, filter)
+
+        val isLocationSharing = sharedPreferences.getBoolean(
+            SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false
+        )
+
+        // check if GPS was disabled when app went to background
+        if (!isGpsOn() && temp >= 1 && isLocationSharing) {
+            stopLocationSharing()
+            Toast.makeText(
+                this@HomeActivity,
+                "Location sharing stopped! You must turn on your GPS.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        temp += 1;
+        Timber.d("onResume")
+        Timber.d("temp: $temp")
+
     }
+
 
     override fun onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
             foregroundOnlyBroadcastReceiver
         )
+        this.unregisterReceiver(locationSwitchStateReceiver)
         super.onPause()
+
     }
 
     override fun onStop() {
@@ -280,17 +344,27 @@ class HomeActivity : AppCompatActivity(),
     }
 
     private fun updateUiForLocationSharing(trackingLocation: Boolean) {
-        if (trackingLocation) {
-            binding.shareLocation.text = getString(R.string.stop_sharing_location)
-            binding.cardView.visibility = View.VISIBLE
-            binding.busName.text = getString(R.string.bus_jamuna, mSelectedBusName)
-            binding.busTime.text = getString(R.string.time_6_45_am, mSelectedBusTime)
-        } else {
-            binding.shareLocation.text = getString(R.string.share_location)
-            binding.cardView.visibility = View.GONE
+        try {
+            if (trackingLocation) {
+                binding.shareLocation.text = getString(R.string.stop_sharing_location)
+                binding.cardView.visibility = View.VISIBLE
+                binding.busName.text = getString(R.string.bus_jamuna, mSelectedBusName)
+                binding.busTime.text = getString(R.string.time_6_45_am, mSelectedBusTime)
+            } else {
+                binding.shareLocation.text = getString(R.string.share_location)
+                binding.cardView.visibility = View.GONE
+            }
+        } catch (e: UninitializedPropertyAccessException) {
+            Timber.e(e)
+            SharedPreferenceUtil.saveLocationTrackingPref(this, false)
+            updateUiForLocationSharing(false)
+        } catch (e: Exception) {
+            Timber.e(e)
+            SharedPreferenceUtil.saveLocationTrackingPref(this, false)
+            updateUiForLocationSharing(false)
         }
-    }
 
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_app_bar, menu)
@@ -382,11 +456,6 @@ class HomeActivity : AppCompatActivity(),
         updateUiForLocationSharing(false)
         stopStopwatch()
         foregroundOnlyLocationService?.unsubscribeToLocationUpdates()
-        Toast.makeText(
-            this@HomeActivity,
-            "Location sharing turned off. Thank you for your contribution!",
-            Toast.LENGTH_SHORT
-        ).show()
 
         // Resubscribe again when stopped sharing location sharing
         FirebaseMessaging.getInstance()
@@ -416,6 +485,11 @@ class HomeActivity : AppCompatActivity(),
         if (isLocationSharing) {
             // if foreground location is already being shared, then stop it
             stopLocationSharing()
+            Toast.makeText(
+                this@HomeActivity,
+                "Location sharing turned off. Thank you for your contribution!",
+                Toast.LENGTH_SHORT
+            ).show()
 
         } else {
             if (foregroundPermissionApproved()) {
@@ -435,7 +509,6 @@ class HomeActivity : AppCompatActivity(),
         }
 
     }
-
 
     fun onViewVolunteersClick(view: View) {
         // Toast.makeText(this, "volunteer", Toast.LENGTH_SHORT).show()
@@ -501,6 +574,41 @@ class HomeActivity : AppCompatActivity(),
             return false
         }
         return true
+    }
+
+
+    private val locationSwitchStateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (LocationManager.PROVIDERS_CHANGED_ACTION == intent.action) {
+                val locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
+                val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                val isNetworkEnabled =
+                    locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+
+                if ((isGpsEnabled || isNetworkEnabled) && !mIsGpsOn) {
+                    Timber.d("GPS is enabled")
+                    mIsGpsOn = true
+
+                } else if ((!isGpsEnabled || !isNetworkEnabled) && mIsGpsOn) {
+                    Timber.d("GPS is disabled!")
+                    mIsGpsOn = false
+
+                    val isLocationSharing = sharedPreferences.getBoolean(
+                        SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false
+                    )
+
+                    if (isLocationSharing) {
+                        // if foreground location is already being shared, then stop it
+                        stopLocationSharing()
+                        Toast.makeText(
+                            this@HomeActivity,
+                            "Location sharing stopped! You must turn on your GPS.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
     }
 
     private fun requestForegroundPermissions() {

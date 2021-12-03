@@ -3,6 +3,7 @@ package com.pixieium.austtravels
 import android.app.Application
 import android.content.Context
 import com.google.firebase.FirebaseApp
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.pixieium.austtravels.utils.Constant
 import com.pixieium.austtravels.utils.notification.NotificationApi
@@ -17,11 +18,16 @@ import timber.log.Timber
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
+
+        // setting disk persistence on
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         FirebaseApp.initializeApp(this)
+
         // only use timber in debug mode
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
 
         // We can use this to send notice like notification
         FirebaseMessaging.getInstance().subscribeToTopic(Constant.GENERAL_NOTIFICATION)

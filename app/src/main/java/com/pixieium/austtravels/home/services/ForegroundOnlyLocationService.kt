@@ -26,6 +26,7 @@ import com.pixieium.austtravels.R
 import com.pixieium.austtravels.home.HomeActivity
 import com.pixieium.austtravels.utils.SharedPreferenceUtil
 import com.pixieium.austtravels.utils.toText
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 /**
@@ -58,7 +59,6 @@ class ForegroundOnlyLocationService : Service() {
     private var currentLocation: Location? = null
 
     override fun onCreate() {
-        Log.d(TAG, "onCreate()")
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         locationRequest = LocationRequest.create().apply {
@@ -89,7 +89,6 @@ class ForegroundOnlyLocationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.d(TAG, "onStartCommand()")
 
         val cancelLocationTrackingFromNotification =
             intent.getBooleanExtra(EXTRA_CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION, false)
@@ -103,7 +102,6 @@ class ForegroundOnlyLocationService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder {
-        Log.d(TAG, "onBind()")
 
         // MainActivity (client) comes into foreground and binds to service, so the service can
         // become a background services.
@@ -114,8 +112,6 @@ class ForegroundOnlyLocationService : Service() {
     }
 
     override fun onRebind(intent: Intent) {
-        Log.d(TAG, "onRebind()")
-
         // MainActivity (client) returns to the foreground and rebinds to service, so the service
         // can become a background services.
         stopForeground(true)
@@ -125,14 +121,13 @@ class ForegroundOnlyLocationService : Service() {
     }
 
     override fun onUnbind(intent: Intent): Boolean {
-        Log.d(TAG, "onUnbind()")
-
         // MainActivity (client) leaves foreground, so service needs to become a foreground service
         // to maintain the 'while-in-use' label.
         // NOTE: If this method is called due to a configuration change in MainActivity,
         // we do nothing.
         if (!configurationChange && SharedPreferenceUtil.getLocationTrackingPref(this)) {
-            Log.d(TAG, "Start foreground service")
+            Timber.d(TAG, "Start foreground service")
+
             val notification = generateNotification(currentLocation)
             startForeground(NOTIFICATION_ID, notification)
             serviceRunningInForeground = true
@@ -143,7 +138,6 @@ class ForegroundOnlyLocationService : Service() {
     }
 
     override fun onDestroy() {
-        Log.d(TAG, "onDestroy()")
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -152,7 +146,7 @@ class ForegroundOnlyLocationService : Service() {
     }
 
     fun subscribeToLocationUpdates() {
-        Log.d(TAG, "subscribeToLocationUpdates()")
+        Timber.d(TAG, "subscribeToLocationUpdates()")
 
         SharedPreferenceUtil.saveLocationTrackingPref(this, true)
 
@@ -167,27 +161,26 @@ class ForegroundOnlyLocationService : Service() {
             )
         } catch (unlikely: SecurityException) {
             SharedPreferenceUtil.saveLocationTrackingPref(this, false)
-            Log.e(TAG, "Lost location permissions. Couldn't remove updates. $unlikely")
+            Timber.d(TAG, "Lost location permissions. Couldn't remove updates. $unlikely")
         }
     }
 
     fun unsubscribeToLocationUpdates() {
-        Log.d(TAG, "unsubscribeToLocationUpdates()")
-
+        Timber.d(TAG, "unsubscribeToLocationUpdates")
         try {
             val removeTask = fusedLocationProviderClient.removeLocationUpdates(locationCallback)
             removeTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "Location Callback removed.")
+                    Timber.d(TAG, "Location Callback removed.")
                     stopSelf()
                 } else {
-                    Log.d(TAG, "Failed to remove Location Callback.")
+                    Timber.d(TAG, "Failed to remove Location Callback.")
                 }
             }
             SharedPreferenceUtil.saveLocationTrackingPref(this, false)
         } catch (unlikely: SecurityException) {
             SharedPreferenceUtil.saveLocationTrackingPref(this, true)
-            Log.e(TAG, "Lost location permissions. Couldn't remove updates. $unlikely")
+            Timber.d(TAG, "Lost location permissions. Couldn't remove updates. $unlikely")
         }
     }
 
@@ -195,7 +188,7 @@ class ForegroundOnlyLocationService : Service() {
      * Generates a BIG_TEXT_STYLE Notification that represent latest location.
      */
     private fun generateNotification(location: Location?): Notification {
-        Log.d(TAG, "generateNotification()")
+        Timber.d(TAG, "generateNotification()")
 
         val mainNotificationText = getString(R.string.sharing_location_prompt)
         val titleText = getString(R.string.app_name)

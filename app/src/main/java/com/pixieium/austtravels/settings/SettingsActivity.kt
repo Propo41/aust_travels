@@ -20,6 +20,7 @@ import com.pixieium.austtravels.models.UserSettings
 import com.pixieium.austtravels.settings.dialog.*
 import com.pixieium.austtravels.utils.Constant
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
     ReAuthenticateDialog.FragmentListener, DeleteConfirmationDialog.FragmentListener,
@@ -49,9 +50,9 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
                 mUserSettings = UserSettings(true, false, "None")
             }
 
-            Log.d(TAG, mUserSettings?.pingNotification.toString())
-            Log.d(TAG, mUserSettings?.locationNotification.toString())
-            Log.d(TAG, mUserSettings?.primaryBus.toString())
+            Timber.d(TAG, mUserSettings?.pingNotification.toString())
+            Timber.d(TAG, mUserSettings?.locationNotification.toString())
+            Timber.d(TAG, mUserSettings?.primaryBus.toString())
 
             updateUi(isVolunteer)
         }
@@ -80,7 +81,7 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             }
 
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
             Toast.makeText(this@SettingsActivity, e.localizedMessage, Toast.LENGTH_SHORT).show()
         }
     }
@@ -95,7 +96,7 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             // if the ping notifications are disabled, then un-subscribe the user
             primaryBus?.let {
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(it).addOnSuccessListener {
-                    Log.d("unsubscribeFromTopic -", primaryBus)
+                    Timber.d("unsubscribeFromTopic -", primaryBus)
                 }
                 Snackbar.make(
                     mBinding.root,

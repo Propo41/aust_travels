@@ -1,20 +1,27 @@
 package com.pixieium.austtravels
 
 import android.app.Application
+import android.content.Context
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
-import com.pixieium.austtravels.utils.notification.NotificationApi
 import com.pixieium.austtravels.utils.Constant
+import com.pixieium.austtravels.utils.notification.NotificationApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
+import timber.log.Timber
+
 
 // This is the entry point of the app
-class AustTravel : Application() {
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
+        // only use timber in debug mode
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
 
         // We can use this to send notice like notification
         FirebaseMessaging.getInstance().subscribeToTopic(Constant.GENERAL_NOTIFICATION)

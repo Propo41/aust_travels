@@ -15,6 +15,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.pixieium.austtravels.MainActivity
 import com.pixieium.austtravels.R
+import timber.log.Timber
 import java.util.*
 
 
@@ -126,7 +127,7 @@ class NotificationUtils(private val mContext: Context) {
             val r = RingtoneManager.getRingtone(mContext, alarmSound)
             r.play()
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
         }
     }
 

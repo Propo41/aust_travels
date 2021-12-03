@@ -10,11 +10,12 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.models.*
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 class SettingsRepository {
 
     suspend fun createVolunteer(uid: String, busName: String, contact: String): Payload {
-        return try {
+        try {
             val database = Firebase.database
             // check if the user already made a request before
             // if not, then create a new entry in the database
@@ -35,14 +36,17 @@ class SettingsRepository {
                 }
             }
         } catch (e: Exception) {
-            //e.printStackTrace()
-            //Payload("Something went horribly wrong. Try again later!", false)
-            Payload(e.localizedMessage, false)
+            Timber.e(e, e.localizedMessage)
+            return Payload(e.localizedMessage, false)
         }
+        return Payload(
+            "Couldn't process your request. Please check if your connection is stable",
+            false
+        )
     }
 
     suspend fun deleteUser(password: String): Boolean {
-        return try {
+        try {
             val user = Firebase.auth.currentUser!!
             if (!reAuthenticateUser(password, user)) {
                 return false
@@ -57,13 +61,13 @@ class SettingsRepository {
 
             // delete auth user
             user.delete().await()
-            true
+            return true
         } catch (e: FirebaseAuthRecentLoginRequiredException) {
-            //e.printStackTrace()
-            false
+            Timber.e(e, e.localizedMessage)
+            return false
         } catch (e: Exception) {
-            //e.printStackTrace()
-            false
+            Timber.e(e, e.localizedMessage)
+            return false
         }
     }
 
@@ -74,31 +78,37 @@ class SettingsRepository {
             user.reauthenticate(credential).await()
             return true
         } catch (e: Exception) {
-            //e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
         }
         return false
     }
 
     suspend fun fetchAllBusInfo(): ArrayList<BusInfo> {
         val list: ArrayList<BusInfo> = ArrayList()
-        // Write a message to the database
-        val database = Firebase.database
-        val snapshot = database.getReference("availableBusInfo").get().await()
-        if (snapshot.exists()) {
-            // iterate over the timing
-            for (snap: DataSnapshot in snapshot.children) {
-                val busInfo = BusInfo()
-                busInfo.name = snap.key.toString()
 
-                val list2: ArrayList<BusTiming> = ArrayList()
-                for (snap1: DataSnapshot in snap.children) {
-                    snap1.getValue<BusTiming>()?.let { list2.add(it) }
+        try {
+            // Write a message to the database
+            val database = Firebase.database
+            val snapshot = database.getReference("availableBusInfo").get().await()
+            if (snapshot.exists()) {
+                // iterate over the timing
+                for (snap: DataSnapshot in snapshot.children) {
+                    val busInfo = BusInfo()
+                    busInfo.name = snap.key.toString()
+
+                    val list2: ArrayList<BusTiming> = ArrayList()
+                    for (snap1: DataSnapshot in snap.children) {
+                        snap1.getValue<BusTiming>()?.let { list2.add(it) }
+                    }
+
+                    busInfo.timing = list2
+                    list.add(busInfo)
                 }
-
-                busInfo.timing = list2
-                list.add(busInfo)
             }
+        } catch (e: Exception) {
+            Timber.e(e, e.localizedMessage)
         }
+
         return list
     }
 
@@ -126,7 +136,7 @@ class SettingsRepository {
                 null
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
         }
         return null
 
@@ -137,8 +147,7 @@ class SettingsRepository {
             val database = Firebase.database
             database.getReference("users/$mUid/settings/primaryBus").setValue(busName)
         } catch (e: Exception) {
-            e.printStackTrace()
-
+            Timber.e(e, e.localizedMessage)
         }
 
     }
@@ -148,7 +157,7 @@ class SettingsRepository {
             val database = Firebase.database
             database.getReference("users/$mUid/settings/isPingNotification").setValue(checked)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
         }
     }
 
@@ -157,7 +166,7 @@ class SettingsRepository {
             val database = Firebase.database
             database.getReference("users/$mUid/settings/isLocationNotification").setValue(checked)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
         }
 
     }

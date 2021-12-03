@@ -11,29 +11,39 @@ import com.pixieium.austtravels.models.BusTiming
 import com.pixieium.austtravels.models.UserInfo
 import com.pixieium.austtravels.models.Volunteer
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 class HomeRepository {
 
+    companion object {
+        const val TAG = "HomeRepository"
+    }
+
     suspend fun fetchAllBusInfo(): ArrayList<BusInfo> {
         val list: ArrayList<BusInfo> = ArrayList()
-        // Write a message to the database
-        val database = Firebase.database
-        val snapshot = database.getReference("availableBusInfo").get().await()
-        if (snapshot.exists()) {
-            // iterate over the timing
-            for (snap: DataSnapshot in snapshot.children) {
-                val busInfo = BusInfo()
-                busInfo.name = snap.key.toString()
+        try {
+            // Write a message to the database
+            val database = Firebase.database
+            val snapshot = database.getReference("availableBusInfo").get().await()
+            if (snapshot.exists()) {
+                // iterate over the timing
+                for (snap: DataSnapshot in snapshot.children) {
+                    val busInfo = BusInfo()
+                    busInfo.name = snap.key.toString()
 
-                val list2: ArrayList<BusTiming> = ArrayList()
-                for (snap1: DataSnapshot in snap.children) {
-                    snap1.getValue<BusTiming>()?.let { list2.add(it) }
+                    val list2: ArrayList<BusTiming> = ArrayList()
+                    for (snap1: DataSnapshot in snap.children) {
+                        snap1.getValue<BusTiming>()?.let { list2.add(it) }
+                    }
+
+                    busInfo.timing = list2
+                    list.add(busInfo)
                 }
-
-                busInfo.timing = list2
-                list.add(busInfo)
             }
+        } catch (e: Exception) {
+            Timber.e(e, e.localizedMessage)
         }
+
         return list
     }
 
@@ -45,7 +55,7 @@ class HomeRepository {
                 return snapshot.getValue<Volunteer>()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
             return null
         }
         return null
@@ -59,7 +69,7 @@ class HomeRepository {
                 return snapshot.getValue<String>()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
             return null
         }
         return null
@@ -71,58 +81,69 @@ class HomeRepository {
         mSelectedBusTime: String,
         location: Location
     ) {
-        val payload = mapOf(
-            "lat" to location.latitude.toString(),
-            "long" to location.longitude.toString(),
-            "lastUpdatedTime" to System.currentTimeMillis().toString(),
-            "lastUpdatedVolunteer" to uid
-        ) as HashMap<String, String>
-        val database = Firebase.database
-        database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/location").setValue(payload)
-
+        try {
+            val payload = mapOf(
+                "lat" to location.latitude.toString(),
+                "long" to location.longitude.toString(),
+                "lastUpdatedTime" to System.currentTimeMillis().toString(),
+                "lastUpdatedVolunteer" to uid
+            ) as HashMap<String, String>
+            val database = Firebase.database
+            database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/location")
+                .setValue(payload)
+        } catch (e: Exception) {
+            Timber.e(e, e.localizedMessage)
+        }
     }
 
     suspend fun getUserInfo(): UserInfo? {
+        try {
+            val database = Firebase.database
+            val uid = Firebase.auth.currentUser?.uid
+            val snap = database.getReference("users/$uid/name").get().await()
 
-        val database = Firebase.database
-        val uid = Firebase.auth.currentUser?.uid
-        val snap = database.getReference("users/$uid/name").get().await()
-
-        var name: String? = ""
-        if (snap.exists()) {
-            name = snap.value as String?
-            if (name == null) {
+            var name: String? = ""
+            if (snap.exists()) {
+                name = snap.value as String?
+                if (name == null) {
+                    name = "Somebody"
+                }
+            } else {
                 name = "Somebody"
             }
-        } else {
-            name = "Somebody"
+
+            val user = Firebase.auth.currentUser
+            user?.let {
+                // Name, email address, and profile photo Url
+                val email = user.email
+                val photoUrl = user.photoUrl
+                return UserInfo(email, photoUrl.toString(), name)
+            }
+        } catch (e: Exception) {
+            Timber.e(e, e.localizedMessage)
         }
 
-        val user = Firebase.auth.currentUser
-        user?.let {
-            // Name, email address, and profile photo Url
-            val email = user.email
-            val photoUrl = user.photoUrl
-            return UserInfo(email, photoUrl.toString(), name)
-        }
         return null
     }
 
     fun updateContribution(totalTimeElapsed: Long) {
-        // get the previous contribution first and then append
-        val database = Firebase.database
-        val uid = Firebase.auth.currentUser?.uid
-        database.getReference("volunteers/$uid/totalContribution").get().addOnSuccessListener {
-            if (it.exists() && it != null) {
-                val prevTime: Long = it.value as Long
-                database.getReference("volunteers/$uid/totalContribution")
-                    .setValue(totalTimeElapsed + prevTime)
-            } else {
-                database.getReference("volunteers/$uid/totalContribution")
-                    .setValue(totalTimeElapsed)
+        try {
+            // get the previous contribution first and then append
+            val database = Firebase.database
+            val uid = Firebase.auth.currentUser?.uid
+            database.getReference("volunteers/$uid/totalContribution").get().addOnSuccessListener {
+                if (it.exists() && it != null) {
+                    val prevTime: Long = it.value as Long
+                    database.getReference("volunteers/$uid/totalContribution")
+                        .setValue(totalTimeElapsed + prevTime)
+                } else {
+                    database.getReference("volunteers/$uid/totalContribution")
+                        .setValue(totalTimeElapsed)
+                }
             }
+        } catch (e: Exception) {
+            Timber.e(e, e.localizedMessage)
         }
-
     }
 
 }

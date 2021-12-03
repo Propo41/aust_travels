@@ -11,12 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.Constants
 import com.google.firebase.messaging.FirebaseMessaging
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivitySettingsBinding
 import com.pixieium.austtravels.models.UserSettings
 import com.pixieium.austtravels.settings.dialog.*
+import com.pixieium.austtravels.utils.Constant
 import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
@@ -135,13 +137,29 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
                 val xx = mBinding.locationNotificationSwitch.isChecked
                 mDatabase.updateLocationNotificationSettings(mUid, xx)
                 if (xx) {
-                    // todo: subscribe user
+                    FirebaseMessaging.getInstance()
+                        .subscribeToTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
+                        .addOnSuccessListener {
+                            Snackbar.make(
+                                mBinding.root,
+                                "You will now receive notifications about ${mUserSettings!!.primaryBus} whenever someone shares their location.",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
 
                 } else {
-                    // todo: un-subscribe user
+                    FirebaseMessaging.getInstance()
+                        .unsubscribeFromTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
+                        .addOnSuccessListener {
+                            Snackbar.make(
+                                mBinding.root,
+                                "Turn off successfully !",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+
                 }
             }
-
         }
     }
 

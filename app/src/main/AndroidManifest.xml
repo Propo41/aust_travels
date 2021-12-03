@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AustTravels">
         <activity
+            android:name=".privacyAndPolicy.PrivacyPolicyActivity"
+            android:exported="false" />
+        <activity
             android:name=".auth.ForgotPasswordActivity"
             android:exported="true" />
         <activity
@@ -68,7 +71,7 @@
             android:exported="false"
             android:foregroundServiceType="location" />
         <service
-            android:name="com.pixieium.austtravels.utils.notification.AustTravelFirebaseMessagingService"
+            android:name=".utils.notification.AustTravelFirebaseMessagingService"
             android:exported="false"
             android:stopWithTask="false">
             <intent-filter>

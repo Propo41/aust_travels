@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 import android.content.*
 import android.location.LocationManager
 import android.os.IBinder
-import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
@@ -51,9 +50,15 @@ import com.pixieium.austtravels.utils.SharedPreferenceUtil
 
 import android.content.Intent
 import timber.log.Timber
-import java.sql.Time
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.util.Log
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 
 
 class HomeActivity : AppCompatActivity(),
@@ -107,6 +112,8 @@ class HomeActivity : AppCompatActivity(),
         mUid = Firebase.auth.currentUser?.uid.toString()
         setSupportActionBar(binding.topAppBar)
 
+        // checkNetworkStatus()
+
         initLocationSharing()
 
         mStopwatchHandler = StopwatchHandler(binding.sharingYourLocation)
@@ -137,6 +144,31 @@ class HomeActivity : AppCompatActivity(),
 
     }
 
+    private fun checkNetworkStatus() {
+        val connectedRef = Firebase.database.getReference(".info/connected")
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val connected = snapshot.getValue(Boolean::class.java) ?: false
+                if (connected) {
+                    Timber.d("Internet connected")
+
+                } else {
+                    Timber.d("Gorib net chalan?")
+                    Toast.makeText(
+                        this@HomeActivity,
+                        "You might have a slow connection there. But no worries!",
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Timber.d(error.toException())
+            }
+        })
+
+    }
 
     private fun updateVolunteerSubscription(primaryBus: String?) {
         if (!mVolunteer!!.isStatus) {
@@ -213,8 +245,12 @@ class HomeActivity : AppCompatActivity(),
         filter.addAction(Intent.ACTION_PROVIDER_CHANGED)
         this.registerReceiver(locationSwitchStateReceiver, filter)
 
+        val isLocationSharing = sharedPreferences.getBoolean(
+            SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false
+        )
+
         // check if GPS was disabled when app went to background
-        if (!isGpsOn() && temp >= 1) {
+        if (!isGpsOn() && temp >= 1 && isLocationSharing) {
             stopLocationSharing()
             Toast.makeText(
                 this@HomeActivity,
@@ -224,6 +260,7 @@ class HomeActivity : AppCompatActivity(),
         }
         temp += 1;
         Timber.d("onResume")
+        Timber.d("temp: $temp")
 
     }
 

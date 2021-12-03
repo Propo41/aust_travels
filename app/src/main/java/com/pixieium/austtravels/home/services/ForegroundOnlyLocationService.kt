@@ -126,7 +126,7 @@ class ForegroundOnlyLocationService : Service() {
         // NOTE: If this method is called due to a configuration change in MainActivity,
         // we do nothing.
         if (!configurationChange && SharedPreferenceUtil.getLocationTrackingPref(this)) {
-            Timber.d(TAG, "Start foreground service")
+            Timber.d("Start foreground service")
 
             val notification = generateNotification(currentLocation)
             startForeground(NOTIFICATION_ID, notification)
@@ -146,7 +146,7 @@ class ForegroundOnlyLocationService : Service() {
     }
 
     fun subscribeToLocationUpdates() {
-        Timber.d(TAG, "subscribeToLocationUpdates()")
+        Timber.d("subscribeToLocationUpdates()")
 
         SharedPreferenceUtil.saveLocationTrackingPref(this, true)
 
@@ -161,26 +161,26 @@ class ForegroundOnlyLocationService : Service() {
             )
         } catch (unlikely: SecurityException) {
             SharedPreferenceUtil.saveLocationTrackingPref(this, false)
-            Timber.d(TAG, "Lost location permissions. Couldn't remove updates. $unlikely")
+            Timber.d("Lost location permissions. Couldn't remove updates. $unlikely")
         }
     }
 
     fun unsubscribeToLocationUpdates() {
-        Timber.d(TAG, "unsubscribeToLocationUpdates")
+        Timber.d( "unsubscribeToLocationUpdates")
         try {
             val removeTask = fusedLocationProviderClient.removeLocationUpdates(locationCallback)
             removeTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Timber.d(TAG, "Location Callback removed.")
+                    Timber.d( "Location Callback removed.")
                     stopSelf()
                 } else {
-                    Timber.d(TAG, "Failed to remove Location Callback.")
+                    Timber.d( "Failed to remove Location Callback.")
                 }
             }
             SharedPreferenceUtil.saveLocationTrackingPref(this, false)
         } catch (unlikely: SecurityException) {
             SharedPreferenceUtil.saveLocationTrackingPref(this, true)
-            Timber.d(TAG, "Lost location permissions. Couldn't remove updates. $unlikely")
+            Timber.d( "Lost location permissions. Couldn't remove updates. $unlikely")
         }
     }
 
@@ -188,7 +188,7 @@ class ForegroundOnlyLocationService : Service() {
      * Generates a BIG_TEXT_STYLE Notification that represent latest location.
      */
     private fun generateNotification(location: Location?): Notification {
-        Timber.d(TAG, "generateNotification()")
+        Timber.d( "generateNotification()")
 
         val mainNotificationText = getString(R.string.sharing_location_prompt)
         val titleText = getString(R.string.app_name)

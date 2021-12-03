@@ -123,8 +123,10 @@ class RoutesActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 //Toast.makeText(this@RoutesActivity, s.toString(), Toast.LENGTH_SHORT).show()
+                mBinding.time.editText?.text?.clear()
                 initSpinnerTime(s.toString(), list)
                 mBinding.select.isEnabled = true
+                Toast.makeText(this@RoutesActivity, "clicked", Toast.LENGTH_SHORT).show()
             }
         })
 

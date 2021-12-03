@@ -50,9 +50,9 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
                 mUserSettings = UserSettings(true, false, "None")
             }
 
-            Timber.d(TAG, mUserSettings?.pingNotification.toString())
-            Timber.d(TAG, mUserSettings?.locationNotification.toString())
-            Timber.d(TAG, mUserSettings?.primaryBus.toString())
+            Timber.d(mUserSettings?.pingNotification.toString())
+            Timber.d(mUserSettings?.locationNotification.toString())
+            Timber.d(mUserSettings?.primaryBus.toString())
 
             updateUi(isVolunteer)
         }

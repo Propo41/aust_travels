@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.home.HomeActivity
 import com.pixieium.austtravels.settings.SettingsActivity
+import timber.log.Timber
 import java.util.*
 
 
@@ -20,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
         setContentView(R.layout.activity_main)
     }
 

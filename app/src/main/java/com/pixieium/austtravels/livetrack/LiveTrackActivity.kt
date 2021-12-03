@@ -489,7 +489,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         val markerOptions = MarkerOptions().position(currentLocation)
             .title(mSelectedBusName)
             .snippet("Start time: $mSelectedBusTime")
-            .icon(bitmapDescriptorFromVector(this, R.drawable.ic_bus))
+            .icon(bitmapDescriptorFromVector(this, R.drawable.ic_bus_marker))
 
         // removing the previous marker
         if (mBusMarker != null) {

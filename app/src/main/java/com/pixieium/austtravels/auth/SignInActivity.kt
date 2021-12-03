@@ -15,6 +15,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.databinding.ActivitySignInBinding
 import com.pixieium.austtravels.home.HomeActivity
+import timber.log.Timber
 import java.lang.Exception
 
 class SignInActivity : AppCompatActivity() {
@@ -38,7 +39,7 @@ class SignInActivity : AppCompatActivity() {
                 // hide the keyboard
                 hideKeyboard()
             } catch (e: Exception) {
-                //e.printStackTrace()
+                Timber.e(e, e.localizedMessage)
                 Toast.makeText(this, e.localizedMessage, Toast.LENGTH_SHORT).show()
             } finally {
                 signInUserByEmail()

@@ -7,6 +7,7 @@ import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.models.UserInfo
 import com.pixieium.austtravels.models.Volunteer
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 class VolunteerRepository {
     suspend fun fetchVolunteers(): ArrayList<Volunteer> {
@@ -39,7 +40,7 @@ class VolunteerRepository {
             return volunteers.reversed() as ArrayList<Volunteer>
 
         } catch (e: Exception) {
-            //e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
         }
 
         return volunteers
@@ -82,7 +83,7 @@ class VolunteerRepository {
             }
             return null
         } catch (e: Exception) {
-            //e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
         }
 
         return null

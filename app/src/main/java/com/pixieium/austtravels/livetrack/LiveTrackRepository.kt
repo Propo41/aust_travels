@@ -6,6 +6,8 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
+import java.lang.Exception
 
 class LiveTrackRepository {
     // todo: get the bus departure time
@@ -16,16 +18,20 @@ class LiveTrackRepository {
     }
 
     suspend fun fetchBusRoute(busName: String, busTime: String): ArrayList<Route> {
-        val database = Firebase.database
-        val snapshot = database.getReference("bus/$busName/$busTime/routes").get().await()
         val routeList: ArrayList<Route> = ArrayList()
-        if (snapshot.exists()) {
-            for (snap: DataSnapshot in snapshot.children) {
-                snap.getValue<Route>()?.let { routeList.add(it) }
+        try {
+            val database = Firebase.database
+            val snapshot = database.getReference("bus/$busName/$busTime/routes").get().await()
+            if (snapshot.exists()) {
+                for (snap: DataSnapshot in snapshot.children) {
+                    snap.getValue<Route>()?.let { routeList.add(it) }
+                }
             }
+        } catch (e: Exception) {
+            Timber.e(e, e.localizedMessage)
         }
-        return routeList
 
+        return routeList
 
     }
 

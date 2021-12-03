@@ -8,29 +8,39 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 class AuthRepository {
     suspend fun getSemesterInfo(): ArrayList<String> {
-        val database = Firebase.database
-        val snapshot = database.getReference("universityInfo/semesters").get().await()
         val semesterList: ArrayList<String> = ArrayList()
-        if (snapshot.exists()) {
-            for (snap: DataSnapshot in snapshot.children) {
-                semesterList.add(snap.value.toString())
+        try {
+            val database = Firebase.database
+            val snapshot = database.getReference("universityInfo/semesters").get().await()
+            if (snapshot.exists()) {
+                for (snap: DataSnapshot in snapshot.children) {
+                    semesterList.add(snap.value.toString())
+                }
             }
+        } catch (e: Exception) {
+            Timber.e(e, e.localizedMessage)
         }
         return semesterList
     }
 
     suspend fun getDeptInfo(): ArrayList<String> {
-        val database = Firebase.database
-        val snapshot = database.getReference("universityInfo/departments").get().await()
         val departmentList: ArrayList<String> = ArrayList()
-        if (snapshot.exists()) {
-            for (snap: DataSnapshot in snapshot.children) {
-                departmentList.add(snap.value.toString())
+        try {
+            val database = Firebase.database
+            val snapshot = database.getReference("universityInfo/departments").get().await()
+            if (snapshot.exists()) {
+                for (snap: DataSnapshot in snapshot.children) {
+                    departmentList.add(snap.value.toString())
+                }
             }
+        } catch (e: Exception) {
+            Timber.e(e, e.localizedMessage)
         }
+
         return departmentList
     }
 
@@ -45,7 +55,7 @@ class AuthRepository {
             database.getReference("users/$uid").setValue(userInfo).await()
             true
         } catch (e: Exception) {
-            //e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
             false
         }
     }

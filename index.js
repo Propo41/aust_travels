@@ -13,7 +13,7 @@ require("dotenv").config();
 const cors = require("cors");
 
 const app = express();
-const port = process.env.PORT || 4321;
+const port = process.env.PORT || 5000;
 
 // middleware
 app.use(cors());
@@ -164,5 +164,5 @@ app.get("/send-users", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("Firebase Admin Server running at port ->", port);
+  console.log("Firebase Admin Server running at port http://localhost:", port);
 });

@@ -34,7 +34,7 @@ import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
-import com.pixieium.austtravels.AustTravel
+import com.pixieium.austtravels.App
 import com.pixieium.austtravels.BuildConfig
 import com.pixieium.austtravels.home.dialog.ProminentDisclosureDialog
 import com.pixieium.austtravels.home.dialog.SelectBusDialog
@@ -48,10 +48,10 @@ import com.pixieium.austtravels.utils.Constant.REQUEST_DIRECTIONS
 import com.pixieium.austtravels.utils.Constant.REQUEST_LIVE_TRACK
 import com.pixieium.austtravels.utils.Constant.REQUEST_SHARE_LOCATION
 import com.pixieium.austtravels.utils.SharedPreferenceUtil
-import android.content.DialogInterface
 
 import android.content.Intent
-import androidx.appcompat.app.AlertDialog
+import timber.log.Timber
+import java.sql.Time
 
 
 class HomeActivity : AppCompatActivity(),
@@ -136,7 +136,7 @@ class HomeActivity : AppCompatActivity(),
             // if the volunteer is disabled
             primaryBus?.let {
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(it).addOnSuccessListener {
-                    Log.d("unsubscribeFromTopic -", primaryBus)
+                    Timber.d("unsubscribeFromTopic -", primaryBus)
                 }
             }
         } else {
@@ -237,14 +237,15 @@ class HomeActivity : AppCompatActivity(),
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Log.d(TAG, "onRequestPermissionResult")
+        Timber.d("TAG -", "onRequestPermissionResult")
 
         when (requestCode) {
             REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE -> when {
                 grantResults.isEmpty() ->
                     // If user interaction was interrupted, the permission request
                     // is cancelled and you receive empty arrays.
-                    Log.d(TAG, "User interaction was cancelled.")
+                    Timber.d(TAG, "User interaction was cancelled.")
+
                 grantResults[0] == PackageManager.PERMISSION_GRANTED ->
                     // Permission was granted.
                     // open bus select dialog
@@ -315,8 +316,9 @@ class HomeActivity : AppCompatActivity(),
             REQUEST_SHARE_LOCATION -> {
                 mSelectedBusName = selectedBusName
                 mSelectedBusTime = selectedBusTime
-                Log.d(TAG, mSelectedBusName)
-                Log.d(TAG, mSelectedBusTime)
+
+                Timber.d(TAG, mSelectedBusName)
+                Timber.d(TAG, mSelectedBusTime)
 
                 startLocationSharing()
             }
@@ -342,7 +344,7 @@ class HomeActivity : AppCompatActivity(),
                 // Notify other users of this bus about sharing
                 lifecycleScope.launch {
                     try {
-                        AustTravel.notificationApi().notifyUsers(
+                        App.notificationApi().notifyUsers(
                             "${mSelectedBusName}${Constant.USER_NOTIFY}",
                             "$mSelectedBusName : $mSelectedBusTime is now live",
                             "${mUserInfo?.name} is sharing their location. Track them now to know where the bus is headed!"
@@ -362,7 +364,8 @@ class HomeActivity : AppCompatActivity(),
         try {
             updateUiForLocationSharing(true)
             foregroundOnlyLocationService?.subscribeToLocationUpdates()
-                ?: Log.d(TAG, "Service Not Bound")
+                ?: Timber.d(TAG, "Service Not Bound")
+
             startStopwatch()
             sendNotificationToSubscribedUsers()
             Toast.makeText(
@@ -371,7 +374,7 @@ class HomeActivity : AppCompatActivity(),
                 Toast.LENGTH_SHORT
             ).show()
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e, e.localizedMessage)
         }
     }
 
@@ -432,7 +435,6 @@ class HomeActivity : AppCompatActivity(),
         }
 
     }
-
 
 
     fun onViewVolunteersClick(view: View) {
@@ -522,7 +524,7 @@ class HomeActivity : AppCompatActivity(),
                 }
                 .show()
         } else {
-            Log.d(TAG, "Request foreground only permission")
+            Timber.d(TAG, "Request foreground only permission")
             ActivityCompat.requestPermissions(
                 this@HomeActivity,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),

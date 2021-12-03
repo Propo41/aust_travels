@@ -21,6 +21,7 @@ import java.util.*
 import android.app.Activity
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
+import timber.log.Timber
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -39,6 +40,14 @@ class SignUpActivity : AppCompatActivity() {
             val semesters: ArrayList<String> = mDatabase.getSemesterInfo()
             val departments: ArrayList<String> = mDatabase.getDeptInfo()
 
+            if (semesters.size == 0 || departments.size == 0) {
+                Toast.makeText(
+                    this@SignUpActivity,
+                    "Found an empty list. It could be a problem of your internet connection!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
             initSpinnerSemester(semesters)
             initSpinnerDepartment(departments)
         }
@@ -47,7 +56,7 @@ class SignUpActivity : AppCompatActivity() {
             try {
                 hideKeyboard()
             } catch (e: Exception) {
-                //e.printStackTrace()
+                Timber.e(e, e.localizedMessage)
             }
             createNewUser()
         }

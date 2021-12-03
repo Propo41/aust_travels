@@ -19,6 +19,7 @@ import com.pixieium.austtravels.home.HomeRepository
 import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SelectBusDialog : DialogFragment() {
 
@@ -72,7 +73,7 @@ class SelectBusDialog : DialogFragment() {
                         .show()
                 }
             } catch (e: Exception) {
-                //e.printStackTrace()
+                Timber.e(e, e.localizedMessage)
                 Toast.makeText(
                     context,
                     "Couldn't fetch data from database. Please check your connection",

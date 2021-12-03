@@ -21,6 +21,7 @@ import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class RoutesActivity : AppCompatActivity() {
     private lateinit var mAdapter: RoutesAdapter
@@ -59,7 +60,7 @@ class RoutesActivity : AppCompatActivity() {
                 }
 
             } catch (e: Exception) {
-                //e.printStackTrace()
+                Timber.e(e, e.localizedMessage)
                 Toast.makeText(
                     baseContext,
                     "Couldn't fetch data from database. Please check your connection",

@@ -15,7 +15,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -34,22 +33,20 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.FirebaseMessaging
-import com.pixieium.austtravels.AustTravel
+import com.pixieium.austtravels.App
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
 import com.pixieium.austtravels.home.dialog.ProminentDisclosureDialog
 import com.pixieium.austtravels.models.Route
-import com.pixieium.austtravels.utils.Constant
 import com.pixieium.austtravels.utils.Constant.PACKAGE_NAME
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -139,7 +136,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                //databaseError.toException().printStackTrace()
+                Timber.e(databaseError.toException(), databaseError.toException().localizedMessage)
             }
         }
         val database = Firebase.database
@@ -196,7 +193,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
 
             lifecycleScope.launch {
                 try {
-                    AustTravel.notificationApi().notifyVolunteers(
+                    App.notificationApi().notifyVolunteers(
                         mSelectedBusName,
                         "Somebody needs help",
                         "A fellow traveler wants to know where your bus, $mSelectedBusName of $mSelectedBusTime is located. You might wanna help them out!"

@@ -17,6 +17,7 @@ import com.pixieium.austtravels.databinding.DialogPromptVolunteerInfoBinding
 import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.settings.SettingsRepository
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 class PromptVolunteerInfoDialog : DialogFragment() {
@@ -83,7 +84,7 @@ class PromptVolunteerInfoDialog : DialogFragment() {
                         .show()
                 }
             } catch (e: Exception) {
-                //e.printStackTrace()
+                Timber.e(e, e.localizedMessage)
                 Toast.makeText(
                     context,
                     e.localizedMessage,

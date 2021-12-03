@@ -1,10 +1,6 @@
 package com.pixieium.austtravels.models;
 
-import android.text.TextUtils;
-import android.util.Patterns;
-
 import com.google.firebase.database.Exclude;
-import com.pixieium.austtravels.databinding.ActivitySignupBinding;
 
 public class UserInfo {
     private String email;

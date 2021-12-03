@@ -7,7 +7,6 @@ import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
-import java.lang.Exception
 
 class LiveTrackRepository {
     // todo: get the bus departure time

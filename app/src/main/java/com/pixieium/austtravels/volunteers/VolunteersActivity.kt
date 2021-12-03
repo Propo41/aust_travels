@@ -14,9 +14,9 @@ import coil.ImageLoader
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.pixieium.austtravels.R
-import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.databinding.ActivityVolunteersBinding
 import com.pixieium.austtravels.models.Volunteer
+import com.pixieium.austtravels.settings.SettingsActivity
 import kotlinx.coroutines.launch
 
 class VolunteersActivity : AppCompatActivity() {

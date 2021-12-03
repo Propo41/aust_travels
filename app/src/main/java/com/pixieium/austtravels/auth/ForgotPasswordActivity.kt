@@ -1,18 +1,16 @@
 package com.pixieium.austtravels.auth
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import com.pixieium.austtravels.databinding.ActivityForgotPasswordBinding
-import android.util.Patterns
-
 import android.text.TextUtils
+import android.util.Patterns
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.google.android.gms.tasks.OnCompleteListener
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.pixieium.austtravels.R
+import com.pixieium.austtravels.databinding.ActivityForgotPasswordBinding
 
 
 class ForgotPasswordActivity : AppCompatActivity() {

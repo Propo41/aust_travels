@@ -9,7 +9,6 @@ import com.pixieium.austtravels.models.BusTiming
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
-import kotlin.Exception
 
 class RoutesRepository {
     suspend fun fetchRouteList(busName: String, busTime: String): ArrayList<Route> {

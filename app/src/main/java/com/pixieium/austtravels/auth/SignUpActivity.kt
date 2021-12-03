@@ -1,9 +1,10 @@
 package com.pixieium.austtravels.auth
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,14 +15,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.databinding.ActivitySignupBinding
-import com.pixieium.austtravels.home.HomeActivity
 import com.pixieium.austtravels.models.UserInfo
 import kotlinx.coroutines.launch
-import java.util.*
-import android.app.Activity
-import android.content.Context
-import android.view.inputmethod.InputMethodManager
 import timber.log.Timber
+import java.util.*
 
 
 class SignUpActivity : AppCompatActivity() {

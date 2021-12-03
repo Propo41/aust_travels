@@ -1,15 +1,11 @@
 package com.pixieium.austtravels.settings
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import com.pixieium.austtravels.R
-import com.pixieium.austtravels.databinding.ActivityHomeBinding
-import com.pixieium.austtravels.databinding.ActivityPrivacyPolicyBinding
-import android.view.View
-
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
+import com.pixieium.austtravels.databinding.ActivityPrivacyPolicyBinding
 
 
 class PrivacyPolicyActivity : AppCompatActivity() {

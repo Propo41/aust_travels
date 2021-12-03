@@ -1,7 +1,6 @@
 package com.pixieium.austtravels
 
 import android.app.Application
-import android.content.Context
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessaging
@@ -10,8 +9,8 @@ import com.pixieium.austtravels.utils.notification.NotificationApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import java.util.concurrent.TimeUnit
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 
 // This is the entry point of the app

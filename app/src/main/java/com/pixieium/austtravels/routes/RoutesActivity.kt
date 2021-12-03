@@ -15,11 +15,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pixieium.austtravels.R
-import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.databinding.ActivityRoutesBinding
 import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
 import com.pixieium.austtravels.models.Route
+import com.pixieium.austtravels.settings.SettingsActivity
 import kotlinx.coroutines.launch
 import timber.log.Timber
 

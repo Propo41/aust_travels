@@ -16,7 +16,6 @@ import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.databinding.ActivitySignInBinding
 import com.pixieium.austtravels.home.HomeActivity
 import timber.log.Timber
-import java.lang.Exception
 
 class SignInActivity : AppCompatActivity() {
 

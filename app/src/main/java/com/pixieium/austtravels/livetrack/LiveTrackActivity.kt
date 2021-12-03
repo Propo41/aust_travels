@@ -40,10 +40,10 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.App
 import com.pixieium.austtravels.R
-import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
 import com.pixieium.austtravels.home.dialog.ProminentDisclosureDialog
 import com.pixieium.austtravels.models.Route
+import com.pixieium.austtravels.settings.SettingsActivity
 import com.pixieium.austtravels.utils.Constant.PACKAGE_NAME
 import kotlinx.coroutines.launch
 import timber.log.Timber

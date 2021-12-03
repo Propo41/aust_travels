@@ -11,7 +11,6 @@ import coil.ImageLoader
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.pixieium.austtravels.R
-import com.pixieium.austtravels.models.UserInfo
 import com.pixieium.austtravels.models.Volunteer
 
 class VolunteerAdapter(routeList: ArrayList<Volunteer>) :

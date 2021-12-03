@@ -1,11 +1,9 @@
 package com.pixieium.austtravels.utils.notification
 
 import android.content.Intent
-import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.pixieium.austtravels.MainActivity
-import com.pixieium.austtravels.home.services.ForegroundOnlyLocationService
 import com.pixieium.austtravels.models.Notification
 import timber.log.Timber
 

@@ -2,15 +2,12 @@ package com.pixieium.austtravels
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.ViewGroup
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.home.HomeActivity
-import com.pixieium.austtravels.settings.SettingsActivity
 import java.util.*
 
 

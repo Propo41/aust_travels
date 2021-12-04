@@ -137,7 +137,7 @@ class HomeRepository {
             val database = Firebase.database
             val uid = Firebase.auth.currentUser?.uid
             // keep this data fresh
-            Firebase.database.getReference("volunteers/$uid/totalContribution").keepSynced(true)
+            //Firebase.database.getReference("volunteers/$uid/totalContribution").keepSynced(true)
             database.getReference("volunteers/$uid/totalContribution").get().addOnSuccessListener {
                 if (it.exists() && it != null) {
                     val prevTime: Long = it.value as Long

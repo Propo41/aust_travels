@@ -33,6 +33,7 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -40,6 +41,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.App
 import com.pixieium.austtravels.R
+import com.pixieium.austtravels.auth.SignInActivity
 import com.pixieium.austtravels.databinding.ActivityLiveTrackBinding
 import com.pixieium.austtravels.home.dialog.ProminentDisclosureDialog
 import com.pixieium.austtravels.models.Route
@@ -66,6 +68,56 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
     private lateinit var mBusLocation: LatLng
     private var mBusMarker: Marker? = null
     private var isFirstTime: Boolean = true
+
+    private val locListener = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+            if (dataSnapshot.exists()) {
+                try {
+                    binding.floatingActionButton.visibility = View.VISIBLE
+
+                    val lat = dataSnapshot.child("lat").value.toString().toDouble()
+                    val long = dataSnapshot.child("long").value.toString().toDouble()
+                    var userRoll = dataSnapshot.child("universityId").value as String?
+                    if (userRoll == null) {
+                        userRoll = "N/A"
+                    }
+
+                    mBusLocation = LatLng(lat, long)
+                    moveToCurrentLocation(mBusLocation)
+                    val lastUpdated = dataSnapshot.child("lastUpdatedTime").value.toString()
+                    binding.lastUpdated.text =
+                        getString(R.string.last_updated, getRelativeTime(lastUpdated.toLong()))
+
+                    binding.userRoll.text = getString(R.string.last_updated_by, userRoll)
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    Toast.makeText(
+                        this@LiveTrackActivity,
+                        "Something went wrong. Try restarting the app",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                binding.floatingActionButton.visibility = View.GONE
+                binding.userRoll.text = getString(R.string.last_updated_by, "None")
+                binding.lastUpdated.text =
+                    getString(R.string.last_updated, "Never")
+                // center the map around AUST if no location available
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(23.763863, 90.406255)))
+                mMap.animateCamera(CameraUpdateFactory.zoomIn());
+                // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(15F), 2000, null)
+
+                Toast.makeText(baseContext, "Oops. No location data found!", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            Timber.e(databaseError.toException(), databaseError.toException().localizedMessage)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,57 +161,24 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         return false
     }
 
+    override fun onDestroy() {
+        try {
+            val database = Firebase.database
+            database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/location")
+                .removeEventListener(locListener)
+            Timber.d("Removing listener at bus/$mSelectedBusName/$mSelectedBusTime/location")
+        } catch (e: Exception) {
+            Timber.e(e)
+            Firebase.auth.signOut()
+            val intent = Intent(this, SignInActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+        }
+        super.onDestroy()
+    }
+
     private fun fetchLocationInfo(busName: String, busTime: String) {
         binding.lastUpdated.visibility = View.VISIBLE
-        val locListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                if (dataSnapshot.exists()) {
-                    try {
-                        binding.floatingActionButton.visibility = View.VISIBLE
-
-                        val lat = dataSnapshot.child("lat").value.toString().toDouble()
-                        val long = dataSnapshot.child("long").value.toString().toDouble()
-                        var userRoll = dataSnapshot.child("universityId").value as String?
-                        if (userRoll == null) {
-                            userRoll = "N/A"
-                        }
-
-                        mBusLocation = LatLng(lat, long)
-                        moveToCurrentLocation(mBusLocation)
-                        val lastUpdated = dataSnapshot.child("lastUpdatedTime").value.toString()
-                        binding.lastUpdated.text =
-                            getString(R.string.last_updated, getRelativeTime(lastUpdated.toLong()))
-
-                        binding.userRoll.text = getString(R.string.last_updated_by, userRoll)
-                    } catch (e: Exception) {
-                        Timber.e(e)
-                        Toast.makeText(
-                            this@LiveTrackActivity,
-                            "Something went wrong. Try restarting the app",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } else {
-                    binding.floatingActionButton.visibility = View.GONE
-                    binding.userRoll.text = getString(R.string.last_updated_by, "None")
-                    binding.lastUpdated.text =
-                        getString(R.string.last_updated, "Never")
-                    // center the map around AUST if no location available
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(23.763863, 90.406255)))
-                    mMap.animateCamera(CameraUpdateFactory.zoomIn());
-                    // Zoom out to zoom level 10, animating with a duration of 2 seconds.
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15F), 2000, null)
-
-                    Toast.makeText(baseContext, "Oops. No location data found!", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Timber.e(databaseError.toException(), databaseError.toException().localizedMessage)
-            }
-        }
         val database = Firebase.database
         database.getReference("bus/$busName/$busTime/location").addValueEventListener(locListener)
     }
@@ -182,25 +201,26 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         setBusStopMarkers()
     }
 
-    private fun getLastPingTime(busName: String): Long {
+    private fun getLastPingTime(busName: String, busTime: String): Long {
         val prefs: SharedPreferences = this.getSharedPreferences(
             "com.pixieium.austtravels", MODE_PRIVATE
         )
-        return prefs.getLong("PING_$busName", 0)
+        return prefs.getLong("PING_$busName:$busTime", 0)
     }
 
-    private fun saveLastPingTime(time: Long, busName: String) {
+    private fun saveLastPingTime(time: Long, busName: String, busTime: String) {
         val prefs = getSharedPreferences(
             PACKAGE_NAME, MODE_PRIVATE
         )
         val editor = prefs.edit()
-        editor.putLong("PING_$busName", time)
+        editor.putLong("PING_$busName:$busTime", time)
         editor.apply()
     }
 
     fun onPingClick(view: View) {
-        val delayMinutes: Long = 5
-        val diff = System.currentTimeMillis() - getLastPingTime(mSelectedBusName)
+        // delay for 3 mins
+        val delayMinutes: Long = 3
+        val diff = System.currentTimeMillis() - getLastPingTime(mSelectedBusName, mSelectedBusTime)
         if (diff >= TimeUnit.MINUTES.toMillis(delayMinutes)) {
             // if 5 minutes have passed since the last ping,
             // send push notifications to all volunteers of this bus
@@ -209,7 +229,9 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
                 "Hold on! Letting the volunteers know.",
                 Toast.LENGTH_LONG
             ).show()
-            saveLastPingTime(System.currentTimeMillis(), mSelectedBusName)
+            saveLastPingTime(System.currentTimeMillis(), mSelectedBusName, mSelectedBusTime)
+
+            Timber.d(mSelectedBusName)
 
             lifecycleScope.launch {
                 try {

@@ -19,7 +19,7 @@ class App : Application() {
         super.onCreate()
 
         // setting disk persistence on
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+       // FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         FirebaseApp.initializeApp(this)
 
         // only use timber in debug mode

@@ -1,6 +1,7 @@
 package com.pixieium.austtravels.models;
 
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.PropertyName;
 
 public class UserInfo {
     private String email;
@@ -9,6 +10,7 @@ public class UserInfo {
     private String department;
     private String universityId;
     private String userImage;
+    private UserSettings settings;
     @Exclude
     private String password;
 
@@ -38,7 +40,32 @@ public class UserInfo {
         this.email = email;
         this.userImage = userImage;
         this.universityId = universityId;
+    }
 
+    public UserInfo(String email, String name, String semester, String department, String universityId, String userImage, UserSettings settings) {
+        this.email = email;
+        this.name = name;
+        this.semester = semester;
+        this.department = department;
+        this.universityId = universityId;
+        this.userImage = userImage;
+        this.settings = settings;
+    }
+
+    public UserSettings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(UserSettings settings) {
+        this.settings = settings;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getUserImage() {

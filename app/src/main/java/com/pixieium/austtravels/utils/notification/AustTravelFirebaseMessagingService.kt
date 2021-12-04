@@ -45,7 +45,7 @@ class AustTravelFirebaseMessagingService : FirebaseMessagingService() {
         val resultIntent = Intent(applicationContext, MainActivity::class.java)
         val notificationUtils = NotificationUtils(applicationContext)
         notificationUtils.displayNotification(notificationModel, resultIntent)
-        notificationUtils.playNotificationSound()
+       // notificationUtils.playNotificationSound()
     }
 
     private fun handleData(data: Map<String, String>) {
@@ -64,7 +64,7 @@ class AustTravelFirebaseMessagingService : FirebaseMessagingService() {
         val resultIntent = Intent(applicationContext, MainActivity::class.java)
         val notificationUtils = NotificationUtils(applicationContext)
         notificationUtils.displayNotification(notificationModel, resultIntent)
-        notificationUtils.playNotificationSound()
+       // notificationUtils.playNotificationSound()
     }
 
     companion object {

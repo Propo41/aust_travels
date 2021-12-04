@@ -111,9 +111,6 @@ class HomeActivity : AppCompatActivity(),
 
         // checkNetworkStatus()
 
-        // resubscribe
-        openFirstTimeAfterLogin()
-
         initLocationSharing()
 
         mStopwatchHandler = StopwatchHandler(binding.sharingYourLocation)
@@ -123,13 +120,14 @@ class HomeActivity : AppCompatActivity(),
 
             binding.loggedInAs.text =
                 getString(R.string.logged_in_as_s, mUserInfo.email)
+
             mUserInfo.userImage?.let { binding.profileImage.loadSvg(it) }
 
             mVolunteer = mDatabase.getVolunteerInfo(mUid)
-            val primaryBus = mDatabase.getUserPrimaryBus(mUid)
             if (mVolunteer != null) {
-                updateVolunteerSubscription(primaryBus)
+                updateVolunteerSubscription(mUserInfo.settings.primaryBus)
             }
+            updateLocationSubscription(mUserInfo.settings.primaryBus)
         }
 
         if (isLocationSharing) {
@@ -169,20 +167,26 @@ class HomeActivity : AppCompatActivity(),
 
     }
 
-    private fun updateVolunteerSubscription(primaryBus: String?) {
+    /**
+     * Subscribes the user to Ping notifications if enabled
+     * @param primaryBus can be None or can be a bus name
+     */
+    private fun updateVolunteerSubscription(primaryBus: String) {
         if (!mVolunteer!!.isStatus) {
             binding.shareLocation.visibility = View.GONE
             // if the volunteer is disabled
-            primaryBus?.let {
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(it).addOnSuccessListener {
-                    Timber.d("unsubscribeFromTopic -$primaryBus")
-                }
+            if (primaryBus != "None" || !mUserInfo.settings.pingNotification) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(primaryBus)
+                    .addOnSuccessListener {
+                        Timber.d("unsubscribeFromTopic -$primaryBus")
+                    }
             }
+
         } else {
             binding.shareLocation.visibility = View.VISIBLE
             // subscribe the user to bus notification
-            primaryBus?.let {
-                FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
+            if (primaryBus != "None" && mUserInfo.settings.pingNotification) {
+                FirebaseMessaging.getInstance().subscribeToTopic(primaryBus).addOnSuccessListener {
                     // Show for the first time
                     if (!isShowToastAboutPing()) {
                         Snackbar.make(
@@ -192,8 +196,10 @@ class HomeActivity : AppCompatActivity(),
                         ).show()
                         saveShowPingState(true)
                     }
+                    Timber.d("re-subscribed to ping topic - $primaryBus")
                 }
             }
+
         }
     }
 
@@ -664,41 +670,27 @@ class HomeActivity : AppCompatActivity(),
         }
     }
 
-    // resubscribe to ping/location share only first time after login
-    private fun openFirstTimeAfterLogin() {
+    /**
+     * If user has location notifications enabled, then subscribes the user to FCM service whenever
+     * someone is sharing their location for the user's selected bus
+     */
+    private fun updateLocationSubscription(primaryBus: String) {
+        Timber.d("First time login")
+        lifecycleScope.launch {
+            // if location notification enable
+            if (primaryBus != "None" && mUserInfo.settings.locationNotification) {
+                // if primary bus name is not None and user has location notifications enabled
+                FirebaseMessaging.getInstance()
+                    .subscribeToTopic("$primaryBus${Constant.USER_NOTIFY}")
+                    .addOnSuccessListener {
+                        Timber.d("Re-subscribed to location notification for bus: $primaryBus")
+                        // save to shared preferences
 
-        val isopenFirstTimeAfterLogin = getSharedPreferences(
-            PACKAGE_NAME, MODE_PRIVATE
-        ).getBoolean("openFirstTimeAfterLogin", true)
-
-        if (isopenFirstTimeAfterLogin) {
-            Timber.d("First time login")
-
-            lifecycleScope.launch {
-                mDatabase.setUpLocationNotification(mUid).first?.let {
-                    // if location notification enable
-                    if (it) {
-                        // if primary bus name is not null
-                        mDatabase.setUpLocationNotification(mUid).second?.let {
-                            FirebaseMessaging.getInstance()
-                                .subscribeToTopic("${it}${Constant.USER_NOTIFY}")
-                                .addOnSuccessListener {
-                                    Timber.d("Resubscribe to location notification")
-
-                                    // save to shared preferences
-                                    val editor = getSharedPreferences(
-                                        PACKAGE_NAME, MODE_PRIVATE
-                                    ).edit()
-                                    editor.putBoolean("openFirstTimeAfterLogin", false)
-                                    editor.apply()
-                                }
-                        }
                     }
-                }
             }
-        } else {
-            Timber.d("!First time login")
         }
+
+
     }
 
     companion object {
@@ -707,5 +699,4 @@ class HomeActivity : AppCompatActivity(),
         private const val TAG = "HomeActivity"
     }
 }
-
 

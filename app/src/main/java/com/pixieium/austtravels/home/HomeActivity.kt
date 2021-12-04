@@ -106,6 +106,11 @@ class HomeActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.shimmer.startShimmer()
+        binding.shimmer.visibility = View.VISIBLE
+        binding.scrollView.visibility = View.GONE
+
         mUid = Firebase.auth.currentUser?.uid.toString()
         setSupportActionBar(binding.topAppBar)
 
@@ -128,6 +133,10 @@ class HomeActivity : AppCompatActivity(),
                 updateVolunteerSubscription(mUserInfo.settings.primaryBus)
             }
             updateLocationSubscription(mUserInfo.settings.primaryBus)
+
+            binding.shimmer.visibility = View.GONE
+            binding.scrollView.visibility = View.VISIBLE
+            binding.shimmer.stopShimmer()
         }
 
         if (isLocationSharing) {

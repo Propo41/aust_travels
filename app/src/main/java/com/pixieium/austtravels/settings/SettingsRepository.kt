@@ -118,6 +118,8 @@ class SettingsRepository {
     suspend fun getUserSettings(mUid: String): UserSettings {
         try {
             val database = Firebase.database
+            database.getReference("users/$mUid/settings").keepSynced(true)
+
             val snapshot = database.getReference("users/$mUid/settings").get().await()
             if (snapshot.exists()) {
                 var pingNotification = snapshot.child("isPingNotification").value as Boolean?

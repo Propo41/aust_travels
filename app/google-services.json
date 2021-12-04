@@ -23,6 +23,30 @@
           }
         },
         {
+          "client_id": "714054307139-7p7se71faf7p499hv6oditfbnpg80567.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pixieium.austtravels",
+            "certificate_hash": "79c03c36b4cdbfd9dc15699bb78f7dec09233fa2"
+          }
+        },
+        {
+          "client_id": "714054307139-bhg45n920ej3fm29lflnlp465q454gph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pixieium.austtravels",
+            "certificate_hash": "d872d7de43ab9a1afffd50ad94b5cb77865c5f87"
+          }
+        },
+        {
+          "client_id": "714054307139-ic641mhfipap464o0431k4adc9e8rqh8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pixieium.austtravels",
+            "certificate_hash": "283cce2ec127512205e30aff079c1fbb0f58d2f5"
+          }
+        },
+        {
           "client_id": "714054307139-qd93ng69or950o7fc53qegt7jp39v0n5.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -38,6 +62,13 @@
             {
               "client_id": "714054307139-qd93ng69or950o7fc53qegt7jp39v0n5.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "714054307139-8vdrq25g06q88kpc18b826avd56d5ohm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "snnafi.aust.travels"
+              }
             }
           ]
         }

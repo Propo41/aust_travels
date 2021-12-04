@@ -153,7 +153,6 @@ class RoutesActivity : AppCompatActivity() {
         mAdapter = RoutesAdapter(routeList)
         mRecyclerView.layoutManager = mLayoutManager
         mRecyclerView.adapter = mAdapter
-
     }
 
     fun onBusSelectClick(view: View) {
@@ -168,9 +167,11 @@ class RoutesActivity : AppCompatActivity() {
                     Toast.makeText(this@RoutesActivity, "Route not added yet!", Toast.LENGTH_SHORT)
                         .show()
                     mBinding.placeholder.visibility = View.VISIBLE
+                    mBinding.recyclerView.visibility = View.GONE
                 } else {
                     mBinding.placeholder.visibility = View.GONE
                     initRecyclerView(list)
+                    mBinding.recyclerView.visibility = View.VISIBLE
                 }
                 stopLoading()
             }

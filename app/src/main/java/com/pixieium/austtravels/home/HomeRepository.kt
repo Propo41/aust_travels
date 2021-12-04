@@ -77,6 +77,7 @@ class HomeRepository {
 
     fun updateLocation(
         uid: String,
+        universityId: String,
         mSelectedBusName: String,
         mSelectedBusTime: String,
         location: Location
@@ -86,7 +87,8 @@ class HomeRepository {
                 "lat" to location.latitude.toString(),
                 "long" to location.longitude.toString(),
                 "lastUpdatedTime" to System.currentTimeMillis().toString(),
-                "lastUpdatedVolunteer" to uid
+                "lastUpdatedVolunteer" to uid,
+                "universityId" to universityId,
             ) as HashMap<String, String>
             val database = Firebase.database
             database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/location")
@@ -96,34 +98,27 @@ class HomeRepository {
         }
     }
 
-    suspend fun getUserInfo(): UserInfo? {
+    suspend fun getUserInfo(): UserInfo {
         try {
             val database = Firebase.database
             val uid = Firebase.auth.currentUser?.uid
-            val snap = database.getReference("users/$uid/name").get().await()
+            val snap = database.getReference("users/$uid").get().await()
 
-            var name: String? = ""
             if (snap.exists()) {
-                name = snap.value as String?
-                if (name == null) {
-                    name = "Somebody"
+                val userInfo = snap.getValue<UserInfo>()
+                if (userInfo != null) {
+                    return userInfo
                 }
-            } else {
-                name = "Somebody"
-            }
-
-            val user = Firebase.auth.currentUser
-            user?.let {
-                // Name, email address, and profile photo Url
-                val email = user.email
-                val photoUrl = user.photoUrl
-                return UserInfo(email, photoUrl.toString(), name)
             }
         } catch (e: Exception) {
             Timber.e(e, e.localizedMessage)
         }
 
-        return null
+        return UserInfo(
+            Firebase.auth.currentUser?.email,
+            Firebase.auth.currentUser?.photoUrl.toString(),
+            "N/A"
+        )
     }
 
     fun updateContribution(totalTimeElapsed: Long) {

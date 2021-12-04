@@ -115,8 +115,8 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:paddingStart="20dp"
                 android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:paddingEnd="25dp"
-                android:paddingBottom="15dp"
                 android:text="@string/last_updated"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -124,7 +124,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/start" />
 
             <TextView
-                android:id="@+id/depart"
+                android:id="@+id/userRoll"
                 style="@style/TextBottomSheetDialog"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -133,8 +133,8 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="25dp"
                 android:paddingBottom="15dp"
-                android:text="@string/departure_time"
-                android:visibility="gone"
+                android:text="@string/last_updated_by"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/last_updated" />

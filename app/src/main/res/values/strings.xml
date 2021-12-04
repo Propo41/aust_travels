@@ -11,8 +11,8 @@
     <string name="title_activity_live_track">LiveTrackActivity</string>
     <string name="LIVE_TRACKING">LIVE TRACKING</string>
     <string name="starting_time"><b>Starting Time</b>: %s</string>
-    <string name="last_updated"><b>Last Updated</b>: %s</string>
-    <string name="departure_time"><b>Departure Time</b>: %s</string>
+    <string name="last_updated"><b>Last updated</b>: %s</string>
+    <string name="last_updated_by"><b>Last updated by</b>: %s</string>
     <string name="selected_bus"><b>Selected Bus</b>: %s</string>
     <string name="ping"><b>PING</b></string>
     <string name="select_time">Select start time</string>

@@ -52,10 +52,10 @@ class ForegroundOnlyLocationService : Service() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         locationRequest = LocationRequest.create().apply {
             // set the timing and stuff
-            interval = TimeUnit.SECONDS.toMillis(60)
-            fastestInterval = TimeUnit.SECONDS.toMillis(60)
+            interval = TimeUnit.SECONDS.toMillis(30)
+            fastestInterval = TimeUnit.SECONDS.toMillis(30)
             maxWaitTime = TimeUnit.SECONDS.toMillis(60)
-            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
         locationCallback = object : LocationCallback() {
@@ -67,12 +67,12 @@ class ForegroundOnlyLocationService : Service() {
                 intent.putExtra(EXTRA_LOCATION, currentLocation)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
 
-                if (serviceRunningInForeground) {
-                    notificationManager.notify(
-                        NOTIFICATION_ID,
-                        generateNotification(currentLocation)
-                    )
-                }
+                /*  if (serviceRunningInForeground) {
+                      notificationManager.notify(
+                          NOTIFICATION_ID,
+                          generateNotification(currentLocation)
+                      )
+                  }*/
             }
         }
     }
@@ -155,21 +155,21 @@ class ForegroundOnlyLocationService : Service() {
     }
 
     fun unsubscribeToLocationUpdates() {
-        Timber.d( "unsubscribeToLocationUpdates")
+        Timber.d("unsubscribeToLocationUpdates")
         try {
             val removeTask = fusedLocationProviderClient.removeLocationUpdates(locationCallback)
             removeTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Timber.d( "Location Callback removed.")
+                    Timber.d("Location Callback removed.")
                     stopSelf()
                 } else {
-                    Timber.d( "Failed to remove Location Callback.")
+                    Timber.d("Failed to remove Location Callback.")
                 }
             }
             SharedPreferenceUtil.saveLocationTrackingPref(this, false)
         } catch (unlikely: SecurityException) {
             SharedPreferenceUtil.saveLocationTrackingPref(this, true)
-            Timber.d( "Lost location permissions. Couldn't remove updates. $unlikely")
+            Timber.d("Lost location permissions. Couldn't remove updates. $unlikely")
         }
     }
 
@@ -177,7 +177,7 @@ class ForegroundOnlyLocationService : Service() {
      * Generates a BIG_TEXT_STYLE Notification that represent latest location.
      */
     private fun generateNotification(location: Location?): Notification {
-        Timber.d( "generateNotification()")
+        Timber.d("generateNotification()")
 
         val mainNotificationText = getString(R.string.sharing_location_prompt)
         val titleText = getString(R.string.app_name)
@@ -202,6 +202,7 @@ class ForegroundOnlyLocationService : Service() {
 
         val cancelIntent = Intent(this, ForegroundOnlyLocationService::class.java)
         cancelIntent.putExtra(EXTRA_CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION, true)
+
 
         val servicePendingIntent = PendingIntent.getService(
             this, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT
@@ -230,11 +231,11 @@ class ForegroundOnlyLocationService : Service() {
                 activityPendingIntent
             )
             .setContentIntent(activityPendingIntent)
-            .addAction(
-                R.drawable.ic_cancel,
-                getString(R.string.stop_location_updates_button_text),
-                servicePendingIntent
-            )
+            /*  .addAction(
+                  R.drawable.ic_cancel,
+                  getString(R.string.stop_location_updates_button_text),
+                  servicePendingIntent
+              )*/
             .build()
     }
 

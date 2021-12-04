@@ -34,10 +34,10 @@ public class UserInfo {
         this.password = password;
     }
 
-    public UserInfo(String email, String userImage, String name) {
+    public UserInfo(String email, String userImage, String universityId) {
         this.email = email;
         this.userImage = userImage;
-        this.name = name;
+        this.universityId = universityId;
 
     }
 

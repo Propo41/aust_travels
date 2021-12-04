@@ -14,7 +14,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
@@ -68,7 +67,7 @@ class HomeActivity : AppCompatActivity(),
     private lateinit var mSelectedBusTime: String
 
     private lateinit var mUid: String
-    private var mUserInfo: UserInfo? = UserInfo()
+    private lateinit var mUserInfo: UserInfo
 
     private var mVolunteer: Volunteer? = Volunteer()
 
@@ -85,6 +84,7 @@ class HomeActivity : AppCompatActivity(),
     private lateinit var sharedPreferences: SharedPreferences
 
     private var mIsGpsOn: Boolean = false
+    private var onResumeCallCounter = 0
 
     // Monitors connection to the while-in-use service.
     private val foregroundOnlyServiceConnection = object : ServiceConnection {
@@ -97,6 +97,8 @@ class HomeActivity : AppCompatActivity(),
         override fun onServiceDisconnected(name: ComponentName) {
             foregroundOnlyLocationService = null
             foregroundOnlyLocationServiceBound = false
+            Toast.makeText(baseContext, "closing!!!", Toast.LENGTH_SHORT).show()
+            Timber.d("Closing!!")
         }
     }
 
@@ -115,11 +117,10 @@ class HomeActivity : AppCompatActivity(),
 
         lifecycleScope.launch {
             mUserInfo = mDatabase.getUserInfo()
-            if (mUserInfo != null) {
-                binding.loggedInAs.text =
-                    getString(R.string.logged_in_as_s, mUserInfo?.email)
-                mUserInfo?.userImage?.let { binding.profileImage.loadSvg(it) }
-            }
+
+            binding.loggedInAs.text =
+                getString(R.string.logged_in_as_s, mUserInfo.email)
+            mUserInfo.userImage?.let { binding.profileImage.loadSvg(it) }
 
             mVolunteer = mDatabase.getVolunteerInfo(mUid)
             val primaryBus = mDatabase.getUserPrimaryBus(mUid)
@@ -225,7 +226,6 @@ class HomeActivity : AppCompatActivity(),
         this.registerReceiver(locationSwitchStateReceiver, filter)
     }
 
-    var temp = 0
 
     override fun onResume() {
         super.onResume()
@@ -245,7 +245,7 @@ class HomeActivity : AppCompatActivity(),
         )
 
         // check if GPS was disabled when app went to background
-        if (!isGpsOn() && temp >= 1 && isLocationSharing) {
+        if (!isGpsOn() && onResumeCallCounter >= 1 && isLocationSharing) {
             stopLocationSharing()
             Toast.makeText(
                 this@HomeActivity,
@@ -253,9 +253,9 @@ class HomeActivity : AppCompatActivity(),
                 Toast.LENGTH_LONG
             ).show()
         }
-        temp += 1;
+        onResumeCallCounter += 1;
         Timber.d("onResume")
-        Timber.d("temp: $temp")
+        Timber.d("temp: $onResumeCallCounter")
 
     }
 
@@ -416,7 +416,7 @@ class HomeActivity : AppCompatActivity(),
                         App.notificationApi().notifyUsers(
                             "${mSelectedBusName}${Constant.USER_NOTIFY}",
                             "$mSelectedBusName : $mSelectedBusTime is now live",
-                            "${mUserInfo?.name} is sharing their location. Track them now to know where the bus is headed!"
+                            "${mUserInfo.name} is sharing their location. Track them now to know where the bus is headed!"
                         )
                     } catch (e: Exception) {
                         Toast.makeText(
@@ -494,7 +494,6 @@ class HomeActivity : AppCompatActivity(),
                         .show(supportFragmentManager, SelectBusDialog.TAG)
                 } else {
                     Toast.makeText(this, "You need to enable your GPS!", Toast.LENGTH_SHORT).show()
-                    buildAlertMessageNoGps()
                 }
 
             } else {
@@ -504,25 +503,6 @@ class HomeActivity : AppCompatActivity(),
             }
         }
 
-    }
-
-    private fun buildAlertMessageNoGps() {
-        AlertDialog.Builder(this)
-            .setTitle("Location Permission Needed")
-            .setMessage("This app needs the Location permission, please accept to use location functionality")
-            .setPositiveButton(
-                "OK"
-            ) { _, _ ->
-                // open settings to manually turn on gps
-                startActivity(
-                    Intent(
-                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.fromParts("package", this.packageName, null),
-                    ),
-                )
-            }
-            .create()
-            .show()
     }
 
     fun onViewVolunteersClick(view: View) {
@@ -592,6 +572,9 @@ class HomeActivity : AppCompatActivity(),
     }
 
 
+    /**
+     * GPS status change listener
+     */
     private val locationSwitchStateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (LocationManager.PROVIDERS_CHANGED_ACTION == intent.action) {
@@ -667,7 +650,13 @@ class HomeActivity : AppCompatActivity(),
             )
 
             if (location != null) {
-                mDatabase.updateLocation(mUid, mSelectedBusName, mSelectedBusTime, location)
+                mDatabase.updateLocation(
+                    mUid,
+                    mUserInfo.universityId,
+                    mSelectedBusName,
+                    mSelectedBusTime,
+                    location
+                )
             }
         }
     }

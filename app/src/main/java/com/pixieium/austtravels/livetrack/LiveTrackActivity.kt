@@ -113,19 +113,36 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         binding.lastUpdated.visibility = View.VISIBLE
         val locListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    binding.floatingActionButton.visibility = View.VISIBLE
 
-                    val lat = dataSnapshot.child("lat").value.toString().toDouble()
-                    val long = dataSnapshot.child("long").value.toString().toDouble()
-                    mBusLocation = LatLng(lat, long)
-                    moveToCurrentLocation(mBusLocation)
-                    val lastUpdated = dataSnapshot.child("lastUpdatedTime").value.toString()
-                    binding.lastUpdated.text =
-                        getString(R.string.last_updated, getRelativeTime(lastUpdated.toLong()))
+                if (dataSnapshot.exists()) {
+                    try {
+                        binding.floatingActionButton.visibility = View.VISIBLE
+
+                        val lat = dataSnapshot.child("lat").value.toString().toDouble()
+                        val long = dataSnapshot.child("long").value.toString().toDouble()
+                        var userRoll = dataSnapshot.child("universityId").value as String?
+                        if (userRoll == null) {
+                            userRoll = "N/A"
+                        }
+
+                        mBusLocation = LatLng(lat, long)
+                        moveToCurrentLocation(mBusLocation)
+                        val lastUpdated = dataSnapshot.child("lastUpdatedTime").value.toString()
+                        binding.lastUpdated.text =
+                            getString(R.string.last_updated, getRelativeTime(lastUpdated.toLong()))
+
+                        binding.userRoll.text = getString(R.string.last_updated_by, userRoll)
+                    } catch (e: Exception) {
+                        Timber.e(e)
+                        Toast.makeText(
+                            this@LiveTrackActivity,
+                            "Something went wrong. Try restarting the app",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 } else {
                     binding.floatingActionButton.visibility = View.GONE
-
+                    binding.userRoll.text = getString(R.string.last_updated_by, "None")
                     binding.lastUpdated.text =
                         getString(R.string.last_updated, "Never")
                     // center the map around AUST if no location available
@@ -171,7 +188,6 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         )
         return prefs.getLong("PING_$busName", 0)
     }
-
 
     private fun saveLastPingTime(time: Long, busName: String) {
         val prefs = getSharedPreferences(
@@ -259,7 +275,6 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
             }
         }
     }
-
 
     private fun customizeMapMarkers() {
         // make the dialog boxes clickable
@@ -374,7 +389,6 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         return newStr
     }
 
-
     /**
      * Refer to
      * https://stackoverflow.com/questions/2296377/how-to-get-city-name-from-latitude-and-longitude-coordinates-in-google-maps
@@ -388,7 +402,6 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
             null
         }
     }
-
 
     private fun enableCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(
@@ -432,7 +445,6 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
             MY_PERMISSIONS_REQUEST_LOCATION
         )
     }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

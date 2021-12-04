@@ -211,9 +211,29 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
 
     private fun logout() {
         Firebase.auth.signOut()
-        val intent = Intent(this, SignInActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
+
+        // unsubscribeFromTopic from ping
+        FirebaseMessaging.getInstance()
+            .unsubscribeFromTopic(mUserSettings!!.primaryBus)
+            .addOnSuccessListener {
+
+                // unsubscribeFromTopic from location update
+                FirebaseMessaging.getInstance()
+                    .unsubscribeFromTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
+                    .addOnSuccessListener {
+
+                        val editor = getSharedPreferences(
+                            Constant.PACKAGE_NAME, MODE_PRIVATE
+                        ).edit()
+                        editor.putBoolean("openFirstTimeAfterLogin", true)
+                        editor.apply()
+
+                        // back to sign in activity
+                        val intent = Intent(this, SignInActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        startActivity(intent)
+                    }
+            }
     }
 
     override fun onVolunteerApprovalClick() {

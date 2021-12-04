@@ -109,6 +109,9 @@ class HomeActivity : AppCompatActivity(),
 
         // checkNetworkStatus()
 
+        // resubscribe
+        openFirstTimeAfterLogin()
+
         initLocationSharing()
 
         mStopwatchHandler = StopwatchHandler(binding.sharingYourLocation)
@@ -178,8 +181,8 @@ class HomeActivity : AppCompatActivity(),
             binding.shareLocation.visibility = View.VISIBLE
             // subscribe the user to bus notification
             primaryBus?.let {
-                // Show for the first time
                 FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
+                    // Show for the first time
                     if (!isShowToastAboutPing()) {
                         Snackbar.make(
                             binding.root,
@@ -669,6 +672,43 @@ class HomeActivity : AppCompatActivity(),
             if (location != null) {
                 mDatabase.updateLocation(mUid, mSelectedBusName, mSelectedBusTime, location)
             }
+        }
+    }
+
+    // resubscribe to ping/location share only first time after login
+    private fun openFirstTimeAfterLogin() {
+
+        val isopenFirstTimeAfterLogin = getSharedPreferences(
+            PACKAGE_NAME, MODE_PRIVATE
+        ).getBoolean("openFirstTimeAfterLogin", true)
+
+        if (isopenFirstTimeAfterLogin) {
+            Timber.d("First time login")
+
+            lifecycleScope.launch {
+                mDatabase.setUpLocationNotification(mUid).first?.let {
+                    // if location notification enable
+                    if (it) {
+                        // if primary bus name is not null
+                        mDatabase.setUpLocationNotification(mUid).second?.let {
+                            FirebaseMessaging.getInstance()
+                                .subscribeToTopic("${it}${Constant.USER_NOTIFY}")
+                                .addOnSuccessListener {
+                                    Timber.d("Resubscribe to location notification")
+
+                                    // save to shared preferences
+                                    val editor = getSharedPreferences(
+                                        PACKAGE_NAME, MODE_PRIVATE
+                                    ).edit()
+                                    editor.putBoolean("openFirstTimeAfterLogin", false)
+                                    editor.apply()
+                                }
+                        }
+                    }
+                }
+            }
+        } else {
+            Timber.d("!First time login")
         }
     }
 

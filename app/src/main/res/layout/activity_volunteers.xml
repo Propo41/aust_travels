@@ -1,16 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:shimmer="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".volunteers.VolunteersActivity">
 
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.AustTravels.AppBarOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.App.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:menu="@menu/top_app_bar"
+            app:navigationIcon="@drawable/ic_back"
+            app:popupTheme="@style/Theme.AustTravels.PopupOverlay"
+            app:title="VOLUNTEERS" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+        shimmer:duration="600">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include layout="@layout/placeholder_volunteers" />
+
+            <include layout="@layout/placeholder_volunteers" />
+
+            <include layout="@layout/placeholder_volunteers" />
+
+            <include layout="@layout/placeholder_volunteers" />
+
+
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/topPosition"
+        android:id="@+id/topPositionCard"
         style="@style/App.CardView.Volunteers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:cardBackgroundColor="@color/green_dark"
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,13 +99,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="-30dp"
-                android:textAllCaps="false"
                 android:backgroundTint="@color/light_ash"
                 android:clickable="false"
                 android:drawableEnd="@drawable/ic_fire"
                 android:drawableTint="@color/orange"
                 android:focusable="false"
                 android:text="@string/_12hr"
+                android:textAllCaps="false"
                 android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="@+id/first_position"
                 app:layout_constraintEnd_toEndOf="@+id/first_position"
@@ -65,14 +117,14 @@
                 android:id="@+id/topNameTv"
                 style="@style/TextAppearance.App.Subtitle1"
                 android:layout_width="0dp"
-                android:textAlignment="center"
+                android:layout_height="wrap_content"
                 android:padding="2dp"
                 android:paddingStart="80dp"
                 android:paddingEnd="80dp"
-                android:layout_height="wrap_content"
                 android:text="@string/top_position_name"
-                android:textStyle="bold"
+                android:textAlignment="center"
                 android:textColor="@color/white"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/first_time" />
@@ -82,16 +134,16 @@
                 style="@style/TextAppearance.App.Subtitle1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/saira_light"
                 android:padding="2dp"
                 android:paddingStart="80dp"
                 android:paddingEnd="80dp"
                 android:text="@string/top_position_name"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:fontFamily="@font/saira_light"
-                app:layout_constraintTop_toBottomOf="@id/topNameTv"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/topNameTv"
                 tools:layout_editor_absoluteY="185dp" />
 
 
@@ -99,53 +151,33 @@
     </com.google.android.material.card.MaterialCardView>
 
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Theme.AustTravels.AppBarOverlay"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            style="@style/Widget.App.Toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:menu="@menu/top_app_bar"
-            app:navigationIcon="@drawable/ic_back"
-            app:popupTheme="@style/Theme.AustTravels.PopupOverlay"
-            app:title="VOLUNTEERS" />
-    </com.google.android.material.appbar.AppBarLayout>
-
     <TextView
         android:id="@+id/not_found_placeholder"
         style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:text="@string/no_volunteers_found"
         android:textAllCaps="true"
         android:textSize="24sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/topPosition" />
+        app:layout_constraintTop_toTopOf="@+id/topPositionCard" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/vrecyclerView"
         android:layout_width="match_parent"
-        android:clipToPadding="false"
-        android:paddingTop="@dimen/item_spacing"
         android:layout_height="0dp"
+        android:clipToPadding="false"
         android:paddingLeft="@dimen/item_spacing"
+        android:paddingTop="@dimen/item_spacing"
         android:paddingRight="@dimen/item_spacing"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topPosition" />
+        app:layout_constraintTop_toBottomOf="@+id/topPositionCard" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:shimmer="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:fillViewport="true"
     android:scrollbars="none"
-    android:animateLayoutChanges="true"
     tools:context=".home.HomeActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -27,12 +28,42 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+        shimmer:duration="600">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include layout="@layout/placeholder_home" />
+
+            <include layout="@layout/placeholder_home" />
+
+            <include layout="@layout/placeholder_home" />
+
+            <include layout="@layout/placeholder_home" />
+
+
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:scrollbars="none"
+        android:visibility="gone"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -170,9 +201,9 @@
                 style="@style/Widget.App.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/orange"
                 android:layout_marginStart="@dimen/window_margin"
                 android:layout_marginEnd="@dimen/window_margin"
+                android:backgroundTint="@color/orange"
                 android:onClick="onShareLocationClick"
                 android:padding="@dimen/button_padding"
                 android:text="@string/share_location"
@@ -191,9 +222,9 @@
                 style="@style/Widget.App.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/green_vibrant"
                 android:layout_marginStart="@dimen/window_margin"
                 android:layout_marginEnd="@dimen/window_margin"
+                android:backgroundTint="@color/green_vibrant"
                 android:onClick="onViewVolunteersClick"
                 android:padding="@dimen/button_padding"
                 android:text="@string/view_volunteers"

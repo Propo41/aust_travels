@@ -86,6 +86,7 @@ class HomeRepository {
         try {
             val database = Firebase.database
             val uid = Firebase.auth.currentUser?.uid
+            database.getReference("users/$uid").keepSynced(true)
             val snap = database.getReference("users/$uid").get().await()
 
             if (snap.exists()) {
@@ -96,7 +97,6 @@ class HomeRepository {
                     userInfo.settings = userSettings
                 }
 
-                println(userInfo)
                 if (userInfo != null) {
                     return userInfo
                 }
@@ -137,15 +137,17 @@ class HomeRepository {
             val database = Firebase.database
             val uid = Firebase.auth.currentUser?.uid
             // keep this data fresh
-            //Firebase.database.getReference("volunteers/$uid/totalContribution").keepSynced(true)
+            Firebase.database.getReference("volunteers/$uid/totalContribution").keepSynced(true)
             database.getReference("volunteers/$uid/totalContribution").get().addOnSuccessListener {
                 if (it.exists() && it != null) {
                     val prevTime: Long = it.value as Long
                     database.getReference("volunteers/$uid/totalContribution")
                         .setValue(totalTimeElapsed + prevTime)
+                    Timber.d("Data saved to database: ${totalTimeElapsed + prevTime}")
                 } else {
                     database.getReference("volunteers/$uid/totalContribution")
                         .setValue(totalTimeElapsed)
+                    Timber.d("new Data saved to database: $totalTimeElapsed")
                 }
             }
         } catch (e: Exception) {
@@ -154,3 +156,4 @@ class HomeRepository {
     }
 
 }
+

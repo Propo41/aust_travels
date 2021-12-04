@@ -18,6 +18,8 @@ import com.pixieium.austtravels.databinding.ActivityVolunteersBinding
 import com.pixieium.austtravels.models.Volunteer
 import com.pixieium.austtravels.settings.SettingsActivity
 import kotlinx.coroutines.launch
+import com.facebook.shimmer.ShimmerFrameLayout
+
 
 class VolunteersActivity : AppCompatActivity() {
     private lateinit var mAdapter: VolunteerAdapter
@@ -37,8 +39,11 @@ class VolunteersActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val volunteers: ArrayList<Volunteer> = mDatabase.fetchVolunteers()
             if (volunteers.size > 0) {
+                mBinding.shimmer.startShimmer()
+                mBinding.shimmer.visibility = View.GONE
+                mBinding.vrecyclerView.visibility = View.VISIBLE
                 mBinding.notFoundPlaceholder.visibility = View.GONE
-                mBinding.topPosition.visibility = View.VISIBLE
+                mBinding.topPositionCard.visibility = View.VISIBLE
                 mBinding.firstPosition.loadSvg(volunteers[0].userImage)
                 mBinding.firstTime.text = volunteers[0].totalContributionFormatted
                 mBinding.topNameTv.text = volunteers[0].name
@@ -48,8 +53,12 @@ class VolunteersActivity : AppCompatActivity() {
                 initRecyclerView(volunteers)
             } else {
                 mBinding.notFoundPlaceholder.visibility = View.VISIBLE
-                mBinding.topPosition.visibility = View.GONE
+                mBinding.topPositionCard.visibility = View.GONE
+                mBinding.vrecyclerView.visibility = View.GONE
+                mBinding.shimmer.visibility = View.VISIBLE
+                mBinding.shimmer.stopShimmer()
             }
+
         }
 
     }

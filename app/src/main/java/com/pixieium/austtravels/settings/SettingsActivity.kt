@@ -18,6 +18,7 @@ import com.pixieium.austtravels.models.UserSettings
 import com.pixieium.austtravels.settings.dialog.*
 import com.pixieium.austtravels.utils.Constant
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
@@ -26,7 +27,7 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
     private val mDatabase: SettingsRepository = SettingsRepository()
     private lateinit var mUid: String
     private lateinit var mBinding: ActivitySettingsBinding
-    private var mUserSettings: UserSettings? = null
+    private lateinit var mUserSettings: UserSettings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,13 +45,10 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
 
         lifecycleScope.launch {
             mUserSettings = mDatabase.getUserSettings(mUid)
-            if (mUserSettings == null) {
-                mUserSettings = UserSettings(true, false, "None")
-            }
 
-            Timber.d(mUserSettings?.pingNotification.toString())
-            Timber.d(mUserSettings?.locationNotification.toString())
-            Timber.d(mUserSettings?.primaryBus.toString())
+            Timber.d(mUserSettings.primaryBus)
+            Timber.d(mUserSettings.locationNotification.toString())
+            Timber.d(mUserSettings.pingNotification.toString())
 
             updateUi(isVolunteer)
         }
@@ -61,10 +59,10 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
     private fun updateUi(isVolunteer: Boolean?) {
         try {
             mBinding.locationNotificationSwitch.isChecked =
-                mUserSettings?.locationNotification == true
+                mUserSettings.locationNotification == true
 
             mBinding.primaryBusVal.text =
-                getString(R.string.primary_bus_value, mUserSettings?.primaryBus)
+                getString(R.string.primary_bus_value, mUserSettings.primaryBus)
 
             if (isVolunteer != null && !isVolunteer) {
                 // if user is not a volunteer
@@ -74,7 +72,7 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
                 // if user is a volunteer
                 // todo: add a button to stop being a volunteer
                 mBinding.becomeVolunteerBtn.visibility = View.GONE
-                mBinding.pingNotificationSwitch.isChecked = mUserSettings?.pingNotification == true
+                mBinding.pingNotificationSwitch.isChecked = mUserSettings.pingNotification == true
                 mBinding.pingNotificationContainer.visibility = View.VISIBLE
             }
 
@@ -88,35 +86,41 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
      * called after user changes primary Bus
      */
     private fun updatePingSubscription(primaryBus: String?) {
-        val xx = mBinding.pingNotificationSwitch.isChecked
+        val isPingSwitchEnabled = mBinding.pingNotificationSwitch.isChecked
 
-        if (!xx) {
+        if (!isPingSwitchEnabled) {
             // if the ping notifications are disabled, then un-subscribe the user
-            primaryBus?.let {
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(it).addOnSuccessListener {
-                    Timber.d("unsubscribeFromTopic -", primaryBus)
-                }
+            if (mUserSettings.primaryBus != "None") {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(mUserSettings.primaryBus)
+                    .addOnSuccessListener {
+                        Timber.d("unsubscribe from ping topic -", primaryBus)
+                    }
                 Snackbar.make(
                     mBinding.root,
                     "You will now stop receiving any ping notifications for $primaryBus",
                     Snackbar.LENGTH_LONG
                 ).show()
             }
+
         } else {
             // subscribe the user to bus notification
-            primaryBus?.let {
-                // Show for the first time
-                FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
-                    Snackbar.make(
-                        mBinding.root,
-                        "You will now receive ping notifications from $primaryBus whenever someone pings you.",
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
+            // Show for the first time
+            if (mUserSettings.primaryBus != "None") {
+                FirebaseMessaging.getInstance().subscribeToTopic(mUserSettings.primaryBus)
+                    .addOnSuccessListener {
+                        Timber.d("subscribe to topic -", primaryBus)
+
+                        Snackbar.make(
+                            mBinding.root,
+                            "You will now receive ping notifications from $primaryBus whenever someone pings you.",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
             }
         }
 
     }
+
 
     /**
      * attaches listeners for pingNotification and locationNotification switches
@@ -126,12 +130,12 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
         mBinding.pingNotificationSwitch.setOnClickListener {
             val xx = mBinding.pingNotificationSwitch.isChecked
             mDatabase.updatePingNotificationSettings(mUid, xx)
-            updatePingSubscription(mUserSettings?.primaryBus)
+            updatePingSubscription(mUserSettings.primaryBus)
         }
 
         mBinding.locationNotificationSwitch.setOnClickListener {
             // if no bus is currently selected, show a prompt
-            if (mUserSettings?.primaryBus == "None") {
+            if (mUserSettings.primaryBus == "None") {
                 Toast.makeText(
                     this@SettingsActivity,
                     "You must choose a primary bus first before subscribing to notifications",
@@ -142,7 +146,7 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
                 val xx = mBinding.locationNotificationSwitch.isChecked
                 mDatabase.updateLocationNotificationSettings(mUid, xx)
                 if (xx) {
-                    subscribeUserLocationUpdates()
+                    subscribeUserLocationUpdates(mUserSettings.primaryBus)
                 } else {
                     unSubscribeUserLocationUpdates()
                 }
@@ -152,7 +156,7 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
 
     private fun unSubscribeUserLocationUpdates() {
         FirebaseMessaging.getInstance()
-            .unsubscribeFromTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
+            .unsubscribeFromTopic("${mUserSettings.primaryBus}${Constant.USER_NOTIFY}")
             .addOnSuccessListener {
                 Snackbar.make(
                     mBinding.root,
@@ -162,16 +166,22 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             }
     }
 
-    private fun subscribeUserLocationUpdates() {
-        FirebaseMessaging.getInstance()
-            .subscribeToTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
-            .addOnSuccessListener {
-                Snackbar.make(
-                    mBinding.root,
-                    "You will now receive notifications about ${mUserSettings!!.primaryBus} whenever someone shares their location.",
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
+    private fun subscribeUserLocationUpdates(primaryBus: String) {
+        val isLocationSwitchEnabled = mBinding.locationNotificationSwitch.isChecked
+
+        if (isLocationSwitchEnabled) {
+            FirebaseMessaging.getInstance()
+                .subscribeToTopic("$primaryBus${Constant.USER_NOTIFY}")
+                .addOnSuccessListener {
+                    Timber.d("Subscribed to location updates for bus: $primaryBus")
+                    Snackbar.make(
+                        mBinding.root,
+                        "You will now receive notifications about $primaryBus whenever someone shares their location.",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -212,28 +222,26 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
     private fun logout() {
         Firebase.auth.signOut()
 
-        // unsubscribeFromTopic from ping
-        FirebaseMessaging.getInstance()
-            .unsubscribeFromTopic(mUserSettings!!.primaryBus)
-            .addOnSuccessListener {
-
-                // unsubscribeFromTopic from location update
+        lifecycleScope.launch {
+            try {
+                // unsubscribe from ping notifications
                 FirebaseMessaging.getInstance()
-                    .unsubscribeFromTopic("${mUserSettings!!.primaryBus}${Constant.USER_NOTIFY}")
-                    .addOnSuccessListener {
+                    .unsubscribeFromTopic(mUserSettings.primaryBus).await()
 
-                        val editor = getSharedPreferences(
-                            Constant.PACKAGE_NAME, MODE_PRIVATE
-                        ).edit()
-                        editor.putBoolean("openFirstTimeAfterLogin", true)
-                        editor.apply()
-
-                        // back to sign in activity
-                        val intent = Intent(this, SignInActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        startActivity(intent)
-                    }
+                FirebaseMessaging.getInstance()
+                    .unsubscribeFromTopic("${mUserSettings.primaryBus}${Constant.USER_NOTIFY}")
+                    .await()
+            } catch (e: Exception) {
+                Timber.e(e)
             }
+            returnToSignIn()
+        }
+    }
+
+    private fun returnToSignIn() {
+        val intent = Intent(this, SignInActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 
     override fun onVolunteerApprovalClick() {
@@ -290,10 +298,11 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
 
     override fun onBusSelectClick(selectedBusName: String) {
         mDatabase.updatePrimaryBus(mUid, selectedBusName)
-        mUserSettings?.primaryBus = selectedBusName
+        mUserSettings.primaryBus = selectedBusName
         mBinding.primaryBusVal.text = getString(R.string.primary_bus_value, selectedBusName)
         updatePingSubscription(selectedBusName)
-        subscribeUserLocationUpdates()
+        subscribeUserLocationUpdates(selectedBusName)
+        Toast.makeText(this, "Primary bus changed to $selectedBusName", Toast.LENGTH_SHORT).show()
     }
 
 

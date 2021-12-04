@@ -14,7 +14,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
@@ -68,7 +67,7 @@ class HomeActivity : AppCompatActivity(),
     private lateinit var mSelectedBusTime: String
 
     private lateinit var mUid: String
-    private var mUserInfo: UserInfo? = UserInfo()
+    private lateinit var mUserInfo: UserInfo
 
     private var mVolunteer: Volunteer? = Volunteer()
 
@@ -85,6 +84,7 @@ class HomeActivity : AppCompatActivity(),
     private lateinit var sharedPreferences: SharedPreferences
 
     private var mIsGpsOn: Boolean = false
+    private var onResumeCallCounter = 0
 
     // Monitors connection to the while-in-use service.
     private val foregroundOnlyServiceConnection = object : ServiceConnection {
@@ -97,6 +97,8 @@ class HomeActivity : AppCompatActivity(),
         override fun onServiceDisconnected(name: ComponentName) {
             foregroundOnlyLocationService = null
             foregroundOnlyLocationServiceBound = false
+            Toast.makeText(baseContext, "closing!!!", Toast.LENGTH_SHORT).show()
+            Timber.d("Closing!!")
         }
     }
 
@@ -109,26 +111,23 @@ class HomeActivity : AppCompatActivity(),
 
         // checkNetworkStatus()
 
-        // resubscribe
-        openFirstTimeAfterLogin()
-
         initLocationSharing()
 
         mStopwatchHandler = StopwatchHandler(binding.sharingYourLocation)
 
         lifecycleScope.launch {
             mUserInfo = mDatabase.getUserInfo()
-            if (mUserInfo != null) {
-                binding.loggedInAs.text =
-                    getString(R.string.logged_in_as_s, mUserInfo?.email)
-                mUserInfo?.userImage?.let { binding.profileImage.loadSvg(it) }
-            }
+
+            binding.loggedInAs.text =
+                getString(R.string.logged_in_as_s, mUserInfo.email)
+
+            mUserInfo.userImage?.let { binding.profileImage.loadSvg(it) }
 
             mVolunteer = mDatabase.getVolunteerInfo(mUid)
-            val primaryBus = mDatabase.getUserPrimaryBus(mUid)
             if (mVolunteer != null) {
-                updateVolunteerSubscription(primaryBus)
+                updateVolunteerSubscription(mUserInfo.settings.primaryBus)
             }
+            updateLocationSubscription(mUserInfo.settings.primaryBus)
         }
 
         if (isLocationSharing) {
@@ -168,20 +167,26 @@ class HomeActivity : AppCompatActivity(),
 
     }
 
-    private fun updateVolunteerSubscription(primaryBus: String?) {
+    /**
+     * Subscribes the user to Ping notifications if enabled
+     * @param primaryBus can be None or can be a bus name
+     */
+    private fun updateVolunteerSubscription(primaryBus: String) {
         if (!mVolunteer!!.isStatus) {
             binding.shareLocation.visibility = View.GONE
             // if the volunteer is disabled
-            primaryBus?.let {
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(it).addOnSuccessListener {
-                    Timber.d("unsubscribeFromTopic -$primaryBus")
-                }
+            if (primaryBus != "None" || !mUserInfo.settings.pingNotification) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(primaryBus)
+                    .addOnSuccessListener {
+                        Timber.d("unsubscribeFromTopic -$primaryBus")
+                    }
             }
+
         } else {
             binding.shareLocation.visibility = View.VISIBLE
             // subscribe the user to bus notification
-            primaryBus?.let {
-                FirebaseMessaging.getInstance().subscribeToTopic(it).addOnSuccessListener {
+            if (primaryBus != "None" && mUserInfo.settings.pingNotification) {
+                FirebaseMessaging.getInstance().subscribeToTopic(primaryBus).addOnSuccessListener {
                     // Show for the first time
                     if (!isShowToastAboutPing()) {
                         Snackbar.make(
@@ -191,8 +196,10 @@ class HomeActivity : AppCompatActivity(),
                         ).show()
                         saveShowPingState(true)
                     }
+                    Timber.d("re-subscribed to ping topic - $primaryBus")
                 }
             }
+
         }
     }
 
@@ -228,7 +235,6 @@ class HomeActivity : AppCompatActivity(),
         this.registerReceiver(locationSwitchStateReceiver, filter)
     }
 
-    var temp = 0
 
     override fun onResume() {
         super.onResume()
@@ -248,7 +254,7 @@ class HomeActivity : AppCompatActivity(),
         )
 
         // check if GPS was disabled when app went to background
-        if (!isGpsOn() && temp >= 1 && isLocationSharing) {
+        if (!isGpsOn() && onResumeCallCounter >= 1 && isLocationSharing) {
             stopLocationSharing()
             Toast.makeText(
                 this@HomeActivity,
@@ -256,9 +262,9 @@ class HomeActivity : AppCompatActivity(),
                 Toast.LENGTH_LONG
             ).show()
         }
-        temp += 1;
+        onResumeCallCounter += 1;
         Timber.d("onResume")
-        Timber.d("temp: $temp")
+        Timber.d("temp: $onResumeCallCounter")
 
     }
 
@@ -419,7 +425,7 @@ class HomeActivity : AppCompatActivity(),
                         App.notificationApi().notifyUsers(
                             "${mSelectedBusName}${Constant.USER_NOTIFY}",
                             "$mSelectedBusName : $mSelectedBusTime is now live",
-                            "${mUserInfo?.name} is sharing their location. Track them now to know where the bus is headed!"
+                            "${mUserInfo.name} is sharing their location. Track them now to know where the bus is headed!"
                         )
                     } catch (e: Exception) {
                         Toast.makeText(
@@ -497,7 +503,6 @@ class HomeActivity : AppCompatActivity(),
                         .show(supportFragmentManager, SelectBusDialog.TAG)
                 } else {
                     Toast.makeText(this, "You need to enable your GPS!", Toast.LENGTH_SHORT).show()
-                    buildAlertMessageNoGps()
                 }
 
             } else {
@@ -507,25 +512,6 @@ class HomeActivity : AppCompatActivity(),
             }
         }
 
-    }
-
-    private fun buildAlertMessageNoGps() {
-        AlertDialog.Builder(this)
-            .setTitle("Location Permission Needed")
-            .setMessage("This app needs the Location permission, please accept to use location functionality")
-            .setPositiveButton(
-                "OK"
-            ) { _, _ ->
-                // open settings to manually turn on gps
-                startActivity(
-                    Intent(
-                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.fromParts("package", this.packageName, null),
-                    ),
-                )
-            }
-            .create()
-            .show()
     }
 
     fun onViewVolunteersClick(view: View) {
@@ -595,6 +581,9 @@ class HomeActivity : AppCompatActivity(),
     }
 
 
+    /**
+     * GPS status change listener
+     */
     private val locationSwitchStateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (LocationManager.PROVIDERS_CHANGED_ACTION == intent.action) {
@@ -670,46 +659,38 @@ class HomeActivity : AppCompatActivity(),
             )
 
             if (location != null) {
-                mDatabase.updateLocation(mUid, mSelectedBusName, mSelectedBusTime, location)
+                mDatabase.updateLocation(
+                    mUid,
+                    mUserInfo.universityId,
+                    mSelectedBusName,
+                    mSelectedBusTime,
+                    location
+                )
             }
         }
     }
 
-    // resubscribe to ping/location share only first time after login
-    private fun openFirstTimeAfterLogin() {
+    /**
+     * If user has location notifications enabled, then subscribes the user to FCM service whenever
+     * someone is sharing their location for the user's selected bus
+     */
+    private fun updateLocationSubscription(primaryBus: String) {
+        Timber.d("First time login")
+        lifecycleScope.launch {
+            // if location notification enable
+            if (primaryBus != "None" && mUserInfo.settings.locationNotification) {
+                // if primary bus name is not None and user has location notifications enabled
+                FirebaseMessaging.getInstance()
+                    .subscribeToTopic("$primaryBus${Constant.USER_NOTIFY}")
+                    .addOnSuccessListener {
+                        Timber.d("Re-subscribed to location notification for bus: $primaryBus")
+                        // save to shared preferences
 
-        val isopenFirstTimeAfterLogin = getSharedPreferences(
-            PACKAGE_NAME, MODE_PRIVATE
-        ).getBoolean("openFirstTimeAfterLogin", true)
-
-        if (isopenFirstTimeAfterLogin) {
-            Timber.d("First time login")
-
-            lifecycleScope.launch {
-                mDatabase.setUpLocationNotification(mUid).first?.let {
-                    // if location notification enable
-                    if (it) {
-                        // if primary bus name is not null
-                        mDatabase.setUpLocationNotification(mUid).second?.let {
-                            FirebaseMessaging.getInstance()
-                                .subscribeToTopic("${it}${Constant.USER_NOTIFY}")
-                                .addOnSuccessListener {
-                                    Timber.d("Resubscribe to location notification")
-
-                                    // save to shared preferences
-                                    val editor = getSharedPreferences(
-                                        PACKAGE_NAME, MODE_PRIVATE
-                                    ).edit()
-                                    editor.putBoolean("openFirstTimeAfterLogin", false)
-                                    editor.apply()
-                                }
-                        }
                     }
-                }
             }
-        } else {
-            Timber.d("!First time login")
         }
+
+
     }
 
     companion object {
@@ -718,5 +699,4 @@ class HomeActivity : AppCompatActivity(),
         private const val TAG = "HomeActivity"
     }
 }
-
 

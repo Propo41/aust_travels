@@ -132,11 +132,11 @@ class NotificationUtils(private val mContext: Context) {
     }
 
     companion object {
-        private val NOTIFICATION_ID = 200
-        private val CHANNEL_ID = "aust_notify_id"
-        private val CHANNEL_NAME = "aust_notify"
-        private val URL = "url"
-        private val ACTIVITY = "activity"
+        private const val NOTIFICATION_ID = 200
+        private const val CHANNEL_ID = "aust_notify_id"
+        private const val CHANNEL_NAME = "aust_notify"
+        private const val URL = "url"
+        private const val ACTIVITY = "activity"
     }
 
     init {

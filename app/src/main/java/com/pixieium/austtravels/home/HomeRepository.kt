@@ -6,10 +6,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.pixieium.austtravels.models.BusInfo
-import com.pixieium.austtravels.models.BusTiming
-import com.pixieium.austtravels.models.UserInfo
-import com.pixieium.austtravels.models.Volunteer
+import com.pixieium.austtravels.models.*
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
@@ -61,46 +58,10 @@ class HomeRepository {
         return null
     }
 
-    suspend fun getUserPrimaryBus(uid: String): String? {
-        try {
-            val database = Firebase.database
-            val snapshot = database.getReference("users/$uid/primaryBus").get().await()
-            if (snapshot.exists() && snapshot != null) {
-                return snapshot.getValue<String>()
-            }
-        } catch (e: Exception) {
-            Timber.e(e, e.localizedMessage)
-            return null
-        }
-        return null
-    }
-
-    suspend fun setUpLocationNotification(mUid: String): Pair<Boolean?, String?> {
-        try {
-            var isLocationNotificationEnabled: Boolean? = null
-            var primaryBusName: String? = null
-            val database = Firebase.database
-            val snapshot1 =
-                database.getReference("users/$mUid/settings/isLocationNotification").get().await()
-            if (snapshot1.exists() && snapshot1 != null) {
-                isLocationNotificationEnabled = snapshot1.getValue<Boolean>()
-            }
-
-            val snapshot2 = database.getReference("users/$mUid/settings/primaryBus").get().await()
-            if (snapshot2.exists() && snapshot2 != null) {
-                primaryBusName = snapshot2.getValue<String>()
-            }
-
-            return Pair(isLocationNotificationEnabled, primaryBusName)
-
-        } catch (e: Exception) {
-            Timber.e(e, e.localizedMessage)
-            return Pair(false, "")
-        }
-    }
 
     fun updateLocation(
         uid: String,
+        universityId: String,
         mSelectedBusName: String,
         mSelectedBusTime: String,
         location: Location
@@ -110,7 +71,8 @@ class HomeRepository {
                 "lat" to location.latitude.toString(),
                 "long" to location.longitude.toString(),
                 "lastUpdatedTime" to System.currentTimeMillis().toString(),
-                "lastUpdatedVolunteer" to uid
+                "lastUpdatedVolunteer" to uid,
+                "universityId" to universityId,
             ) as HashMap<String, String>
             val database = Firebase.database
             database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/location")
@@ -120,34 +82,53 @@ class HomeRepository {
         }
     }
 
-    suspend fun getUserInfo(): UserInfo? {
+    suspend fun getUserInfo(): UserInfo {
         try {
             val database = Firebase.database
             val uid = Firebase.auth.currentUser?.uid
-            val snap = database.getReference("users/$uid/name").get().await()
+            val snap = database.getReference("users/$uid").get().await()
 
-            var name: String? = ""
             if (snap.exists()) {
-                name = snap.value as String?
-                if (name == null) {
-                    name = "Somebody"
-                }
-            } else {
-                name = "Somebody"
-            }
+                val userInfo = snap.getValue<UserInfo>()
 
-            val user = Firebase.auth.currentUser
-            user?.let {
-                // Name, email address, and profile photo Url
-                val email = user.email
-                val photoUrl = user.photoUrl
-                return UserInfo(email, photoUrl.toString(), name)
+                val userSettings = setUserSettings(snap)
+                if (userInfo != null) {
+                    userInfo.settings = userSettings
+                }
+
+                println(userInfo)
+                if (userInfo != null) {
+                    return userInfo
+                }
             }
         } catch (e: Exception) {
             Timber.e(e, e.localizedMessage)
         }
 
-        return null
+        return UserInfo(
+            Firebase.auth.currentUser?.email,
+            Firebase.auth.currentUser?.photoUrl.toString(),
+            "N/A"
+        )
+    }
+
+    private fun setUserSettings(snap: DataSnapshot): UserSettings {
+        var isPingNotification = snap.child("settings/isPingNotification").value as Boolean?
+        var isLocationNotification =
+            snap.child("settings/isLocationNotification").value as Boolean?
+        var bus = snap.child("settings/primaryBus").value as String?
+
+        if (isPingNotification == null) {
+            isPingNotification = true
+        }
+        if (isLocationNotification == null) {
+            isLocationNotification = false
+        }
+        if (bus == null) {
+            bus = "None"
+        }
+        return UserSettings(isPingNotification, isLocationNotification, bus)
+
     }
 
     fun updateContribution(totalTimeElapsed: Long) {
@@ -156,7 +137,7 @@ class HomeRepository {
             val database = Firebase.database
             val uid = Firebase.auth.currentUser?.uid
             // keep this data fresh
-            Firebase.database.getReference("volunteers/$uid/totalContribution").keepSynced(true)
+            //Firebase.database.getReference("volunteers/$uid/totalContribution").keepSynced(true)
             database.getReference("volunteers/$uid/totalContribution").get().addOnSuccessListener {
                 if (it.exists() && it != null) {
                     val prevTime: Long = it.value as Long

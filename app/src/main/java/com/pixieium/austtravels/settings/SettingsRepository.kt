@@ -115,11 +115,11 @@ class SettingsRepository {
         return list
     }
 
-    suspend fun getUserSettings(mUid: String): UserSettings? {
+    suspend fun getUserSettings(mUid: String): UserSettings {
         try {
             val database = Firebase.database
             val snapshot = database.getReference("users/$mUid/settings").get().await()
-            return if (snapshot.exists()) {
+            if (snapshot.exists()) {
                 var pingNotification = snapshot.child("isPingNotification").value as Boolean?
                 var locationNotification =
                     snapshot.child("isLocationNotification").value as Boolean?
@@ -134,15 +134,12 @@ class SettingsRepository {
                 if (bus == null) {
                     bus = "None"
                 }
-                UserSettings(pingNotification, locationNotification, bus)
-            } else {
-                null
+                return UserSettings(pingNotification, locationNotification, bus)
             }
         } catch (e: Exception) {
             Timber.e(e, e.localizedMessage)
         }
-        return null
-
+        return UserSettings(true, false, "None")
     }
 
     fun updatePrimaryBus(mUid: String, busName: String) {

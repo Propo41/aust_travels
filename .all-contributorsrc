@@ -11,7 +11,10 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/46298019?v=4",
       "profile": "https://www.aliahnaf.engineer/",
       "contributions": [
-        "code"
+        "code",
+        "bug",
+        "design",
+        "ideas",
       ]
     },
     {
@@ -20,7 +23,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/22527366?v=4",
       "profile": "http://app.snnafi.com",
         "contributions": [
-        "code"
+        "code",
+        "bug",
       ]
     },
     {
@@ -29,7 +33,9 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/49322945?v=4",
       "profile": "https://github.com/tashfiq333",
        "contributions": [
-        "code"
+        "code",
+        "bug",
+        "ideas",
       ]
     },
     {
@@ -38,7 +44,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/48449533?v=4",
       "profile": "https://github.com/FuadBinAkhter",
       "contributions": [
-        "code"
+        "code",
+        "bug",
       ]
     }
   ],

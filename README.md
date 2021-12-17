@@ -1,4 +1,7 @@
 ![banner](https://user-images.githubusercontent.com/46298019/143385075-b8f12140-7261-4f3d-8d27-41e66d3c1e20.png)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <a href="https://github.com/Propo41/aust_travels/releases/tag/v1.4-beta"><img src="https://img.shields.io/badge/release-v1.4--beta-blue" alt="release"/></a>
 <a href="https://github.com/Propo41/aust_travels/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-orange" alt="license"/></a>
@@ -58,3 +61,23 @@ Screenshots
 License
 -------
 [MIT](https://github.com/Propo41/aust_travels/blob/main/LICENSE.md)  
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://www.aliahnaf.engineer/"><img src="https://avatars.githubusercontent.com/u/46298019?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ali Ahnaf</b></sub></a><br /><a href="https://github.com/Propo41/aust_travels/commits?author=Propo41" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

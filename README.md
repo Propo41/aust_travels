@@ -72,6 +72,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://www.aliahnaf.engineer/"><img src="https://avatars.githubusercontent.com/u/46298019?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ali Ahnaf</b></sub></a><br /><a href="https://github.com/Propo41/aust_travels/commits?author=Propo41" title="Code">💻</a></td>
+    <td align="center"><a href="http://app.snnafi.com"><img src="https://avatars.githubusercontent.com/u/22527366?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Shahriar Nasim Nafi</b></sub></a><br /><a href="https://github.com/Propo41/aust_travels/commits?author=SNNafi" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/tashfiq333"><img src="https://avatars.githubusercontent.com/u/49322945?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Tashfiq Nahiyan Khan</b></sub></a><br /><a href="https://github.com/Propo41/aust_travels/commits?author=tashfiq333" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/FuadBinAkhter"><img src="https://avatars.githubusercontent.com/u/48449533?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Fuad Bin Akhter</b></sub></a><br /><a href="https://github.com/Propo41/aust_travels/commits?author=FuadBinAkhter" title="Code">💻</a></td>
   </tr>

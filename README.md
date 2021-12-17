@@ -1,9 +1,7 @@
 ![banner](https://user-images.githubusercontent.com/46298019/143385075-b8f12140-7261-4f3d-8d27-41e66d3c1e20.png)
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <a href="https://github.com/Propo41/aust_travels/releases/tag/v1.4-beta"><img src="https://img.shields.io/badge/release-v1.4--beta-blue" alt="release"/></a>
+<a href="https://github.com/Propo41/aust_travels/graphs/contributors"><img src="https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square" alt="release"/></a>
 <a href="https://github.com/Propo41/aust_travels/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-orange" alt="license"/></a>
 <a href="https://github.com/Propo41/aust_travels/network/members"><img src="https://img.shields.io/github/forks/Propo41/aust_travels" alt="forks"/></a>
 <a href="https://github.com/Propo41/aust_travels/stargazers"><img src="https://img.shields.io/github/stars/Propo41/aust_travels" alt="stars"/></a>

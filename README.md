@@ -1,6 +1,6 @@
 ![banner](https://user-images.githubusercontent.com/46298019/143385075-b8f12140-7261-4f3d-8d27-41e66d3c1e20.png)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <a href="https://github.com/Propo41/aust_travels/releases/tag/v1.4-beta"><img src="https://img.shields.io/badge/release-v1.4--beta-blue" alt="release"/></a>
@@ -72,6 +72,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://www.aliahnaf.engineer/"><img src="https://avatars.githubusercontent.com/u/46298019?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ali Ahnaf</b></sub></a><br /><a href="https://github.com/Propo41/aust_travels/commits?author=Propo41" title="Code">💻</a> <a href="#design-Propo41" title="Design">🎨</a> <a href="#ideas-Propo41" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/Propo41/aust_travels/issues?q=author%3APropo41" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="http://app.snnafi.com"><img src="https://avatars.githubusercontent.com/u/22527366?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Shahriar Nasim Nafi</b></sub></a><br /><a href="https://github.com/Propo41/aust_travels/commits?author=SNNafi" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/tashfiq333"><img src="https://avatars.githubusercontent.com/u/49322945?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Tashfiq Nahiyan Khan</b></sub></a><br /><a href="https://github.com/Propo41/aust_travels/commits?author=tashfiq333" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/FuadBinAkhter"><img src="https://avatars.githubusercontent.com/u/48449533?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Fuad Bin Akhter</b></sub></a><br /><a href="https://github.com/Propo41/aust_travels/commits?author=FuadBinAkhter" title="Code">💻</a></td>
   </tr>
 </table>
 

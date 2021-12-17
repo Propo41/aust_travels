@@ -16,6 +16,33 @@
         "ideas",
         "bug"
       ]
+    },
+    {
+      "login": "SNNafi",
+      "name": "Shahriar Nasim Nafi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22527366?v=4",
+      "profile": "http://app.snnafi.com",
+        "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "tashfiq333",
+      "name": "Tashfiq Nahiyan Khan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49322945?v=4",
+      "profile": "https://github.com/tashfiq333",
+       "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "FuadBinAkhter",
+      "name": "Fuad Bin Akhter",
+      "avatar_url": "https://avatars.githubusercontent.com/u/48449533?v=4",
+      "profile": "https://github.com/FuadBinAkhter",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

@@ -11,6 +11,18 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/46298019?v=4",
       "profile": "https://www.aliahnaf.engineer/",
       "contributions": [
+        "code",
+        "design",
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "SNNafi",
+      "name": "Shahriar Nasim Nafi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22527366?v=4",
+      "profile": "http://app.snnafi.com",
+        "contributions": [
         "code"
       ]
     },

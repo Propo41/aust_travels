@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "Propo41",
+      "name": "Ali Ahnaf",
+      "avatar_url": "https://avatars.githubusercontent.com/u/46298019?v=4",
+      "profile": "https://www.aliahnaf.engineer/",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "aust_travels",
+  "projectOwner": "Propo41",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}

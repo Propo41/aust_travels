@@ -52,6 +52,7 @@ import com.pixieium.austtravels.utils.Constant.REQUEST_SHARE_LOCATION
 import com.pixieium.austtravels.utils.SharedPreferenceUtil
 import com.pixieium.austtravels.volunteers.VolunteersActivity
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 
@@ -683,18 +684,15 @@ class HomeActivity : AppCompatActivity(),
      * If user has location notifications enabled, then subscribes the user to FCM service whenever
      * someone is sharing their location for the user's selected bus
      */
-    private fun updateLocationSubscription(primaryBus: String) {
+    private suspend fun updateLocationSubscription(primaryBus: String) {
         Timber.d("First time login")
         lifecycleScope.launch {
             // if location notification enable
             if (primaryBus != "None" && mUserInfo.settings.locationNotification) {
                 // if primary bus name is not None and user has location notifications enabled
                 FirebaseMessaging.getInstance()
-                    .subscribeToTopic("$primaryBus${Constant.USER_NOTIFY}")
-                    .addOnSuccessListener {
-                        Timber.d("Re-subscribed to location notification for bus: $primaryBus")
-                        // save to shared preferences
-                    }
+                    .subscribeToTopic("$primaryBus${Constant.USER_NOTIFY}").await()
+                Timber.d("Re-subscribed to location notification for bus: $primaryBus")
             }
         }
 

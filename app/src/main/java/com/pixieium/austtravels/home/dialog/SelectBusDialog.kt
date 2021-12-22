@@ -85,7 +85,7 @@ class SelectBusDialog : DialogFragment() {
 
         mBinding.selectBtn.setOnClickListener {
             val selectedBusName = mBinding.selectName.editText?.text.toString()
-            val selectedBusTime = mBinding.selectTime.editText?.text.toString()
+            val selectedBusTime = parseDeptTime(mBinding.selectTime.editText?.text.toString())
 
             if (selectedBusName.isNotEmpty() && selectedBusTime.isNotEmpty()) {
                 listener?.onBusSelectClick(selectedBusName, selectedBusTime, REQUESTER)
@@ -141,13 +141,21 @@ class SelectBusDialog : DialogFragment() {
         for (busInfo: BusInfo in list) {
             if (busInfo.name == selectedName) {
                 for (timing: BusTiming in busInfo.timing) {
-                    timingList.add(timing.startTime)
+                    timingList.add("${timing.startTime} | ${timing.departureTime}")
                 }
                 break
             }
         }
         val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner, timingList)
         (mBinding.selectTime.editText as? AutoCompleteTextView)?.setAdapter(adapter)
+    }
+
+    /**
+     * the str is assumed to be in the format: 6:30AM | 3:45PM
+     * the function returns the first time 6:30AM
+     */
+    private fun parseDeptTime(str: String): String {
+        return str.split('|')[0].trim()
     }
 
 

@@ -1,5 +1,7 @@
 package com.pixieium.austtravels.livetrack
 
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -9,13 +11,6 @@ import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 class LiveTrackRepository {
-    // todo: get the bus departure time
-    suspend fun getBusInfo(busName: String, busTime: String) {
-        val database = Firebase.database
-        val snapshot = database.getReference("bus/$busName/$busTime").get().await()
-        snapshot.exists()
-    }
-
     suspend fun fetchBusRoute(busName: String, busTime: String): ArrayList<Route> {
         val routeList: ArrayList<Route> = ArrayList()
         try {
@@ -31,10 +26,28 @@ class LiveTrackRepository {
         }
 
         return routeList
-
     }
 
+    fun addWatcher(mSelectedBusName: String, mSelectedBusTime: String) {
+        try {
+            val database = Firebase.database
+            database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/viewers/${Firebase.auth.currentUser?.uid}")
+                .setValue(true)
 
+        } catch (e: Exception) {
+            Timber.d(e)
+        }
+    }
 
+    fun removeWatcher(mSelectedBusName: String, mSelectedBusTime: String) {
+        try {
+            val database = Firebase.database
+            database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/viewers/${Firebase.auth.currentUser?.uid}")
+                .setValue(null)
+
+        } catch (e: Exception) {
+            Timber.d(e)
+        }
+    }
 
 }

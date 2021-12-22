@@ -72,8 +72,8 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:foreground="?attr/selectableItemBackground"
-                android:text="@string/ping"
                 android:onClick="onPingClick"
+                android:text="@string/ping"
                 android:textColor="@color/yellow"
                 android:textSize="@dimen/text_size_subtitle"
                 android:textStyle="bold"
@@ -115,8 +115,8 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:paddingStart="20dp"
                 android:paddingTop="5dp"
-                android:paddingBottom="5dp"
                 android:paddingEnd="25dp"
+                android:paddingBottom="5dp"
                 android:text="@string/last_updated"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -147,15 +147,57 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:layout_margin="15dp"
-        android:onClick="onRepositionBusClick"
-        app:tint="@color/orange"
-        android:contentDescription="@string/re_position_bus"
         android:layout_marginBottom="@dimen/item_spacing"
+        android:clickable="true"
+        android:contentDescription="@string/re_position_bus"
+        android:focusable="true"
+        android:onClick="onRepositionBusClick"
         app:layout_constraintBottom_toTopOf="@+id/materialCardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_bus"
-        android:focusable="true" />
+        app:tint="@color/orange" />
 
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/item_spacing"
+        app:cardCornerRadius="@dimen/item_spacing"
+        android:layout_marginStart="@dimen/item_spacing_med"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/item_spacing">
+
+            <TextView
+                android:id="@+id/watcherTv"
+                style="@style/TextBottomSheetDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/_0"
+                app:layout_constraintStart_toEndOf="@id/imageView4"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+                app:layout_constraintTop_toTopOf="@+id/imageView4"
+                tools:layout_editor_absoluteX="20dp" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:src="@drawable/ic_eye"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

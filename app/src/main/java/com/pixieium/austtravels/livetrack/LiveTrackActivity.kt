@@ -34,9 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.App
@@ -69,6 +67,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
     private var mBusMarker: Marker? = null
     private var isFirstTime: Boolean = true
 
+    lateinit var watcherListener: ValueEventListener
     private val locListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
 
@@ -142,6 +141,27 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
         binding.sec.text = getString(R.string.selected_bus, mSelectedBusName)
         // bus start time
         binding.start.text = getString(R.string.starting_time, mSelectedBusTime)
+
+        mDatabase.addWatcher(mSelectedBusName, mSelectedBusTime)
+
+        viewWatchers()
+    }
+
+    private fun viewWatchers() {
+        watcherListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    binding.watcherTv.text = dataSnapshot.childrenCount.toString()
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Timber.d(databaseError.toException())
+            }
+        }
+        val database = Firebase.database
+        database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/viewers")
+            .addValueEventListener(watcherListener)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -167,6 +187,11 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
             database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/location")
                 .removeEventListener(locListener)
             Timber.d("Removing listener at bus/$mSelectedBusName/$mSelectedBusTime/location")
+
+            mDatabase.removeWatcher(mSelectedBusName, mSelectedBusTime)
+            database.getReference("bus/$mSelectedBusName/$mSelectedBusTime/viewers")
+                .removeEventListener(watcherListener)
+
         } catch (e: Exception) {
             Timber.e(e)
             Firebase.auth.signOut()
@@ -203,7 +228,7 @@ class LiveTrackActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private fun getLastPingTime(busName: String, busTime: String): Long {
         val prefs: SharedPreferences = this.getSharedPreferences(
-            "com.pixieium.austtravels", MODE_PRIVATE
+            packageName, MODE_PRIVATE
         )
         return prefs.getLong("PING_$busName:$busTime", 0)
     }

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingBottom="@dimen/text_input_padding">
+
+    <TextView
+        android:id="@+id/textView"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="@string/update_available"
+        android:textAlignment="center"
+        android:textColor="@color/green_dark"
+        android:textSize="@dimen/text_size_subtitle"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/prompt"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="0dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp"
+        android:text="@string/a_new_update_is_available"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/update_button"
+        style="@style/Widget.App.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/item_spacing_large"
+        android:layout_marginEnd="@dimen/item_spacing_large"
+        android:backgroundTint="@color/green_dark"
+        android:padding="@dimen/button_padding"
+        android:text="@string/update"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/prompt" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

@@ -116,4 +116,8 @@
     <string name="ping_notifications">Ping Notifications</string>
     <string name="change">change</string>
     <string name="placeholder_mohammadpur">Mohammadpur</string>
+    <string name="update_available">UPDATE AVAILABLE</string>
+    <string name="a_new_update_is_available">Hello travelers, we\'ve just launched a new update of version %s. Make sure to update your app to the latest version to get the best experience.</string>
+    <string name="update">update</string>
+
 </resources>

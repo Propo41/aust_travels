@@ -24,6 +24,7 @@ import timber.log.Timber
 class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentListener,
     ReAuthenticateDialog.FragmentListener, DeleteConfirmationDialog.FragmentListener,
     PromptVolunteerInfoDialog.FragmentListener, SelectBusDialog.FragmentListener {
+
     private val mDatabase: SettingsRepository = SettingsRepository()
     private lateinit var mUid: String
     private lateinit var mBinding: ActivitySettingsBinding
@@ -146,7 +147,10 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
                 val xx = mBinding.locationNotificationSwitch.isChecked
                 mDatabase.updateLocationNotificationSettings(mUid, xx)
                 if (xx) {
-                    subscribeUserLocationUpdates(mUserSettings.primaryBus)
+                    subscribeUserLocationUpdates(
+                        mUserSettings.primaryBus,
+                        "None"
+                    )
                 } else {
                     unSubscribeUserLocationUpdates()
                 }
@@ -166,13 +170,20 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             }
     }
 
-    private fun subscribeUserLocationUpdates(primaryBus: String) {
+    /**
+     * un-subscribe to all previous location updates and subscribe to new location
+     */
+    private fun subscribeUserLocationUpdates(primaryBus: String, currentBus: String) {
         val isLocationSwitchEnabled = mBinding.locationNotificationSwitch.isChecked
 
-        if (isLocationSwitchEnabled) {
-            FirebaseMessaging.getInstance()
-                .subscribeToTopic("$primaryBus${Constant.USER_NOTIFY}")
-                .addOnSuccessListener {
+        lifecycleScope.launch {
+            try {
+                unSubscribeCurrentLocationUpdates(currentBus)
+                if (isLocationSwitchEnabled) {
+                    // subscribe to new topic
+                    FirebaseMessaging.getInstance()
+                        .subscribeToTopic("$primaryBus${Constant.USER_NOTIFY}").await()
+
                     Timber.d("Subscribed to location updates for bus: $primaryBus")
                     Snackbar.make(
                         mBinding.root,
@@ -180,9 +191,25 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
                         Snackbar.LENGTH_LONG
                     ).show()
                 }
+            } catch (e: Exception) {
+                Timber.d(e.localizedMessage)
+            }
         }
-
     }
+
+    private suspend fun unSubscribeCurrentLocationUpdates(bus: String) {
+        try {
+            if (bus != "None") {
+                Timber.d("Unsubscribed from previous location updates for bus: $bus")
+
+                FirebaseMessaging.getInstance()
+                    .unsubscribeFromTopic("${bus}${Constant.USER_NOTIFY}").await()
+            }
+        } catch (e: Exception) {
+            Timber.d(e)
+        }
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
@@ -298,10 +325,11 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
 
     override fun onBusSelectClick(selectedBusName: String) {
         mDatabase.updatePrimaryBus(mUid, selectedBusName)
+        val previousBus = mUserSettings.primaryBus
         mUserSettings.primaryBus = selectedBusName
         mBinding.primaryBusVal.text = getString(R.string.primary_bus_value, selectedBusName)
         updatePingSubscription(selectedBusName)
-        subscribeUserLocationUpdates(selectedBusName)
+        subscribeUserLocationUpdates(selectedBusName, previousBus)
         Toast.makeText(this, "Primary bus changed to $selectedBusName", Toast.LENGTH_SHORT).show()
     }
 

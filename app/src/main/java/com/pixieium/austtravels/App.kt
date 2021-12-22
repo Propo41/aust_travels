@@ -27,11 +27,11 @@ class App : Application() {
             Timber.plant(Timber.DebugTree())
         }
 
-
         // We can use this to send notice like notification
         FirebaseMessaging.getInstance().subscribeToTopic(Constant.GENERAL_NOTIFICATION)
             .addOnSuccessListener {
             }
+
     }
 
     companion object {

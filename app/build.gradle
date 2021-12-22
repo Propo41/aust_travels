@@ -44,8 +44,9 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
 
     // google play services
-    implementation 'com.google.android.gms:play-services-maps:18.0.1'
-    implementation 'com.google.android.gms:play-services-location:19.0.0'
+    // don't update the packages. App crashed for some reason
+    implementation 'com.google.android.gms:play-services-maps:18.0.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     //firebase
     implementation platform('com.google.firebase:firebase-bom:29.0.0')

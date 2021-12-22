@@ -694,7 +694,6 @@ class HomeActivity : AppCompatActivity(),
                     .addOnSuccessListener {
                         Timber.d("Re-subscribed to location notification for bus: $primaryBus")
                         // save to shared preferences
-
                     }
             }
         }

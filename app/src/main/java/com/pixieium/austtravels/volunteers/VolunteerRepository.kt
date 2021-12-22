@@ -56,18 +56,33 @@ class VolunteerRepository {
 
         // if greater than 60s show in min
         if (time > 60) {
+            val sec = time % 60
             time /= 60
-            str = time.toString() + "m"
+            str = if (sec > 0) {
+                time.toString() + "m" + sec.toString() + "s"
+            } else {
+                time.toString() + "m"
+            }
         }
         if (time > 99) {
-            // fi greater than 99 mins, show in hrs
+            // if greater than 99 mins, show in hrs
+            val min = time % 60
             time /= 60
-            str = time.toString() + "hr"
+            str = if (min > 0) {
+                time.toString() + "hr" + min.toString() + "m"
+            } else {
+                time.toString() + "hr"
+            }
         }
         if (time > 99) {
+            val hrs = time % 24
             // if greater than 99 hours, show in days
             time /= 24
-            str = time.toString() + "d"
+            str = if (hrs > 0) {
+                time.toString() + "d" + hrs.toString() + "hrs"
+            } else {
+                time.toString() + "d"
+            }
         }
 
         return str

@@ -84,16 +84,21 @@ class SelectBusDialog : DialogFragment() {
         }
 
         mBinding.selectBtn.setOnClickListener {
-            val selectedBusName = mBinding.selectName.editText?.text.toString()
-            val selectedBusTime = parseDeptTime(mBinding.selectTime.editText?.text.toString())
+            try {
+                val selectedBusName = mBinding.selectName.editText?.text.toString()
+                val selectedBusTime = parseDeptTime(mBinding.selectTime.editText?.text.toString())
 
-            if (selectedBusName.isNotEmpty() && selectedBusTime.isNotEmpty()) {
-                listener?.onBusSelectClick(selectedBusName, selectedBusTime, REQUESTER)
-                dismiss()
-            } else {
-                Toast.makeText(context, "Ahh, you must select a time dear!", Toast.LENGTH_SHORT)
-                    .show()
+                if (selectedBusName.isNotEmpty() && selectedBusTime.isNotEmpty()) {
+                    listener?.onBusSelectClick(selectedBusName, selectedBusTime, REQUESTER)
+                    dismiss()
+                } else {
+                    Toast.makeText(context, "Ahh, you must select a time dear!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            } catch (e: Exception) {
+                Timber.d(e)
             }
+
         }
         return mBinding.root
     }

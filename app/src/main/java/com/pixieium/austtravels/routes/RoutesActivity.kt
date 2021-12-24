@@ -12,22 +12,26 @@ import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pixieium.austtravels.R
 import com.pixieium.austtravels.databinding.ActivityRoutesBinding
 import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
+import com.pixieium.austtravels.models.Representative
 import com.pixieium.austtravels.models.Route
+import com.pixieium.austtravels.routes.adapters.RepresentativesAdapter
+import com.pixieium.austtravels.routes.adapters.RoutesAdapter
 import com.pixieium.austtravels.settings.SettingsActivity
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class RoutesActivity : AppCompatActivity() {
-    private lateinit var mAdapter: RoutesAdapter
+    private lateinit var mAdapter: ConcatAdapter
+    private lateinit var mRoutesAdapter: RoutesAdapter
     private lateinit var mLayoutManager
             : RecyclerView.LayoutManager
-    private lateinit var mRecyclerView: RecyclerView
     private lateinit var mBinding: ActivityRoutesBinding
     private val mDatabase: RoutesRepository = RoutesRepository()
 
@@ -137,7 +141,7 @@ class RoutesActivity : AppCompatActivity() {
         for (busInfo: BusInfo in list) {
             if (busInfo.name == selectedName) {
                 for (timing: BusTiming in busInfo.timing) {
-                    timingList.add(timing.startTime)
+                    timingList.add("${timing.startTime} | ${timing.departureTime}")
                 }
                 break
             }
@@ -147,21 +151,39 @@ class RoutesActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * the str is assumed to be in the format: 6:30AM | 3:45PM
+     * the function returns the first time 6:30AM
+     */
+    private fun parseDeptTime(str: String): String {
+        return str.split('|')[0].trim()
+    }
+
     private fun initRecyclerView(routeList: ArrayList<Route>) {
-        mRecyclerView = findViewById(R.id.recyclerView)
         mLayoutManager = LinearLayoutManager(this)
-        mAdapter = RoutesAdapter(routeList)
-        mRecyclerView.layoutManager = mLayoutManager
-        mRecyclerView.adapter = mAdapter
+
+        lifecycleScope.launch {
+            val list = mDatabase.getBusRepresentativeInfo(mBinding.name.editText?.text.toString())
+            val mRepAdapter = RepresentativesAdapter(list)
+            mRoutesAdapter = RoutesAdapter(routeList)
+
+            mAdapter = ConcatAdapter(mRoutesAdapter, mRepAdapter)
+            mBinding.recyclerView.layoutManager = mLayoutManager
+            mBinding.recyclerView.adapter = mAdapter
+        }
+
     }
 
     fun onBusSelectClick(view: View) {
         if (!mBinding.time.editText?.text.isNullOrEmpty() && !mBinding.name.editText?.text.isNullOrEmpty()) {
             startLoading()
+
             lifecycleScope.launch {
+                val selectedBusTime = parseDeptTime(mBinding.time.editText?.text.toString())
+
                 val list: ArrayList<Route> = mDatabase.fetchRouteList(
                     mBinding.name.editText?.text.toString(),
-                    mBinding.time.editText?.text.toString()
+                    selectedBusTime
                 )
                 if (list.size == 0) {
                     Toast.makeText(this@RoutesActivity, "Route not added yet!", Toast.LENGTH_SHORT)

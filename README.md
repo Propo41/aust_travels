@@ -44,18 +44,6 @@ Contributing Guidelines
 Refer to our <a href="https://github.com/Propo41/aust_travels/blob/main/contributing.md">contributing guidelines</a> for more information on how to contribute to our project 
 
 
-
-Screenshots
----------
-
-![257665150_485494346111673_2233233698688838218_n](https://user-images.githubusercontent.com/46298019/143294955-d7b4e1a1-b016-476f-998b-2ac8f8d423c4.jpg)
-![1637578082101](https://user-images.githubusercontent.com/46298019/143294319-7a538ad0-c4a5-46da-aad7-f73a47174ef9.jpg)
-![258851301_1045487116275753_3048621812035715196_n](https://user-images.githubusercontent.com/46298019/143296416-966a3bbd-40b6-4309-a331-6c00cea516bf.jpg)
-![1637578082110](https://user-images.githubusercontent.com/46298019/143294323-6ca6fe47-d8fe-42ef-af19-f8e3b6365e52.jpg)
-![1637578082082](https://user-images.githubusercontent.com/46298019/143294928-f0c1a1fe-726d-42d6-af44-e7be2d45e673.jpg)
-
-
-
 License
 -------
 [MIT](https://github.com/Propo41/aust_travels/blob/main/LICENSE.md)  

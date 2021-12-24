@@ -1,4 +1,4 @@
-![banner](https://user-images.githubusercontent.com/46298019/143385075-b8f12140-7261-4f3d-8d27-41e66d3c1e20.png)
+![banner-Recovered](https://user-images.githubusercontent.com/46298019/147356803-8389a230-bc82-42f0-90ba-5b5a12ad10ed.png)
 
 <a href="https://github.com/Propo41/aust_travels/releases/tag/v1.4-beta"><img src="https://img.shields.io/badge/release-v1.4--beta-blue" alt="release"/></a>
 <a href="https://github.com/Propo41/aust_travels/graphs/contributors"><img src="https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square" alt="release"/></a>

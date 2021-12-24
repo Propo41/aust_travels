@@ -1,4 +1,4 @@
-package com.pixieium.austtravels.routes
+package com.pixieium.austtravels.routes.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -21,7 +21,6 @@ class RoutesAdapter(routeList: ArrayList<Route>) :
         val mEstTime: TextView = itemView.findViewById(R.id.estTime)
         val mLine: View = itemView.findViewById(R.id.divider)
         val mImageView: ImageView = itemView.findViewById(R.id.imageView)
-
     }
 
 

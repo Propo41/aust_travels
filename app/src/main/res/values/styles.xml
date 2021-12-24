@@ -37,6 +37,12 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="TextAppearance.App.Subtitle2" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/saira_medium</item>
+        <item name="android:fontFamily">@font/saira_medium</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <style name="TextAppearance.AppCompat.Caption" parent="TextAppearance.MaterialComponents.Body1">
         <item name="fontFamily">@font/saira_bold</item>
         <item name="android:fontFamily">@font/saira_bold</item>

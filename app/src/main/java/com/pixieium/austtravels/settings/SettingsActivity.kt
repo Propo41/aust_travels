@@ -68,6 +68,7 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
             if (isVolunteer != null && !isVolunteer) {
                 // if user is not a volunteer
                 mBinding.pingNotificationContainer.visibility = View.GONE
+                mBinding.divider3.visibility = View.GONE
                 mBinding.becomeVolunteerBtn.visibility = View.VISIBLE
             } else {
                 // if user is a volunteer
@@ -75,6 +76,7 @@ class SettingsActivity : AppCompatActivity(), PromptVolunteerDialog.FragmentList
                 mBinding.becomeVolunteerBtn.visibility = View.GONE
                 mBinding.pingNotificationSwitch.isChecked = mUserSettings.pingNotification == true
                 mBinding.pingNotificationContainer.visibility = View.VISIBLE
+                mBinding.divider3.visibility = View.VISIBLE
             }
 
         } catch (e: Exception) {

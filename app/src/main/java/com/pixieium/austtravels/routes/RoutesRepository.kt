@@ -6,6 +6,7 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.pixieium.austtravels.models.BusInfo
 import com.pixieium.austtravels.models.BusTiming
+import com.pixieium.austtravels.models.Representative
 import com.pixieium.austtravels.models.Route
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
@@ -56,4 +57,20 @@ class RoutesRepository {
         return list
     }
 
+    suspend fun getBusRepresentativeInfo(busName: String): ArrayList<Representative> {
+        val list: ArrayList<Representative> = ArrayList()
+        try {
+            val database = Firebase.database
+            val snapshot = database.getReference("bus/$busName/representatives").get().await()
+            if (snapshot.exists()) {
+                for (snap: DataSnapshot in snapshot.children) {
+                    list.add(Representative(snap.key, snap.getValue<String>()))
+                }
+            }
+        } catch (e: Exception) {
+            Timber.e(e, e.localizedMessage)
+        }
+
+        return list
+    }
 }

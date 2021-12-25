@@ -39,6 +39,13 @@ Resources
 2. Admin Panel: [hosted on firebase](https://aust-travels.firebaseapp.com)
 
 
+Join Us On
+---------
+<a href="https://discord.gg/6YyR3QTA">
+    <img alt="Join us on discord" height="80" src="docs/graphics/discord_logo.png" />
+</a>
+
+
 Contributing Guidelines
 ---------
 Refer to our <a href="https://github.com/Propo41/aust_travels/blob/main/contributing.md">contributing guidelines</a> for more information on how to contribute to our project 

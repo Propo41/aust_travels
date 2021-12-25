@@ -1,11 +1,11 @@
 ![banner-Recovered](https://user-images.githubusercontent.com/46298019/147356803-8389a230-bc82-42f0-90ba-5b5a12ad10ed.png)
 
-<a href="https://github.com/Propo41/aust_travels/releases/tag/v1.4-beta"><img src="https://img.shields.io/badge/release-v1.4--beta-blue" alt="release"/></a>
-<a href="https://github.com/Propo41/aust_travels/graphs/contributors"><img src="https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square" alt="release"/></a>
-<a href="https://github.com/Propo41/aust_travels/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-orange" alt="license"/></a>
-<a href="https://github.com/Propo41/aust_travels/network/members"><img src="https://img.shields.io/github/forks/Propo41/aust_travels" alt="forks"/></a>
-<a href="https://github.com/Propo41/aust_travels/stargazers"><img src="https://img.shields.io/github/stars/Propo41/aust_travels" alt="stars"/></a>
-<a href="https://github.com/Propo41/aust_travels/issues"><img src="https://img.shields.io/github/issues/Propo41/aust_travels" alt="issues"/></a>
+<a target="_blank" href="https://github.com/Propo41/aust_travels/releases/tag/v1.4-beta"><img src="https://img.shields.io/badge/release-v1.4--beta-blue" alt="release"/></a>
+<a target="_blank" href="https://github.com/Propo41/aust_travels/graphs/contributors"><img src="https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square" alt="release"/></a>
+<a target="_blank" href="https://github.com/Propo41/aust_travels/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-orange" alt="license"/></a>
+<a target="_blank" href="https://github.com/Propo41/aust_travels/network/members"><img src="https://img.shields.io/github/forks/Propo41/aust_travels" alt="forks"/></a>
+<a target="_blank" href="https://github.com/Propo41/aust_travels/stargazers"><img src="https://img.shields.io/github/stars/Propo41/aust_travels" alt="stars"/></a>
+<a target="_blank" href="https://github.com/Propo41/aust_travels/issues"><img src="https://img.shields.io/github/issues/Propo41/aust_travels" alt="issues"/></a>
 
 # Aust Travels
 
@@ -28,8 +28,8 @@ Installation
 3. Run `MainActivity.kt`
 
 <hr>
-<a href="https://play.google.com/store/apps/details?id=com.pixieium.austtravels">
-    <img alt="Get it on Google Play" height="80" src="docs/graphics/google-badge.png" />
+<a href="https://play.google.com/store/apps/details?id=com.pixieium.austtravels" target="_blank">
+    <img alt="Get it on Google Play" height="80" src="docs/graphics/google-badge.png" target="_blank"/>
 </a>
 
 Resources
@@ -41,14 +41,14 @@ Resources
 
 Join Us On
 ---------
-<a href="https://discord.gg/6YyR3QTA">
-    <img alt="Join us on discord" height="80" src="docs/graphics/discord_logo.png" />
+<a href="https://discord.gg/sJXrCtMHeq" target="_blank">
+    <img alt="Join us on discord" height="80" src="docs/graphics/discord_logo.png" target="_blank"/>
 </a>
 
 
 Contributing Guidelines
 ---------
-Refer to our <a href="https://github.com/Propo41/aust_travels/blob/main/contributing.md">contributing guidelines</a> for more information on how to contribute to our project 
+Refer to our <a href="https://github.com/Propo41/aust_travels/blob/main/contributing.md" target="_blank">contributing guidelines</a> for more information on how to contribute to our project 
 
 
 License
